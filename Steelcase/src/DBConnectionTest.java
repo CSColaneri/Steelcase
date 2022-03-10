@@ -71,10 +71,8 @@ public class DBConnectionTest {
       // jdbc:mysql:///<DATABASE_NAME>?cloudSqlInstance=<INSTANCE_CONNECTION_NAME>&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=<MYSQL_USER_NAME>&password=<MYSQL_USER_PASSWORD>
       String url = String.format("jdbc:mysql:///%s?cloudSqlInstance=%s&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=%s&password=%s", dbName,cloudSqlInstance, user, password);
       // String dmConn = String.format("jdbc:mysql://%s:%d/",hostname,port);
-      System.out.println("This test whether or not this machine can connect " + 
-      "to a mysql database hosted locally. If all goes well, you should see " +
-      "the printout \"TestTable column 0: 10\". Otherwise an exception will " +
-      "be thrown.");
+      System.out.println("This test whether or not this machine can connect "
+        + "to the Google Cloud SQL instance and database.");
       try {
         conn = DriverManager.getConnection(url);
         // conn = DriverManager.getConnection(url, info);
