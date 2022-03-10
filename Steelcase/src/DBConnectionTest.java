@@ -59,8 +59,8 @@ public class DBConnectionTest {
       // info.put("password", password);
       String user = "admin";
       String password = "admin";
-      info.put("user", "admin");
-      info.put("password", "admin");
+      info.put("user", user);
+      info.put("password", password);
       String dbName = "steelcase";
       String cloudSqlInstance = "ambient-scope-342219:us-central1:steelcase-db";
       // GoogleCredentials apiCredentials = GoogleCredentials.fromStream(new FileInputStream(SA_KEY_PATH))
@@ -78,13 +78,15 @@ public class DBConnectionTest {
         // conn = DriverManager.getConnection(url, info);
         // conn = DriverManager.getConnection(dmConn, info);
         // loggedIn = true;
+        System.out.println("Connection successful.");
       } catch(SQLException e) {
         System.out.println("Failed to connect.");
         e.printStackTrace();
         // continue;
+        System.out.println("This concludes the test.");
+        return;
       }
     // }
-    System.out.println("Connection successful.");
 
     try {
       PreparedStatement setdb = conn.prepareStatement("use steelcase");
@@ -100,13 +102,13 @@ public class DBConnectionTest {
       // } else {
       //   throw new Exception("Something went wrong.");
       // }
-      System.out.println("This concludes the test. Goodbye.");
       rs1.close();
       showHostname.close();
     } catch(Exception e) {
-      System.out.println("whaddaFrontdoor happen?");
+      System.err.println("Something exploded!!");
       e.printStackTrace();
     }
+    System.out.println("This concludes the test.");
     return;
   }
 
