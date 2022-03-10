@@ -1,2 +1,7 @@
-./Steelcase/.project
+# vscode extension trash
 Steelcase/.project
+
+# Service Account key
+# DO NOT REMOVE FROM .gitignore If you're missing this file
+# message Ethan Brown for it, it should NOT go in the repo
+ambient-scope-342219-3894e6e0fc09.json
