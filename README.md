@@ -20,11 +20,11 @@ The Google library will also automatically use the *GOOGLE_APPLICATION_CREDENTIA
 1. In the Windows search bar search for "environment variables" (although it should only take you as much as "env") and hit enter.  
 <img src="./images/search.jpg" style="width:50%;height:50%;">  
 2. This opens a System Properties window; click the Environment Variables button near the bottom.  
-<img src="./images/env1.png" style="width:50%;height:50%;">  
+<img src="./images/env1.PNG" style="width:50%;height:50%;">  
 3. Under the User Variables section, click New (It could be a system variable too, it doesn't matter).  
-<img src="./images/env2.png" style="width:50%;height:50%;">  
+<img src="./images/env2.PNG" style="width:50%;height:50%;">  
 4. For the name of the variable, make sure it is GOOGLE_APPLICATION_CREDENTIALS exactly. For the value, you can browse for the file and add it that way or you can copy & paste the absolute path yourself. When done, click OK.  
-<img src="./images/env3.png" style="width:50%;height:50%;">  
+<img src="./images/env3.PNG" style="width:50%;height:50%;">  
 5. Last, restart whatever application you're running java in (the Java VM needs to restart to see our change). After this, DBConnectionTest.java should succeed.
 
 ## Testing Your Connection
