@@ -15,8 +15,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
-
 
 public class DBConnectionTest {
   public static Connection conn;
@@ -30,12 +28,9 @@ public class DBConnectionTest {
         + "location of the service account json key.\n", SA_ENV);
       System.exit(1);
     }
-    Properties info = new Properties();
 
     String user = "admin";
     String password = "admin";
-    info.put("user", user);
-    info.put("password", password);
     String dbName = "steelcase";
     String cloudSqlInstance = "ambient-scope-342219:us-central1:steelcase-db";
     
