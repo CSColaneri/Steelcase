@@ -2,7 +2,7 @@
 Steelcase/.project
 
 #intellj .idea folder, it should create by itself if you decide to use intellj
-Steelcase/.idea
+/.idea
 
 # Service Account key
 # DO NOT REMOVE FROM .gitignore If you're missing this file
