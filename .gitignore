@@ -1,6 +1,9 @@
 # vscode extension trash
 Steelcase/.project
 
+#intellj .idea folder, it should create by itself if you decide to use intellj
+Steelcase/.idea
+
 # Service Account key
 # DO NOT REMOVE FROM .gitignore If you're missing this file
 # message Ethan Brown for it, it should NOT go in the repo
