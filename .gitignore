@@ -2,10 +2,10 @@
 Steelcase/.project
 
 #intellj .idea folder, it should create by itself if you decide to use intellj
-.idea
-#Have to ignore the javafx Lib. Github won't take a file over 50 Mb. There is a way to do it ->
+.idea/
+#Have to ignore the javafx Lib. Github won't happly take a file over 50 Mb. There is a way to do it but -_- ->
 #https://git-lfs.github.com/
-Steelcase/lib/javafx-sdk-17.0.2
+Steelcase/lib/javafx-sdk-17.0.2/
 
 
 # Service Account key
