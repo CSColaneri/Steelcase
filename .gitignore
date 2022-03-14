@@ -4,7 +4,7 @@ Steelcase/.project
 # Service Account key
 # DO NOT REMOVE FROM .gitignore If you're missing this file
 # message Ethan Brown for it, it should NOT go in the repo
-ambient-scope-342219-3894e6e0fc09.json
+# ambient-scope-342219-3894e6e0fc09.json
 
 # This is what I'm using to upload data to db, don't run this.
-Steelcase/src/UploadToDB.java
+# Steelcase/src/UploadToDB.java

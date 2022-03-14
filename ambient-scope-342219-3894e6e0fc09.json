@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ambient-scope-342219",
+  "private_key_id": "3894e6e0fc0969f41678465649ee2cf732809f20",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQClOnWVUeh0+tjM\nJLA6kjWOBucI1bhxGqer/x062bFLA4SA4eLs2xhg+Vw4SSNbV292xW4uhXaxcrmv\nF3iHpmhH+k1cUVugAnoIZUJfjuc7IfSNr1rXyE6iSeFLdPJcbsqhjwFGMfgwVxiI\nxpuEvHIPLowBLINrv5eF3GYiUGfU5PnZdoocOcphVFFvV+mU3LOnzZbWyRUOP2Z+\nCrRYT19RtG6z7Ei1WSiYYOXA8KPJDsnQbsmYw1JSvK5fp41BlseA0m7kiaAZcmYi\nQ7VhthDwxpLQ8fxlPHtDbLuElEdw4kXdTtdsExsvxTq8PI0D0zQBaEQW2s5DRvu3\n5AIUSHYRAgMBAAECggEAB8BuXnWxSjZakCPzK0xLZuu7+xYhHm1PCyq03FtKOL1k\nLLJsSwscYbBRO0gdzd3pmiY5EnBV2TgLWMOTzAlqlbXl2zxAkt6K4HSfteFRHTJt\nSW29/VGlyXIIjS8Munltguw1SxhyZGeG/HkU4sKp4ecfz7j0PCHeTKbCbpRcdV3A\nBayFX3eVz9SveyRlnbDC6LZMlOx8v6RFuLMlUvJ95iqJn39aGFgLGGtzqy6sQpaJ\nxtgLaL3iaOBw8rTxdaK6A8Q7HcnIQUhOCat55TlZNFvU+0VBXnn747BMUQ50GENA\nsm9Kx6xzPQK0R79YZcwRa9G+23EoOlR/QtM8lg+iYQKBgQDg6H7rp4435wf2e4hC\nx11MY6YTwNwGUHuv+0OD8dgqsQASOczFzvOJlitzQ2oCPzH/sK0RcgZ9ZIs6/CIe\nYJcGqP8pdMIBFqHWjXGXdPXTwG8hX56Jh84HTxnt2fbYagasj6m+Mp/AMdZnqi9D\nj7DfHuYLvo6tMsA4oCZPjo495wKBgQC8EeS2/bGSTegOJQA2gQhYfVZdEoGtl7Zj\ngHxOwUqB1tfnTE3Ia6icFWydO9UNyK+TgDAaOQ7xOzjZCcZc5t4Irx4wLPwu2lvU\nd9S02LhgddyMmuGa9q+IWlSURSON/utIdIBAY0GZtGPy1rCwROoATQqLnjxIEswf\n9R5URhj9RwKBgGV6QZoOVer/QOaDwm1vCrem1o5fHGd09PnoQwRLoJ9SkZenoK83\nu0a/DQfKyRAOd37Itq4CZs85CGEq1jIinsIQimCoH8jh70+hLjmKOki6sOm7/QpM\nzjcaB7b7+5aV8ED36Ty6Fr5fPkAz13OCZ+mkRWPTLQkUtwpVqDOJPMDNAoGAcncx\njW67NSDVrEY46vN98N3YQq2Q3+cGy2jYP9bFUmFA5zY54VIlPVqM0OYptkn/Evdi\nT5OK1KgG4ZJheQnK+d4bsZavppSgb6C/hZKiJZOWuL1LstWR4JuZ/uRVz4boDSFb\nLdU7iCGS86pXv/Exux0o3fFhHzzRoGHAI+rGKuECgYEA05CTHZTWq0VAnHW487JL\ntdhO0yw/0KdEwjv6G0O3FFzzWn4vzmMeoYnPKbfcLyC64OGmc9vM6rEnz8MoE5jF\n091qK3Gbiq+P5eBdPGQYnJNuA8WCGRk6dnO7FNar406Pkk0pogoOgAy3qQGNsZOk\nFKeZnUYBFNgHICT0OQS/rOc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "steelcase-scheduling@ambient-scope-342219.iam.gserviceaccount.com",
+  "client_id": "107860454560175356788",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/steelcase-scheduling%40ambient-scope-342219.iam.gserviceaccount.com"
+}
