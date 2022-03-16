@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class UploadToDB {
     Connection conn;
     String user = "admin";
     String password = "admin";
-    String dbName = "steelcase";
+    String dbName = "steelcase_test";
     String cloudSqlInstance = "ambient-scope-342219:us-central1:steelcase-db";
     
     // jdbc:mysql:///<DATABASE_NAME>?cloudSqlInstance=<INSTANCE_CONNECTION_NAME>&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=<MYSQL_USER_NAME>&password=<MYSQL_USER_PASSWORD>
@@ -29,7 +28,7 @@ public class UploadToDB {
     try {
       conn = DriverManager.getConnection(url);
       System.out.println("Connection successful.");
-      PreparedStatement setdb = conn.prepareStatement("use steelcase_test");
+      PreparedStatement setdb = conn.prepareStatement(dbName);
       setdb.execute();
       setdb.close();
     } catch (SQLException e) {
@@ -38,29 +37,9 @@ public class UploadToDB {
       System.exit(1);
       return;
     }
-    String table = "Course";
-    String[] attributes = {
-      "code",
-      "department",
-      "short_title",
-      "long_title",
-      "begin_time",
-      "end_time",
-      "day",
-      "building",
-      "room",
-      "enrollment",
-      "capacity",
-      "section",
-      "prereqID",
-      "description",
-      "professor"
-    };
     
-    // insert_initial_data(table, attributes, conn);
-
-    // File prereqs = new File("PrereqsDB.csv");
-    
+    // insert_initial_data(conn);
+    // insert_prereq_data(conn);
     
     // Insert some test accounts
     
@@ -226,12 +205,29 @@ public class UploadToDB {
     }
   }
 
-  public static void insert_initial_data(String table, String[] attributes, Connection conn) throws SQLException, FileNotFoundException, IOException {
+  public static void insert_initial_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
+    String table = "Course";
+    String[] attributes = {
+      "code",
+      "department",
+      "short_title",
+      "long_title",
+      "begin_time",
+      "end_time",
+      "day",
+      "building",
+      "room",
+      "enrollment",
+      "capacity",
+      "section",
+      "prereqID",
+      "description",
+      "professor"
+    };
+    
     String sql = createInsert(table, attributes);
     // System.out.println(sql);
     PreparedStatement ps = conn.prepareStatement(sql);
-
-
 
     BufferedReader br = new BufferedReader(new FileReader("CourseDB_WithFictionalCapacities.csv"));
     br.readLine();
@@ -248,6 +244,39 @@ public class UploadToDB {
     }
     br.close();
     ps.executeBatch();
+    ps.close();
   }
 
+  public static void insert_prereq_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
+    System.out.println("UploadToDB.insert_prereq_data()");
+    String sql = String.format("UPDATE Course c1, (SELECT id, code, department FROM Course) AS c2 SET c1.prereqID = c2.id WHERE c1.code = ? AND c1.department = ? and c2.code = ? and c2.department = ?");
+    PreparedStatement ps = conn.prepareStatement(sql);
+
+    BufferedReader br = new BufferedReader(new FileReader("PrereqsDB.csv"));
+    br.readLine();
+    String line;
+    int counter = 0;
+    while((line = br.readLine()) != null) {
+      //line = "ACCT 200,ACCT 201"
+      //codes[0] = "ACCT 200"
+      //codes[1] = "ACCT 201"
+      // codes[0].split(" ")[0] = "ACCT"
+      // codes[0].split(" ")[1] = "200"
+      // codes[1].split(" ")[0] = "ACCT"
+      // codes[1].split(" ")[1] = "201"
+      String[] codes = line.split(",");
+      ps.setInt(1, Integer.valueOf(codes[0].split(" ")[1]));
+      ps.setString(2, codes[0].split(" ")[0]);
+      ps.setInt(3, Integer.valueOf(codes[1].split(" ")[1]));
+      ps.setString(4, codes[1].split(" ")[0]);
+      ps.addBatch();
+      counter++;
+      if(counter % 100 == 0) {
+        ps.executeBatch();
+      }
+    }
+    ps.executeBatch();
+    ps.close();
+    br.close();
+  }
 }
