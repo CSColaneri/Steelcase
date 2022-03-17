@@ -2,6 +2,12 @@
   "java.project.referencedLibraries": [
     "lib/**/*.jar",
     "Steelcase/lib/mysql-socket-factory-connector-j-8-1.4.4-SNAPSHOT-jar-with-dependencies.jar",
-    "Steelcase/lib/mysql-connector-java-8.0.18.jar"
+    "Steelcase/lib/mysql-connector-java-8.0.18.jar",
+    "Steelcase\\lib\\hamcrest-core-1.3.jar",
+    "Steelcase\\lib\\junit-4.13.2.jar"
+  ],
+  "java.project.sourcePaths": [
+    "Steelcase\\test",
+    "Steelcase\\src"
   ]
 }
