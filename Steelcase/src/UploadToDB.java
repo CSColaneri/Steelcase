@@ -28,7 +28,7 @@ public class UploadToDB {
     try {
       conn = DriverManager.getConnection(url);
       System.out.println("Connection successful.");
-      PreparedStatement setdb = conn.prepareStatement(dbName);
+      PreparedStatement setdb = conn.prepareStatement("use " + dbName);
       setdb.execute();
       setdb.close();
     } catch (SQLException e) {
@@ -38,7 +38,10 @@ public class UploadToDB {
       return;
     }
     
+    // initial data
     // insert_initial_data(conn);
+    
+    // initial prereq data
     // insert_prereq_data(conn);
     
     // Insert some test accounts
@@ -46,13 +49,27 @@ public class UploadToDB {
     // Insert some test Schedules
   }
 
-  public static String createInsert(String table, String[] attrs) {
+  /**
+   * Takes a table's name and a list of attributes and returns a simple
+   * MySQL insert statement.
+   * @param table The table to insert into
+   * @param attrs array of Strings denoting the attributes to insert.
+   * @return "INSERT INTO table_name(attr1, attr2, attr3, ...) VALUES(?, ?, ?, ... )"
+   * @throws IndexOutOfBoundsException 
+   */
+  public static String createInsert(String table, String[] attrs) throws IndexOutOfBoundsException {
+    System.out.println("UploadToDB.createInsert()");
     StringBuilder fields = new StringBuilder();
     for (String string : attrs) {
       fields.append(string + ", ");
     }
     fields.replace(fields.length()-2, fields.length(), "");
-    return String.format("INSERT INTO %s(%s) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", table, fields.toString());
+    StringBuilder sqlInsertsBuilder = new StringBuilder();
+    for(int i = 0; i < attrs.length; ++i) {
+      sqlInsertsBuilder.append("?,");
+    }
+    sqlInsertsBuilder.replace((attrs.length)*2-1, (attrs.length)*2, "");
+    return String.format("INSERT INTO %s(%s) VALUES (%s)", table, fields.toString(), sqlInsertsBuilder.toString());
   }
 
   /**
@@ -62,9 +79,9 @@ public class UploadToDB {
    * @param line
    * @throws SQLException
    */
-  public static void addToBatch(PreparedStatement ps, String csv_line) throws SQLException {
+  private static void addToInitialInsertBatch(PreparedStatement ps, String csv_line) throws SQLException {
+    System.out.println("UploadToDB.addToInitialInsertBatch()");
     // there are many double spaces, replace them with single spaces
-
     String line = csv_line.replace("  ", " ");
     String[] arrayLine = line.split(",");
     /*
@@ -139,11 +156,12 @@ public class UploadToDB {
     // description
     // professor
 
-    setSqlValues(values, ps);
+    setInitialSqlValues(values, ps);
     ps.addBatch();
   }
 
-  public static void setSqlValues(ArrayList<String> values, PreparedStatement ps) throws SQLException {
+  private static void setInitialSqlValues(ArrayList<String> values, PreparedStatement ps) throws SQLException {
+    System.out.println("UploadToDB.setInitialSqlValues()");
     int multiplier[] = {3600000, 60000, 100};
     String timeString;
     String splits[];
@@ -178,7 +196,7 @@ public class UploadToDB {
         splits = timeString.split(":");
         time = 0;
         for (int x = 0; x < splits.length; x++) {
-            time += (Integer.parseInt(splits[x]) * multiplier[x]);
+          time += (Integer.parseInt(splits[x]) * multiplier[x]);
         }
         ps.setTime(5, new Time(time));
       } else {
@@ -205,7 +223,8 @@ public class UploadToDB {
     }
   }
 
-  public static void insert_initial_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
+  private static void insert_initial_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
+    System.out.println("UploadToDB.insert_initial_data()");
     String table = "Course";
     String[] attributes = {
       "code",
@@ -236,7 +255,7 @@ public class UploadToDB {
     // 1 Add Courses.
     int counter = 0;
     while((line = br.readLine()) != null) {
-      addToBatch(ps, line);
+      addToInitialInsertBatch(ps, line);
       ++counter;
       if(counter % 100 == 0) {
         ps.executeBatch();
@@ -247,9 +266,10 @@ public class UploadToDB {
     ps.close();
   }
 
-  public static void insert_prereq_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
+  private static void insert_prereq_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
     System.out.println("UploadToDB.insert_prereq_data()");
-    String sql = String.format("UPDATE Course c1, (SELECT id, code, department FROM Course) AS c2 SET c1.prereqID = c2.id WHERE c1.code = ? AND c1.department = ? and c2.code = ? and c2.department = ?");
+    String[] attrs = {"courseCode", "courseDep", "prereqCode", "prereqDep"};
+    String sql = createInsert("Prereq", attrs);
     PreparedStatement ps = conn.prepareStatement(sql);
 
     BufferedReader br = new BufferedReader(new FileReader("PrereqsDB.csv"));
@@ -265,10 +285,10 @@ public class UploadToDB {
       // codes[1].split(" ")[0] = "ACCT"
       // codes[1].split(" ")[1] = "201"
       String[] codes = line.split(",");
-      ps.setInt(1, Integer.valueOf(codes[0].split(" ")[1]));
-      ps.setString(2, codes[0].split(" ")[0]);
-      ps.setInt(3, Integer.valueOf(codes[1].split(" ")[1]));
-      ps.setString(4, codes[1].split(" ")[0]);
+      ps.setInt(1, Integer.valueOf(codes[0].split(" ")[1]));//courseCode
+      ps.setString(2, codes[0].split(" ")[0]);              //courseDep
+      ps.setInt(3, Integer.valueOf(codes[1].split(" ")[1]));//pereqCode
+      ps.setString(4, codes[1].split(" ")[0]);              //prereqDep
       ps.addBatch();
       counter++;
       if(counter % 100 == 0) {
