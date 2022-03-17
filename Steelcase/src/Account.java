@@ -4,12 +4,15 @@ import java.security.spec.KeySpec;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import com.mysql.cj.xdevapi.Statement;
+
 	// much of the methods are grabbed from 
 	// https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
 	// The encryption is the main reason for using this
 public class Account {
 	private String email = null;
-	private String passEncyrpted = null;
+	private String passEncrypted = null;
+	private String salt = null;
 	
 	Boolean validUser(String email) {
 		return false;
@@ -24,13 +27,10 @@ public class Account {
 	}
 	
 	void signup(String email, String password) throws Exception{
-		String salt = getNewSalt();
-        String encryptedPassword = getEncryptedPassword(password, salt);
-        UserInfo user = new UserInfo();
-        user.userEncryptedPassword = encryptedPassword;
-        //user.userName = userName;
-        user.userSalt = salt;
-        //saveUser(user);
+		salt = getNewSalt();
+        passEncrypted = getEncryptedPassword(password, salt);
+        this.email = email;
+        saveUser();
 	}
 	
 	// Get a encrypted password using PBKDF2 hash algorithm
@@ -56,6 +56,10 @@ public class Account {
         random.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);
     }
+    
+    private void saveUser() {
+        Statement stmt;
+    }
 	
 	void logout() {
 		
@@ -64,12 +68,4 @@ public class Account {
 	void changeEmail() {
 		
 	}
-}
-
-//Each user has a unique salt
-//This salt must be recomputed during password change!
-class UserInfo {
- String userEncryptedPassword;
- String userSalt;
- String userName;
 }
