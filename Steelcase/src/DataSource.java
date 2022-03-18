@@ -16,12 +16,13 @@ public class DataSource {
   
   // private static Connection conn = null;
 
+  // static initializer block.
   static {
-    config.setJdbcUrl(String.format("jdbc:mysql:///%s?cloudSqlInstance=%s"
-    + "&socketFactory=com.google.cloud.sql.mysql.SocketFactory",
-    "steelcase_test", "ambient-scope-342219:us-central1:steelcase-db"));
+    config.setJdbcUrl(String.format("jdbc:mysql:///%s", "steelcase_test"));
     config.setUsername(System.getenv("DB_USERNAME"));
     config.setPassword(System.getenv("DB_PASSWORD"));
+    config.addDataSourceProperty("socketFactory", "com.google.cloud.sql.SocketFactory");
+    config.addDataSourceProperty("cloudSqlInstance", "ambient-scope-342219:us-central1:steelcase-db");
     ds = new HikariDataSource(config);
   }
 
