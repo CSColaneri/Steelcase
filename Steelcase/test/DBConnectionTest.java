@@ -11,7 +11,7 @@
  *              it out. 
  */
 import java.sql.Connection;
-import java.sql.DriverManager;
+// import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,38 +19,42 @@ import java.sql.SQLException;
 public class DBConnectionTest {
   public static Connection conn;
 
-  private final static String SA_ENV = "GOOGLE_APPLICATION_CREDENTIALS";
-  private final static String SA_KEY_ENV = System.getenv(SA_ENV);
+  // private final static String SA_ENV = "GOOGLE_APPLICATION_CREDENTIALS";
+  // private final static String SA_KEY_ENV = System.getenv(SA_ENV);
 
   public static void main(String[] args) throws Exception {
-    if (SA_KEY_ENV == null) {
-      System.err.printf("The environment variable \"%s\" must be set to the " 
-        + "location of the service account json key.\n", SA_ENV);
-      System.exit(1);
-    }
+    // if (SA_KEY_ENV == null) {
+    //   System.err.printf("The environment variable \"%s\" must be set to the " 
+    //     + "location of the service account json key.\n", SA_ENV);
+    //   System.exit(1);
+    // }
 
-    String user = "admin";
-    String password = "admin";
-    String dbName = "steelcase";
-    String cloudSqlInstance = "ambient-scope-342219:us-central1:steelcase-db";
+    // String user = "admin";
+    // String password = "admin";
+    // String dbName = "steelcase";
+    // String cloudSqlInstance = "ambient-scope-342219:us-central1:steelcase-db";
     
-    // jdbc:mysql:///<DATABASE_NAME>?cloudSqlInstance=<INSTANCE_CONNECTION_NAME>&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=<MYSQL_USER_NAME>&password=<MYSQL_USER_PASSWORD>
-    String url = String.format("jdbc:mysql:///%s?cloudSqlInstance=%s"
-        + "&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=%s&password=%s",
-        dbName, cloudSqlInstance, user, password);
+    // // jdbc:mysql:///<DATABASE_NAME>?cloudSqlInstance=<INSTANCE_CONNECTION_NAME>&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=<MYSQL_USER_NAME>&password=<MYSQL_USER_PASSWORD>
+    // String url = String.format("jdbc:mysql:///%s?cloudSqlInstance=%s"
+    //     + "&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=%s&password=%s",
+    //     dbName, cloudSqlInstance, user, password);
+    System.out.println("This test whether or not this machine can connect "
+      + "to a mysql database hosted on the cloud.");
     
-    System.out.println("This test whether or not this machine can connect " +
-        "to a mysql database hosted on the cloud.");
+    Connection conn;
+    
     try {
-      conn = DriverManager.getConnection(url);
+      conn = DataSource.getConnection();
       System.out.println("Connection successful.");
     } catch (SQLException e) {
       System.out.println("Failed to connect.");
       e.printStackTrace();
+      System.exit(1);
+      return;
     }
 
     try {
-      PreparedStatement setdb = conn.prepareStatement("use steelcase");
+      PreparedStatement setdb = conn.prepareStatement("use steelcase_test");
       setdb.execute();
       setdb.close();
       PreparedStatement showHostname = conn.prepareStatement("SELECT * FROM Course");

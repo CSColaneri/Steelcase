@@ -10,7 +10,9 @@
       "request": "launch",
       "mainClass": "${file}",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "DB_PASSWORD": "admin",
+        "DB_USERNAME": "admin"
       }
     },
     {
@@ -20,7 +22,9 @@
       "mainClass": "DBConnectionTest",
       "projectName": "steelcase_repo_504f08f5",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "DB_PASSWORD": "admin",
+        "DB_USERNAME": "admin"
       }
     },
     {
