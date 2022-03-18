@@ -56,7 +56,7 @@ public class Account {
 
   /**
    * Author: Ethan B.
-   * TODO: Use Account Object or make static.
+   * TODO: Move db logic to its own method. authenticateUser should assume params valid
    * maybe return Account or null.
    */
   public static Account authenticateUser(String email, String password) {
@@ -64,6 +64,7 @@ public class Account {
     String pHash;
     String salt;
     // automatically releases connection and closes ps at end or exception
+    // TODO: break into methods
     try(Connection conn = DataSource.getConnection();
       PreparedStatement ps = conn.prepareStatement(sql);) {
       ps.setString(1, email);
@@ -89,13 +90,14 @@ public class Account {
         // maybe something goes here?
         return new Account(email, userPassHash, salt);
       }
-      return null;
     } catch (Exception e) {
       // TODO: Make log function
       System.err.println("Failed to authenticate user.");
       e.printStackTrace();
       return null;
     }
+    
+    return null;
   }
 
   // TODO: Put requirements on password. Maybe new method for it.
