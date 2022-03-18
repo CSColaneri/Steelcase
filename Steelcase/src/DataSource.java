@@ -21,8 +21,9 @@ public class DataSource {
     config.setJdbcUrl(String.format("jdbc:mysql:///%s", "steelcase_test"));
     config.setUsername(System.getenv("DB_USERNAME"));
     config.setPassword(System.getenv("DB_PASSWORD"));
-    config.addDataSourceProperty("socketFactory", "com.google.cloud.sql.SocketFactory");
+    config.addDataSourceProperty("socketFactory", "com.google.cloud.sql.mysql.SocketFactory");
     config.addDataSourceProperty("cloudSqlInstance", "ambient-scope-342219:us-central1:steelcase-db");
+    config.addDataSourceProperty("ipTypes", "PUBLIC,PRIVATE");
     ds = new HikariDataSource(config);
   }
 
