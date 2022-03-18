@@ -15,16 +15,33 @@ import com.mysql.cj.xdevapi.Statement;
 // https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
 // The encryption is the main reason for using this
 public class Account {
-  private String email = null;
-  private String passEncrypted = null;
-  private String salt = null;
+  private String email;
+  private String passEncrypted;
+  private String salt;
 
   private Account(String email, String pword, String salt) {
-    this.email = email;
-    this.passEncrypted = pword;
+    this.setEmail(email);
+    this.setPassEncrypted(pword);
     this.salt = salt;
   }
 
+  public String getPassEncrypted() {
+    return passEncrypted;
+  }
+
+  private void setPassEncrypted(String passEncrypted) {
+    this.passEncrypted = passEncrypted;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  private void setEmail(String email) {
+    this.email = email;
+  }
+
+  //same as authenticateUser?
   public boolean validUser(String email) {
     return false;
   }
@@ -39,34 +56,32 @@ public class Account {
 
   /**
    * Author: Ethan B.
-   * TODO: Put requirements on password. Maybe new method for it.
    * TODO: Use Account Object or make static.
    * maybe return Account or null.
    */
-  public Account authenticateUser(String username, String password) {
-    Connection conn = DBConnection.getConnection();
-    PreparedStatement ps;
+  public static Account authenticateUser(String email, String password) {
+    String sql = String.format("SELECT * FROM Account where email like %s", email);
     String pHash;
     String salt;
-    // try getting user's details to auth
-    try {
-      ps = conn.prepareStatement("SELECT * FROM Account where email like ?");
-      ps.setString(1, username);
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {// account exists in db.
-        pHash = rs.getString("password_hash");
-        salt = rs.getString("salt");
-      } else {
-        // no account with that email.
-        return null;
-      }
+    try(Connection conn = DataSource.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();) {
+
+          if(rs.next()) {// account exists in db.
+            pHash = rs.getString("password_hash");
+            salt = rs.getString("salt");
+          } else {
+            // no account with that email.
+            return null;
+          }
+
+      
     } catch (SQLException e) {
       // TODO: Make log function.
       System.err.println("Failed to prepare a sql statement.");
       e.printStackTrace();
       return null;
     }
-
     try {
       String userPassHash = getEncryptedPassword(password, salt);
       if (pHash.equals(userPassHash)) {
@@ -82,15 +97,16 @@ public class Account {
     }
   }
 
+  // TODO: Put requirements on password. Maybe new method for it.
   public void signup(String email, String password) throws Exception {
     salt = getNewSalt();
-    passEncrypted = getEncryptedPassword(password, salt);
-    this.email = email;
+    setPassEncrypted(getEncryptedPassword(password, salt));
+    this.setEmail(email);
     saveUser();
   }
 
   // Get a encrypted password using PBKDF2 hash algorithm
-  public String getEncryptedPassword(String password, String salt) throws Exception {
+  public static String getEncryptedPassword(String password, String salt) throws Exception {
     String algorithm = "PBKDF2WithHmacSHA1";
     int derivedKeyLength = 160; // for SHA1
     int iterations = 20000; // NIST specifies 10000
@@ -104,7 +120,7 @@ public class Account {
   }
 
   // Returns base64 encoded salt
-  public String getNewSalt() throws Exception {
+  public static String getNewSalt() throws Exception {
     // Don't use Random!
     SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
     // NIST recommends minimum 4 bytes. We use 8.
