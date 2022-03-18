@@ -10,7 +10,6 @@ import java.sql.Time;
 import java.sql.Types;
 import java.util.ArrayList;
 
-
 public class UploadToDB {
   public static void main(String[] args) throws Exception {
     Connection conn;
@@ -223,6 +222,7 @@ public class UploadToDB {
     }
   }
 
+  @SuppressWarnings("unused")
   private static void insert_initial_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
     System.out.println("UploadToDB.insert_initial_data()");
     String table = "Course";
@@ -266,6 +266,7 @@ public class UploadToDB {
     ps.close();
   }
 
+  @SuppressWarnings("unused")
   private static void insert_prereq_data(Connection conn) throws SQLException, FileNotFoundException, IOException {
     System.out.println("UploadToDB.insert_prereq_data()");
     String[] attrs = {"courseCode", "courseDep", "prereqCode", "prereqDep"};
