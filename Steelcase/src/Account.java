@@ -60,22 +60,23 @@ public class Account {
    * maybe return Account or null.
    */
   public static Account authenticateUser(String email, String password) {
-    String sql = String.format("SELECT * FROM Account where email like %s", email);
+    String sql = "SELECT * FROM Account where email like ?";
     String pHash;
     String salt;
+    // automatically releases connection and closes ps at end or exception
     try(Connection conn = DataSource.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();) {
-
-          if(rs.next()) {// account exists in db.
-            pHash = rs.getString("password_hash");
-            salt = rs.getString("salt");
-          } else {
-            // no account with that email.
-            return null;
-          }
-
-      
+      PreparedStatement ps = conn.prepareStatement(sql);) {
+      ps.setString(1, email);
+      ResultSet rs = ps.executeQuery();
+      if(rs.next()) {// account exists in db.
+        pHash = rs.getString("password_hash");
+        salt = rs.getString("salt");
+        rs.close();
+      } else {
+        // no account with that email.
+        rs.close();
+        return null;
+      }
     } catch (SQLException e) {
       // TODO: Make log function.
       System.err.println("Failed to prepare a sql statement.");
