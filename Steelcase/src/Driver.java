@@ -1,8 +1,11 @@
+import java.io.Console;
 import java.util.*;
 
 public class Driver {
 	private boolean running = true;
-	private boolean loggedIn = false;
+	private boolean loggedIn = false;//maybe make this an Account object and test if null or not
+	private Account account;
+	private Schedule schedule;
 
 	public static void main(String argv[]) {
 		Driver driver = new Driver();
@@ -27,8 +30,8 @@ public class Driver {
 
 		System.out.println("Welcome, User!");
 		System.out.println(help);
-		if (loggedIn) {
-			while (running) {
+		while(running) {
+			if(loggedIn) {
 				in = input.next();
 				switch (in) {
 					case "create":
@@ -53,9 +56,7 @@ public class Driver {
 						System.out.println("No command found: " + in);
 						break;
 				}
-			}
-		} else {
-			while (running) {
+			} else {
 				in = input.next();
 				switch (in) {
 					case "create":
@@ -70,8 +71,8 @@ public class Driver {
 					case "help":
 						System.out.println(help);
 						break;
-					case "logout":
-						logoutPage();
+					case "login":
+						loginPage();
 						break;
 					case "exit":
 						running = false;
@@ -128,8 +129,29 @@ public class Driver {
 		System.out.println("Results should go here.");
 	}
 
+	// TODO: if succesful and:
+	// TODO		user has schedule, goto view schedule page.
+	// TODO		user has no schedule, goto create schedule page.
 	public void loginPage() {
-		System.out.println("Results should go here.");
+		String email;
+		Console console = System.console();
+
+		email = console.readLine("Username: ");
+		// Avoids storing plaintext password by directly passing it to the login 
+		// function.
+		account = Account.login(email, console.readPassword("Password: ").toString());
+
+		if(account == null) {
+			System.out.println("Invalid username/password.");
+		} else {
+			System.out.printf("Welcome back %s\n",email);
+			schedule = Schedule.retrieveSchedule(account);
+			if(schedule.hasSchedule()) {
+				viewSchedulePage();
+			} else {
+				createSchedulePage();
+			}
+		}
 	}
 
 	public void logoutPage() {
