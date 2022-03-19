@@ -50,21 +50,33 @@ public class Account {
     return false;
   }
 
+  //not vital, save for last
   public void resetPass(String email) {
 
   }
 
+  public static Account login(String email, String password) {
+    Account acc;
+    if((acc = getAccountDetails(email)) != null) {
+      //if credentials are invalid, acc becomes null 
+      if((acc = authenticateUser(acc, password)) != null){
+        return acc;
+      }
+    }
+    return null;
+  }
+
   /**
-   * Author: Ethan B.
-   * TODO: Move db logic to its own method. authenticateUser should assume params valid
-   * maybe return Account or null.
+   * Retrieve account info that matches the given email.
+   * @param email the email the user is attempting to log in as.
+   * @return null if there's no account matching the email, or 
+   * An Account object containing the email, password hash, and 
+   * salt from the database.
    */
-  public static Account authenticateUser(String email, String password) {
+  private static Account getAccountDetails(String email) {
     String sql = "SELECT * FROM Account where email like ?";
     String pHash;
     String salt;
-    // automatically releases connection and closes ps at end or exception
-    // TODO: break into methods
     try(Connection conn = DataSource.getConnection();
       PreparedStatement ps = conn.prepareStatement(sql);) {
       ps.setString(1, email);
@@ -72,23 +84,33 @@ public class Account {
       if(rs.next()) {// account exists in db.
         pHash = rs.getString("password_hash");
         salt = rs.getString("salt");
-        rs.close();
-      } else {
-        // no account with that email.
-        rs.close();
-        return null;
+        return new Account(email, pHash, salt);
       }
+      rs.close();
     } catch (SQLException e) {
       // TODO: Make log function.
-      System.err.println("Failed to prepare a sql statement.");
+      System.err.println("Failed to get Account Details.");
       e.printStackTrace();
       return null;
     }
+    // no account with that email.
+    return null;
+  }
+
+  /**
+   * Checks given password against stored Account's password and returns
+   * true or false
+   * @param account An account from the db whose email matches what the user gave.
+   * @param password The password given by the user logging in.
+   * @return True if password matches, false if not.
+   */
+  public static Account authenticateUser(Account account, String password) {
+    // automatically releases connection and closes ps at end or exception
     try {
-      String userPassHash = getEncryptedPassword(password, salt);
-      if (pHash.equals(userPassHash)) {
-        // maybe something goes here?
-        return new Account(email, userPassHash, salt);
+      String userPassHash = getEncryptedPassword(password, account.salt);
+      if (account.getPassEncrypted().equals(userPassHash)) {
+        // credentials are valid
+        return account;
       }
     } catch (Exception e) {
       // TODO: Make log function
@@ -96,7 +118,7 @@ public class Account {
       e.printStackTrace();
       return null;
     }
-    
+    //credentials are not valid
     return null;
   }
 
@@ -143,4 +165,12 @@ public class Account {
   public void changeEmail() {
 
   }
+
+  // public static void main(String[] args) throws Exception {
+  //   String salt = getNewSalt();
+  //   String password = "123456";
+  //   String email = "testEmail@gmail.com";
+  //   System.out.println(salt);
+  //   System.out.println(getEncryptedPassword(password, salt));
+  // }
 }
