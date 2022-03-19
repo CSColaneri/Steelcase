@@ -79,4 +79,63 @@ public class Search {
         return c;
     }
 
-}
+    //input: date/time selection
+    //output: list of course names from the database
+    public static void searchByTime(String date, String start, String end) {
+      
+      
+
+      int multiplier[] = {3600000, 60000};
+      String startString = start; //read in string from user
+      String endString = end;
+      String splits[]; //array of strings split by colons
+
+      long startTime = 0;
+      long endTime = 0;
+      
+      splits = startString.split(":");
+      for (int x = 0; x < splits.length; x++) {
+              startTime += (Integer.parseInt(splits[x]) * multiplier[x]); 
+              //converts to milliseconds
+      }
+      
+
+      splits = endString.split(":");
+      for (int x = 0; x < splits.length; x++) {
+              endTime += (Integer.parseInt(splits[x]) * multiplier[x]);
+      }
+
+      try {
+        Connection conn = DataSource.getConnection();
+        ArrayList<String> courseList = new ArrayList<>();
+
+        PreparedStatement stmt = conn.prepareStatement(
+          "SELECT long_title FROM Course WHERE day = ? AND begin_time = ? AND end_time = ?");
+          stmt.setString(1, date);
+          stmt.setTime(2, new Time(startTime));
+          stmt.setTime(3, new Time(endTime));
+          ResultSet getCourses = stmt.executeQuery();
+          while (getCourses.next()) {
+            int row = 1;
+            courseList.add(getCourses.getString(row));
+            row++;
+          }
+          System.out.print(courseList);
+          getCourses.close();
+          stmt.close();
+        } catch (SQLException e) {
+          System.out.println("Failed to connect.");
+          e.printStackTrace();
+        }
+      }
+
+      public static void main(String[] args) {
+        //Sample input to test
+        //I will be changing this to user input once my DB is fixed and I have tested
+        searchByTime("MWF", "14:00", "15:00");
+      }
+
+
+    }
+
+
