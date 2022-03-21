@@ -123,17 +123,17 @@ public class Account {
   }
 
   // TODO: Put requirements on password. Maybe new method for it.
-  public void signup(String email, String password) throws Exception {
+  public void signup(String email, String password, Schedule sched) throws Exception {
     salt = getNewSalt();
     setPassEncrypted(getEncryptedPassword(password, salt));
     this.setEmail(email);
-    saveUser();
+    saveUser(sched);
   }
 
   // Get a encrypted password using PBKDF2 hash algorithm
   public static String getEncryptedPassword(String password, String salt) throws Exception {
     String algorithm = "PBKDF2WithHmacSHA1";
-    int derivedKeyLength = 60; // for SHA1
+    int derivedKeyLength = 160; // for SHA1
     int iterations = 20000; // NIST specifies 10000
 
     byte[] saltBytes = Base64.getDecoder().decode(salt);

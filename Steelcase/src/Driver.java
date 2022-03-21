@@ -158,8 +158,22 @@ public class Driver {
 		System.out.println("Results should go here.");
 	}
 
-	public void signupPage() {
-		System.out.println("Results should go here.");
+	public void signupPage() throws Exception {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter a new email.");
+		String email = input.next();
+		String pass = null;
+		Boolean match = false;
+		while(!match) {
+			System.out.println("Enter a password");
+			pass = input.next();
+			System.out.println("Confirm your password");
+			String confirm = input.next();
+			if(pass.equals(confirm)) {
+				match = true;
+			}
+		}
+		account.signup(email, pass, schedule);
 	}
 
 	public void accoutnDetailsPage(){
