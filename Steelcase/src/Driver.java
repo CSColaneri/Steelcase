@@ -205,6 +205,7 @@ public class Driver {
 	// TODO		user has no schedule, goto create schedule page.
 	public void loginPage() {
 		String email;
+		Scanner scan = new Scanner(System.in);
 		Console console = System.console();
 		if(console == null) {
 			//TODO: make log function
@@ -212,10 +213,14 @@ public class Driver {
 			return;
 		}
 
-		email = console.readLine("Username: ");
+		// email = console.readLine("Username: ");
+		System.out.printf("Username: ");
+		email = scan.nextLine();
 		// Avoids storing plaintext password by directly passing it to the login 
 		// function.
-		account = Account.login(email, console.readPassword("Password: ").toString());
+		// console.readPassword("Password: ").toString()
+		System.out.printf("Password: ");
+		account = Account.login(email, scan.nextLine());
 
 		if(account == null) {
 			System.out.println("Invalid username/password.");
