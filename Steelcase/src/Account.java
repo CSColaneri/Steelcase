@@ -57,12 +57,15 @@ public class Account {
 
   public static Account login(String email, String password) {
     Account acc;
+    //get account info with that email
     if((acc = getAccountDetails(email)) != null) {
-      //if credentials are invalid, acc becomes null 
-      if((acc = authenticateUser(acc, password)) != null){
+      //compare retrieved account password to the given one
+      if((acc = authenticateUser(acc, password)) != null) {
+        // passwords and email match, return the account
         return acc;
       }
     }
+    //either no email or the passwords don't match
     return null;
   }
 
