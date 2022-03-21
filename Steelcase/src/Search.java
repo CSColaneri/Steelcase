@@ -134,7 +134,7 @@ public class Search {
 
     //input: date/time selection
     //output: list of course names from the database
-    public static void searchByTime(String date, String start, String end) {
+    public static String searchByTime(String date, String start, String end) {
       int multiplier[] = {3600000, 60000};
       String startString = start; //read in string from user
       String endString = end;
@@ -170,19 +170,24 @@ public class Search {
             courseList.add(getCourses.getString(row));
             row++;
           }
-          System.out.print(courseList);
+          StringBuilder courseString = new StringBuilder();
+          for (String s : courseList) {
+            courseString.append(s);
+            courseString.append("\n");
+          }
           getCourses.close();
           stmt.close();
+          return courseString.toString();
         } catch (SQLException e) {
           System.out.println("Failed to connect.");
           e.printStackTrace();
+          return(e.getMessage());
         }
       }
 
       public static void main(String[] args) {
         //Sample input to test
-        //I will be changing this to user input once my DB is fixed and I have tested
-        searchByTime("MWF", "13:00", "13:50");
+        //System.out.println(searchByTime("M", "18:30", "21:00"));
 
       }
 }
