@@ -13,6 +13,7 @@ public class Filter {
         {
             if(s.equals(acceptedParams[i]))
             {
+                
                 return true;
             }
         }

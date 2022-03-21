@@ -47,8 +47,8 @@ public class Search {
                 } 
                 else 
                 {
-                    statement = statement + "" + filters.get(i).getParam() + " LIKE %" + filters.get(i).getValue()
-                    + "% AND ";
+                    statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue()
+                    + "%' AND ";
                 }
             }
         }
@@ -101,6 +101,7 @@ public class Search {
                     }
                     s = s + rsmd.getColumnName(i);
                 }
+                System.out.println("");
                 while (courses.next()) 
                 {
                     for (int i = 1; i <= columnsNumber; i++) 
@@ -181,7 +182,7 @@ public class Search {
       public static void main(String[] args) {
         //Sample input to test
         //I will be changing this to user input once my DB is fixed and I have tested
-        //  searchByTime("MWF", "14:00", "15:00");
+        searchByTime("MWF", "13:00", "13:50");
 
       }
 }

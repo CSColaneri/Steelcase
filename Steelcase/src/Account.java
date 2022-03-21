@@ -127,7 +127,7 @@ public class Account {
     salt = getNewSalt();
     setPassEncrypted(getEncryptedPassword(password, salt));
     this.setEmail(email);
-    saveUser();
+    //saveUser();
   }
 
   // Get a encrypted password using PBKDF2 hash algorithm
