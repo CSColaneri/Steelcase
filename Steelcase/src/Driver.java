@@ -225,6 +225,7 @@ public class Driver {
 		if(account == null) {
 			System.out.println("Invalid username/password.");
 		} else {
+			loggedIn = true;
 			System.out.printf("Welcome back %s\n",account.getEmail());
 			schedule = Schedule.retrieveSchedule(account);
 			if(schedule.hasSchedule()) {
