@@ -93,6 +93,13 @@ public class Driver {
 
 	public void createSchedulePage() {
 		System.out.println("Results should go here.");
+		String help = "~~~~~Course Search Page~~~~~\n\n"
+			+ "Options:\n"
+			+	"add: add a class by its department, code, and section (i.e. COMP 300 A)\n"
+			+ "search: Begin searching for courses\n";
+		System.out.println(help);
+
+		// 
 		
 
 	}
@@ -198,6 +205,11 @@ public class Driver {
 	public void loginPage() {
 		String email;
 		Console console = System.console();
+		if(console == null) {
+			//TODO: make log function
+			System.err.println("Sorry, logins are disabled at this time.");
+			return;
+		}
 
 		email = console.readLine("Username: ");
 		// Avoids storing plaintext password by directly passing it to the login 
@@ -267,12 +279,12 @@ public class Driver {
 
 	protected void addCourse(int courseCode, Connection conn)
 	{
-		String s = "INSERT INTO Schedule VALUES (?, ?)";
+		String s = "INSERT INTO Schedule(email, courseID) VALUES (?, ?)";
 		try
 		{
 			PreparedStatement p = conn.prepareStatement(s);
-			p.setInt(1, courseCode);
-			p.setString(2, account.getEmail());
+			p.setString(1, account.getEmail());
+			p.setInt(2, courseCode);
 			p.executeQuery();
 			p.close();
 			System.out.println("Course added.");
