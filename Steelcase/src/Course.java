@@ -1,6 +1,5 @@
 
 public class Course {
-  // TODO: This can't be right...
   private int id;
   private int code;
   private String department;
@@ -16,10 +15,13 @@ public class Course {
   private int capacity;
   private int enrollment;
   private String room;
-
-  public Course(int id, int code, String department, char section, String building, String long_title,
-      String short_title, String description, String professor, String day, String begin_time, String end_time,
-      int capacity, int enrollment, String room) {
+  
+  // TODO: This can't be right...
+  public Course(int id, int code, String department, char section, 
+      String building, String long_title, String short_title, 
+      String description, String professor, String day, 
+      String begin_time, String end_time, int capacity, 
+      int enrollment, String room) {
     this.id = id;
     this.code = code;
     this.department = department;
