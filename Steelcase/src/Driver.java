@@ -225,7 +225,7 @@ public class Driver {
 		System.out.println("Results should go here.");
 	}
 
-	public void accoutnDetailsPage(){
+	public void accountDetailsPage(){
 		System.out.println("Results should go here.");
 	}
 
@@ -250,7 +250,7 @@ public class Driver {
 					{
 						filter.setParam(in);
 						System.out.print("Parameter:  ");
-						in = input.next();
+						in = input.next();//should be nextLine if by description
 						filter.setValue(in);
 						System.out.println();
 						filters.add(filter);
