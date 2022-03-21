@@ -136,7 +136,7 @@ public class Account {
   // Get a encrypted password using PBKDF2 hash algorithm
   public static String getEncryptedPassword(String password, String salt) throws Exception {
     String algorithm = "PBKDF2WithHmacSHA1";
-    int derivedKeyLength = 60; // for SHA1
+    int derivedKeyLength = 160; // for SHA1
     int iterations = 20000; // NIST specifies 10000
 
     byte[] saltBytes = Base64.getDecoder().decode(salt);
@@ -197,7 +197,7 @@ public class Account {
   }
 
   // public static void main(String[] args) throws Exception {
-  //   String salt = getNewSalt();
+  //   String salt = "cuPMHgO5LJg=";
   //   String password = "123456";
   //   String email = "testEmail@gmail.com";
   //   System.out.println(salt);
