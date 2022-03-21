@@ -1,5 +1,8 @@
 import java.io.Console;
 import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 
 public class Driver {
 	private boolean running = true;
@@ -22,15 +25,15 @@ public class Driver {
 				+ "help:  brings up help dialog.\n"
 				+ "create: brings up the create schedule dialog.\n"
 				+ "view: brings up dialog to view any schedules you have made.\n"
-				+ "login: brings up the login dialog"
-				+ "search: search for courses using the course search dialog"
-				+ "courses: a list of courses "
-				+ "\n";
+				+ "login: brings up the login dialog.\n"
+				+ "search: search for courses using the course search dialog.\n"
+				+ "courses: a list of courses.\n";
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Welcome, User!");
 		System.out.println(help);
 		while(running) {
+			System.out.println("~~~~~Home Page~~~~~\n\n");
 			if(loggedIn) {
 				in = input.next();
 				switch (in) {
@@ -83,7 +86,6 @@ public class Driver {
 				}
 			}
 		}
-		input.close();
 	}
 
 	public void createSchedulePage() {
@@ -98,16 +100,36 @@ public class Driver {
 		boolean inSearch = true;
 		Scanner input = new Scanner(System.in);
 		String in = "";
+		Connection conn = null;
+		try
+		{
+			conn = DataSource.getConnection();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Connection failed.");
+			System.out.println(e);
+		}
+
+		String help = "~~~~~Course Search Page~~~~~\n\n"
+		+ "Options: \n"
+		+ "filter:  add filters to your search.\n"
+		+ "back: return to main console dialog.\n"
+		+ "add: add a course from the course list to your schedule\n";
+
+		System.out.println(help);
+
 		while(inSearch)
 		{
+			System.out.println(help);
 			Search search = new Search();
 			in = input.next();
 			switch (in) {
 				case "filter":
-					search.changeFilters(takeFilters());
 					try
 					{
-						search.buildStatement();
+						search.changeFilters(takeFilters());
+						System.out.println(search.searchCourses(conn));
 					}
 					catch (Exception e)
 					{
@@ -117,12 +139,27 @@ public class Driver {
 				case "back":
 					inSearch = false;
 					break;
+				case "add":
+					System.out.println("Input the ID of the course you'd like to add.");
+					int add = input.nextInt();
+					addCourse(add, conn);
+					break;
 				default:
 					System.out.println("No command found: " + in);
 					break;
 			}
 		}
-		input.close();
+		
+		try
+		{
+			conn.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Close failed somehow.");
+			System.out.println(e);
+		}
+
 	}
 
 	public void courseCatalogPage() {
@@ -175,7 +212,7 @@ public class Driver {
 		while(inSearch)
 		{
 			System.out.println("Provide filter type, or type exit to exit\n" + 
-			"Sort types: Professor, Name, Description, Code, Department");
+			"Sort types: professor, name, description, code, department");
 			in = input.next();
 			switch (in) {
 				case "exit":
@@ -199,8 +236,25 @@ public class Driver {
 					break;
 			}
 		}
-		input.close();
 		return filters;
+	}
+
+	protected void addCourse(int courseCode, Connection conn)
+	{
+		String s = "INSERT INTO Schedule VALUES (?, ?)";
+		try
+		{
+			PreparedStatement p = conn.prepareStatement(s);
+			p.setInt(1, courseCode);
+			p.setString(2, account.getEmail());
+			p.executeQuery();
+			p.close();
+			System.out.println("Course added.");
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
 	}
 
 }
