@@ -237,7 +237,10 @@ public class Driver {
 	}
 
 	public void logoutPage() {
-		System.out.println("Results should go here.");
+		account = null; //logs out
+		schedule = null;
+		loggedIn = false;
+		System.out.println("Logged out successfully: " + account);
 	}
 
 	public void signupPage() {
