@@ -154,11 +154,12 @@ public class Account {
     return Base64.getEncoder().encodeToString(salt);
   }
 
-  private void saveUser() {
-	  String sql = "insert into Account(email, password_hash, salt) values(?, ?, ?)";
-	  
+  private void saveUser(Schedule classes) {
+	  String acc = "insert into Account(email, password_hash, salt) values(?, ?, ?)";
+	  String sch = "insert into Schedule(email, courseID) values(?, ?)";
 	  try(Connection conn = DataSource.getConnection();
-		PreparedStatement ps = conn.prepareStatement(sql);) {
+		PreparedStatement ps1 = conn.prepareStatement(acc);
+		PreparedStatement ps2 = conn.prepareStatement(sch);) {
 		  PreparedStatement error = conn.prepareStatement("select email from Account"
                   + "where email = ?");
           error.setString(1, email);
@@ -167,10 +168,15 @@ public class Account {
               System.out.println("email already exists");
           }
           else {
-        	  ps.setString(1, email);
-              ps.setString(2, passEncrypted);
-              ps.setString(3, salt);
-              ps.execute();
+        	  ps1.setString(1, email);
+              ps1.setString(2, passEncrypted);
+              ps1.setString(3, salt);
+              ps1.execute();
+              ps2.setString(1, email);
+              for(int i = 0; i < classes.getSchedule().size(); i++) {
+            	  ps2.setInt(2, classes.getSchedule().get(i).getID());
+            	  ps2.execute();
+              }
           }
 	  }
 	  catch (SQLException s){

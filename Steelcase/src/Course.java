@@ -37,5 +37,8 @@ public class Course {
     this.room = room;
   }
   
+  public int getID() {
+	  return id;
+  }
 
 }
