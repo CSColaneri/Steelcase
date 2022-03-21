@@ -2,6 +2,7 @@ import java.io.Console;
 import java.util.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 public class Driver {
@@ -287,6 +288,43 @@ public class Driver {
 			p.setInt(2, courseCode);
 			p.executeQuery();
 			p.close();
+
+			s = "SELECT * FROM Schedule";
+
+			p = conn.prepareStatement(s);
+			ResultSet g = p.executeQuery();
+
+			System.out.println(g.toString());
+
+			p.close();
+
+			System.out.println("Course added.");
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+	}
+
+	protected void removeCourse(int courseCode, Connection conn)
+	{
+		String s = "DELETE FROM Schedule VALUES WHERE courseID = ?";
+		try
+		{
+			PreparedStatement p = conn.prepareStatement(s);
+			p.setInt(1, courseCode);
+			p.executeQuery();
+			p.close();
+
+			s = "SELECT * FROM Schedule";
+
+			p = conn.prepareStatement(s);
+			ResultSet g = p.executeQuery();
+
+			System.out.println(g.toString());
+
+			p.close();
+
 			System.out.println("Course added.");
 		}
 		catch(Exception e)
