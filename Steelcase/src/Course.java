@@ -41,4 +41,59 @@ public class Course {
 	  return id;
   }
 
+  public int getCode() {
+    return code;
+  }
+
+  public String getDepartment() {
+    return department;
+  }
+
+  public char getSection() {
+    return section;
+  }
+
+  public String getBuilding() {
+    return building;
+  }
+
+  public String getLong_title() {
+    return long_title;
+  }
+
+  public String getShort_title() {
+    return short_title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public String getProfessor() {
+    return professor;
+  }
+
+  public String getDay() {
+    return day;
+  }
+
+  public String getBegin_time() {
+    return begin_time;
+  }
+
+  public String getEnd_time() {
+    return end_time;
+  }
+
+  public int getCapacity() {
+    return capacity;
+  }
+
+  public int getEnrollment() {
+    return enrollment;
+  }
+
+  public String getRoom() {
+    return room;
+  }
 }
