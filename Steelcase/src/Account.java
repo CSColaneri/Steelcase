@@ -57,12 +57,15 @@ public class Account {
 
   public static Account login(String email, String password) {
     Account acc;
+    //get account info with that email
     if((acc = getAccountDetails(email)) != null) {
-      //if credentials are invalid, acc becomes null 
-      if((acc = authenticateUser(acc, password)) != null){
+      //compare retrieved account password to the given one
+      if((acc = authenticateUser(acc, password)) != null) {
+        // passwords and email match, return the account
         return acc;
       }
     }
+    //either no email or the passwords don't match
     return null;
   }
 
@@ -127,7 +130,11 @@ public class Account {
     salt = getNewSalt();
     setPassEncrypted(getEncryptedPassword(password, salt));
     this.setEmail(email);
+<<<<<<< HEAD
     saveUser(sched);
+=======
+    //saveUser();
+>>>>>>> branch 'master' of https://github.com/CSColaneri/Steelcase
   }
 
   // Get a encrypted password using PBKDF2 hash algorithm
@@ -194,7 +201,7 @@ public class Account {
   }
 
   // public static void main(String[] args) throws Exception {
-  //   String salt = getNewSalt();
+  //   String salt = "cuPMHgO5LJg=";
   //   String password = "123456";
   //   String email = "testEmail@gmail.com";
   //   System.out.println(salt);

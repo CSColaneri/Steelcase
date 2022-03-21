@@ -3,7 +3,7 @@ public class Filter {
     private String value = "";
     private String param = "";
 
-    private String acceptedParams[] =  {"Professor", "Name", "Description", "Code", "Department"};
+    private String acceptedParams[] =  {"professor", "name", "description", "code", "department"};
 
     protected Filter() {}
 
@@ -13,6 +13,7 @@ public class Filter {
         {
             if(s.equals(acceptedParams[i]))
             {
+                
                 return true;
             }
         }

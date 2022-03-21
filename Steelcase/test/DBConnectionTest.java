@@ -53,11 +53,7 @@ public class DBConnectionTest {
       return;
     }
 
-    try {
-      PreparedStatement setdb = conn.prepareStatement("use steelcase_test");
-      setdb.execute();
-      setdb.close();
-      PreparedStatement showHostname = conn.prepareStatement("SELECT * FROM Course");
+    try(PreparedStatement showHostname = conn.prepareStatement("SELECT * FROM Course")) {
       ResultSet rs1 = showHostname.executeQuery();
       // Tables have no data atm
       // if(rs1.next()) {
@@ -68,7 +64,6 @@ public class DBConnectionTest {
       // throw new Exception("Something went wrong.");
       // }
       rs1.close();
-      showHostname.close();
     } catch (Exception e) {
       System.out.println("Something exploded");
       e.printStackTrace();

@@ -42,7 +42,9 @@ public class DataSource {
   }
 
   public static Connection getConnection() throws SQLException {
-    return ds.getConnection();
+    Connection conn = ds.getConnection();
+    conn.prepareStatement("use steelcase_test").execute();
+    return conn;
     // if(conn == null) {
     //   try {
     //     new DataSource();
