@@ -207,11 +207,11 @@ public class Driver {
 		String email;
 		Scanner scan = new Scanner(System.in);
 		Console console = System.console();
-		if(console == null) {
-			//TODO: make log function
-			System.err.println("Sorry, logins are disabled at this time.");
-			return;
-		}
+//		if(console == null) {
+//			//TODO: make log function
+//			System.err.println("Sorry, logins are disabled at this time.");
+//			return;
+//		}
 
 		// email = console.readLine("Username: ");
 		System.out.printf("Username: ");
