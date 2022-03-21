@@ -43,6 +43,9 @@ public class Driver {
 					case "view":
 						viewSchedulePage();
 						break;
+					case "save":
+						saveScheduleDialogue();
+						break;
 					case "search":
 						searchCoursesPage();
 						break;
@@ -90,10 +93,33 @@ public class Driver {
 
 	public void createSchedulePage() {
 		System.out.println("Results should go here.");
+		
+
 	}
 
 	public void viewSchedulePage() {
-		System.out.println("Results should go here.");
+		// System.out.println("Results should go here.");
+		//if have no schedule, say so and return
+		if(schedule == null || !schedule.hasSchedule()) {
+			System.out.println("No schedule to show.");
+		} else {//has a schedule
+			System.out.println(schedule.toString());
+			//save command saves schedule
+		}
+	}
+
+	/**
+	 * allows a user to save an empty schedule, as a way to clear it.
+	 */
+	public void saveScheduleDialogue() {
+		System.out.println("Saving your schedule...");
+		if(schedule == null) {
+			System.out.println("No schedule to save, try creating one first!");
+		} else if(!schedule.saveSchedule(account)) {
+			System.out.println("Sorry, something went wrong! Please try again later.");
+		} else {
+			System.out.println("Schedule saved!");
+		}
 	}
 
 	public void searchCoursesPage() {
@@ -181,7 +207,7 @@ public class Driver {
 		if(account == null) {
 			System.out.println("Invalid username/password.");
 		} else {
-			System.out.printf("Welcome back %s\n",email);
+			System.out.printf("Welcome back %s\n",account.getEmail());
 			schedule = Schedule.retrieveSchedule(account);
 			if(schedule.hasSchedule()) {
 				viewSchedulePage();
