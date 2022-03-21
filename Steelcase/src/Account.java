@@ -133,7 +133,7 @@ public class Account {
   // Get a encrypted password using PBKDF2 hash algorithm
   public static String getEncryptedPassword(String password, String salt) throws Exception {
     String algorithm = "PBKDF2WithHmacSHA1";
-    int derivedKeyLength = 160; // for SHA1
+    int derivedKeyLength = 60; // for SHA1
     int iterations = 20000; // NIST specifies 10000
 
     byte[] saltBytes = Base64.getDecoder().decode(salt);
@@ -155,7 +155,28 @@ public class Account {
   }
 
   private void saveUser() {
-    Statement stmt;
+	  String sql = "insert into Account(email, password_hash, salt) values(?, ?, ?)";
+	  
+	  try(Connection conn = DataSource.getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);) {
+		  PreparedStatement error = conn.prepareStatement("select email from Account"
+                  + "where email = ?");
+          error.setString(1, email);
+          ResultSet err = error.executeQuery();
+          if (err.next()) {
+              System.out.println("email already exists");
+          }
+          else {
+        	  ps.setString(1, email);
+              ps.setString(2, passEncrypted);
+              ps.setString(3, salt);
+              ps.execute();
+          }
+	  }
+	  catch (SQLException s){
+		  System.err.println("Failed to add new account");
+	      s.printStackTrace();
+	  }
   }
 
   public void logout() {
