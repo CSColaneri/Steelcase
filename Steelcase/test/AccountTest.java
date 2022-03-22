@@ -18,7 +18,7 @@ public class AccountTest {
     String password = ";jajdjvoe";
     String salt = "aO+k5fGwCVo=";
     String expectedHash = "MadWSBwLgOKB2x2T7j6zYVyrN4Y=";
-    assertEquals(Account.getEncryptedPassword(password, salt), expectedHash);
+    assertEquals(expectedHash, Account.getEncryptedPassword(password, salt));
   }
   
   // not testable here without mocking out DB, which is too much rn.
