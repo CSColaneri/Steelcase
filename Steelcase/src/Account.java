@@ -198,8 +198,8 @@ public class Account {
 
   // public static void main(String[] args) throws Exception {
   //   String salt = "cuPMHgO5LJg=";
-  //   String password = "123456";
-  //   String email = "testEmail@gmail.com";
+  //   String password = "123456";   <---- password
+  //   String email = "testEmail@gmail.com";  <-----
   //   System.out.println(salt);
   //   System.out.println(getEncryptedPassword(password, salt));
   // }
