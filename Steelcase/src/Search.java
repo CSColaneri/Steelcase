@@ -29,6 +29,7 @@ public class Search {
         return s;
     }
 
+    //todo: please use String.format instead of string concatenation
     public PreparedStatement buildStatement(Connection conn) throws Exception {
         int i = 0;
         String statement = "SELECT * FROM Course WHERE ";
@@ -44,7 +45,10 @@ public class Search {
                     statement = statement + "" + filters.get(i).getParam() + " = ? AND";
                     codeSpot = i;
                     hasCode = true;
-                } 
+                } else if (filters.get(i).getParam().equals("begin_time") || filters.get(i).getParam().equals("end_time")) {
+                    statement = statement + "" + filters.get(i).getParam() + " = " + filters.get(i).getValue() + " ";
+
+                }
                 else 
                 {
                     statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue()

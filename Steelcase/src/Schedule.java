@@ -85,6 +85,7 @@ public class Schedule {
       return startTime;
   }
   
+  //TODO: please... add comments and use String.format instead of string concatenation
   public void printCalendar() {
 	  ArrayList<String> mon = new ArrayList<String>();
 	  ArrayList<String> tue = new ArrayList<String>();
@@ -232,5 +233,11 @@ public class Schedule {
         throw new SQLException("Failed to insert new schedule, rolling back transaction.");
       }
     }
+  }
+
+
+  @Override
+  public String toString() {
+    return "SCHEDULE toString: COMPLETE THIS";
   }
 }
