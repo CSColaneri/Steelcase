@@ -40,7 +40,7 @@ public class Search {
         {
             for (i = 0; i < filters.size() - 1; i++) 
             {
-                if (filters.get(i).getParam().equals("code")) 
+                if (filters.get(i).getParam().equals("code") || filters.get(i).getParam().equals("id")) 
                 {
                     statement = statement + "" + filters.get(i).getParam() + " = ? AND ";
                     codeSpot = i;

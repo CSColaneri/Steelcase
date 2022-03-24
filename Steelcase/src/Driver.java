@@ -1,8 +1,6 @@
-import java.io.Console;
+import java.io.*;
 import java.util.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 
 public class Driver {
@@ -377,30 +375,29 @@ public class Driver {
 	// it's easier if we use the schedule class we have.
 	protected void addCourse(int courseCode, Connection conn)
 	{
-		String s = "INSERT INTO Schedule(email, courseID) VALUES (?, ?)";
+		ArrayList<Filter> fList = new ArrayList<Filter>();
+		Filter fil = new Filter();
+		fil.setParam("id");
+		fil.setValue(Integer.toString(courseCode));
+
+		Search search = new Search();
+
+		search.changeFilters(fList);
 		try
 		{
-			PreparedStatement p = conn.prepareStatement(s);
-			p.setString(1, account.getEmail());
-			p.setInt(2, courseCode);
-			p.executeQuery();
-			p.close();
+			ResultSet rs = search.buildStatement(conn).executeQuery();
 
-			s = "SELECT * FROM Schedule";
+			Course course = new Course(rs);
 
-			p = conn.prepareStatement(s);
-			ResultSet g = p.executeQuery();
-
-			System.out.println(g.toString());
-
-			p.close();
-
-			System.out.println("Course added.");
+			schedule.add(course);
 		}
 		catch(Exception e)
 		{
 			System.out.println(e);
 		}
+
+
+
 	}
 
 	//TODO: Doesn't work unless the user is signed in.
