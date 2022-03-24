@@ -346,7 +346,7 @@ public class Driver {
 			PreparedStatement p = conn.prepareStatement(s);
 			p.setString(1, account.getEmail());
 			p.setInt(2, courseCode);
-			p.executeQuery();
+			p.execute();
 			p.close();
 
 			s = "SELECT * FROM Schedule";
