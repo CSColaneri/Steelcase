@@ -3,9 +3,14 @@ public class Filter {
     private String value = "";
     private String param = "";
 
-    private String acceptedParams[] =  {"professor", "name", "description", "code", "department"};
+    private String acceptedParams[] =  {"professor", "name", "description", "code", "department", "section"};
 
     protected Filter() {}
+
+    public Filter(String param, String value) {
+        this.param = param;
+        this.value = value;
+    }
 
     public boolean isValidParam(String s)
     {
@@ -43,5 +48,9 @@ public class Filter {
     public String toString()
     {
         return param;
+    }
+
+    public String[] getAcceptedParams() {
+        return this.acceptedParams;
     }
 }
