@@ -319,8 +319,7 @@ public class Driver {
 		System.out.println("Logged out successfully: " + account);
 	}
 
-	//TODO: Shouldn't throw exception
-	public void signupPage() throws Exception {
+	public void signupPage() {
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter a new email.");
 		String email = input.next();
@@ -335,7 +334,13 @@ public class Driver {
 				match = true;
 			}
 		}
-		account.signup(email, pass, schedule);
+		try {
+			account.signup(email, pass, schedule);
+		} catch(Exception e) {
+			//TODO: make log function
+			System.err.println("Something went wrong. Please try again later.");
+			e.printStackTrace();
+		}
 	}
 
 	public void accountDetailsPage(){
