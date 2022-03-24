@@ -28,7 +28,8 @@ public class Driver {
 				+ "view: brings up dialog to view any schedules you have made.\n"
 				+ "login: brings up the login dialog.\n"
 				+ "search: search for courses using the course search dialog.\n"
-				+ "courses: a list of courses.\n";
+				+ "courses: a list of courses.\n"
+				+ "exit:  exit the application.";
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Welcome, User!");
@@ -189,6 +190,9 @@ public class Driver {
 			Search search = new Search();
 			in = input.next();
 			switch (in) {
+				/*case "display":
+					System.out.println(search.searchCourses(conn));
+					break;*/
 				case "filter":
 					try
 					{
