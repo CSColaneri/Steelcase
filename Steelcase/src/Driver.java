@@ -172,7 +172,7 @@ public class Driver {
 						System.out.println("Please create an account if you want to upload your schedule!");
 						System.out.println("Would you like to create one now? Y/N");
 						if(scan.next().equalsIgnoreCase("y")) {
-							// signupPage();
+							signupPage();
 						}
 						break;
 					}
@@ -400,9 +400,14 @@ public class Driver {
 		{
 			ResultSet rs = search.buildStatement(conn).executeQuery();
 
-			Course course = new Course(rs);
-
-			schedule.add(course);
+			if (rs.next()) {
+				Course course = new Course(rs);
+				schedule.add(course);
+			}
+			else {
+				System.out.print("No course found.");
+			}
+			
 		}
 		catch(Exception e)
 		{
