@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import com.mysql.cj.xdevapi.Statement;
-
 // much of the methods are grabbed from 
 // https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
 // The encryption is the main reason for using this
