@@ -42,7 +42,7 @@ public class Search {
             {
                 if (filters.get(i).getParam().equals("code")) 
                 {
-                    statement = statement + "" + filters.get(i).getParam() + " = ? AND";
+                    statement = statement + "" + filters.get(i).getParam() + " = ? AND ";
                     codeSpot = i;
                     hasCode = true;
                 } else if (filters.get(i).getParam().equals("begin_time") || filters.get(i).getParam().equals("end_time")) {
@@ -70,18 +70,26 @@ public class Search {
 
         try 
         {
+            System.out.println("Statement: " + statement);
             PreparedStatement setdb = conn.prepareStatement(statement);
             if(hasCode)
             {
-                setdb.setInt(i, Integer.parseInt(filters.get(codeSpot).getValue()));
+                setdb.setInt(1, Integer.parseInt(filters.get(codeSpot).getValue()));
             }
             return setdb;
         }
         catch (SQLException e) 
         {
-            System.out.println("Error");
+            // TODO: Log function
+            System.err.println("Search Error");
             e.printStackTrace();
-            System.exit(1);
+            // System.exit(1);
+            return null;
+        }
+        catch(NumberFormatException e) {
+            // TODO: Log function
+            System.err.println("Code is not a number");
+            e.printStackTrace();
             return null;
         }
     }
@@ -131,9 +139,25 @@ public class Search {
         {
             System.out.println("Error groking courses.");
             e.printStackTrace();
-            System.exit(1);
+            // System.exit(1);//this quits the program
             return null;
         }
+    }
+
+    public ArrayList<Course> searchCoursesC(Connection conn) {
+        ArrayList<Course> alc = new ArrayList<Course>();
+        try(PreparedStatement stmt = buildStatement(conn);
+            ResultSet courses = stmt.executeQuery()) {
+            while(courses.next()) {
+                alc.add(new Course(courses));
+            }
+        } catch(Exception e) {
+            // TODO: Log function
+            System.err.println("Couldn't search for courses.");
+            e.printStackTrace();
+            return null;
+        }
+        return alc;
     }
 
     //input: date/time selection
