@@ -182,8 +182,6 @@ public class Driver {
 		+ "back: return to main console dialog.\n"
 		+ "add: add a course from the course list to your schedule\n";
 
-		System.out.println(help);
-
 		while(inSearch)
 		{
 			System.out.println(help);
