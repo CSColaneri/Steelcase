@@ -235,6 +235,23 @@ public class Schedule {
     }
   }
 
+  public void removeCourse(int id)
+  {
+    boolean removed = false;
+    for(int i = 0; i < schedule.size(); i++)
+    {
+      if(schedule.get(i).getID() == id)
+      {
+        schedule.remove(i);
+        removed = true;
+        break;
+      }
+    }
+    if(!removed)
+    {
+      System.out.println("Course not found in schedule.");
+    }
+  }
 
   @Override
   public String toString() {

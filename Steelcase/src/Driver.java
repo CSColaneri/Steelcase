@@ -179,6 +179,11 @@ public class Driver {
 				case "help":
 					System.out.println(help);
 					break;
+				case "remove":
+					System.out.println("Provide course code you'd like to remove.");
+					int courseCode = scan.nextInt();
+					removeCourse(courseCode);
+					break;
 				case "back":
 					viewing = false;
 					break;
@@ -249,8 +254,7 @@ public class Driver {
 					break;
 				case "add":
 					System.out.println("Input the ID of the course you'd like to add.");
-					int add = input.nextInt();
-					addCourse(add, conn);
+					
 					break;
 				default:
 					System.out.println("No command found: " + in);
@@ -383,11 +387,13 @@ public class Driver {
 	// it's easier if we use the schedule class we have.
 	protected void addCourse(int courseCode, Connection conn)
 	{
+
 		ArrayList<Filter> fList = new ArrayList<Filter>();
 		Filter fil = new Filter();
 		fil.setParam("id");
 		fil.setValue(Integer.toString(courseCode));
 
+		fList.add(fil);
 		Search search = new Search();
 
 		search.changeFilters(fList);
@@ -395,44 +401,42 @@ public class Driver {
 		{
 			ResultSet rs = search.buildStatement(conn).executeQuery();
 
-			Course course = new Course(rs);
+			if(rs.next())
+			{
+				Course course = new Course(rs);
+
+				for(int i = 0; i < schedule.getSchedule().size(); i++)
+				{
+					if(schedule.getSchedule().get(i).getBegin_time().equals(course.getBegin_time()))
+					{
+						System.out.println("There exists a course conflict within your schedule!");
+						System.out.println(schedule.getSchedule().get(i).getDepartment() + " " + schedule.getSchedule().get(i).getCode() + "\nhas a time conflict with\n"
+							+ course.getCode() + " " + course.getDepartment() + ".");
+						return;
+					}
+				}
 
 			schedule.add(course);
+
+			}
+			else
+			{
+				System.out.println("There is no course with that ID.");
+			}
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			e.printStackTrace();
+			System.out.println("AddCourse error.");
 		}
 	}
 
 	//TODO: Doesn't work unless the user is signed in.
 	// We shouldn't be modifying it directly like this,
 	// it's easier if we use the schedule class we have.
-	protected void removeCourse(int courseCode, Connection conn)
+	protected void removeCourse(int courseCode)
 	{
-		String s = "DELETE FROM Schedule VALUES WHERE courseID = ?";
-		try
-		{
-			PreparedStatement p = conn.prepareStatement(s);
-			p.setInt(1, courseCode);
-			p.executeQuery();
-			p.close();
-
-			s = "SELECT * FROM Schedule";
-
-			p = conn.prepareStatement(s);
-			ResultSet g = p.executeQuery();
-
-			System.out.println(g.toString());
-
-			p.close();
-
-			System.out.println("Course added.");
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
+		schedule.removeCourse(courseCode);
 	}
 
 	/**

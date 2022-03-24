@@ -57,7 +57,7 @@ public class Search {
             }
         }
 
-        if(filters.get(i).getParam().equals("code"))
+        if(filters.get(i).getParam().equals("code") || filters.get(i).getParam().equals("id"))
         {
             statement = statement + "" + filters.get(i).getParam() + " = ?";
             codeSpot = i;
@@ -113,7 +113,7 @@ public class Search {
                     }
                     s = s + rsmd.getColumnName(i);
                 }
-                System.out.println("");
+                s = s + "\n";
                 while (courses.next()) 
                 {
                     for (int i = 1; i <= columnsNumber; i++) 
