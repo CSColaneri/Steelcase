@@ -400,9 +400,14 @@ public class Driver {
 		{
 			ResultSet rs = search.buildStatement(conn).executeQuery();
 
-			Course course = new Course(rs);
-
-			schedule.add(course);
+			if (rs.next()) {
+				Course course = new Course(rs);
+				schedule.add(course);
+			}
+			else {
+				System.out.print("No course found.");
+			}
+			
 		}
 		catch(Exception e)
 		{
