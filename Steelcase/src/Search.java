@@ -57,7 +57,7 @@ public class Search {
             }
         }
 
-        if(filters.get(i).getParam().equals("code"))
+        if(filters.size() != 0 && filters.get(i).getParam().equals("code"))
         {
             statement = statement + "" + filters.get(i).getParam() + " = ?";
             codeSpot = i;
@@ -65,7 +65,9 @@ public class Search {
         }
         else
         {
-            statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue() + "%'";
+            if(!filters.isEmpty()) {
+                statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue() + "%'";
+            }
         }
 
         try 
@@ -94,54 +96,45 @@ public class Search {
         }
     }
 
-    public String searchCourses(Connection conn)
-    {
-        try
-        {
-            PreparedStatement stmt = buildStatement(conn);
-            ResultSet courses = stmt.executeQuery();
-            String s = "";
-            try
-            {
-                ResultSetMetaData rsmd = courses.getMetaData();
-                int columnsNumber = rsmd.getColumnCount();
-                for(int i = 1; i <= columnsNumber; i++)
-                {
-                    if (i > 1)
-                    {
-                        s = s + (",  ");
-                    }
-                    s = s + rsmd.getColumnName(i);
-                }
-                System.out.println("");
-                while (courses.next()) 
-                {
-                    for (int i = 1; i <= columnsNumber; i++) 
-                    {
-                        if (i > 1)
-                        {
+    public String searchCourses(Connection conn) {
+        if (!filters.isEmpty()) {
+            try {
+                PreparedStatement stmt = buildStatement(conn);
+                ResultSet courses = stmt.executeQuery();
+                String s = "";
+                try {
+                    ResultSetMetaData rsmd = courses.getMetaData();
+                    int columnsNumber = rsmd.getColumnCount();
+                    for (int i = 1; i <= columnsNumber; i++) {
+                        if (i > 1) {
                             s = s + (",  ");
                         }
-                        s = s + courses.getString(i);
+                        s = s + rsmd.getColumnName(i);
                     }
-                    s = s + "\n";
+                    System.out.println("");
+                    while (courses.next()) {
+                        for (int i = 1; i <= columnsNumber; i++) {
+                            if (i > 1) {
+                                s = s + (",  ");
+                            }
+                            s = s + courses.getString(i);
+                        }
+                        s = s + "\n";
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
                 }
+                courses.close();
+                stmt.close();
+                return s;
+            } catch (Exception e) {
+                System.out.println("Error groking courses.");
+                e.printStackTrace();
+                // System.exit(1);//this quits the program
+                return null;
             }
-            catch (Exception e)
-            {
-                System.out.println(e);
-            }
-            courses.close();
-            stmt.close();
-            return s;
         }
-        catch (Exception e)
-        {
-            System.out.println("Error groking courses.");
-            e.printStackTrace();
-            // System.exit(1);//this quits the program
-            return null;
-        }
+        return null;
     }
 
     public ArrayList<Course> searchCoursesC(Connection conn) {
