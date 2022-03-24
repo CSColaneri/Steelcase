@@ -255,6 +255,18 @@ public class Driver {
 				case "add":
 					System.out.println("Input the ID of the course you'd like to add.");
 					
+					String addString = input.next();
+
+					try 
+					{
+						int add = Integer.parseInt(addString);
+						addCourse(add, conn);
+					} 
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+						System.out.println("Please provide an Integer.");
+					}
 					break;
 				default:
 					System.out.println("No command found: " + in);
