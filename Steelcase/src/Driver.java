@@ -137,13 +137,15 @@ public class Driver {
 		//if have no schedule, say so and return
 		boolean viewing = true;
 		
-		System.out.println("~~~~~View Schedule~~~~~");
 		String help = "Options:\n"
 			+ "List: View the schedule as a list\n"
-			+ "Calendar: View the schedule as a calendar\n";
+			+ "Calendar: View the schedule as a calendar\n"
+			+ "Help: print this message again\n"
+			+ "Back: go back to the home view\n";
 		if(loggedIn) help += "Save: Upload and save your schedule\n";
 
 		while(viewing) {
+			System.out.println("~~~~~View Schedule~~~~~");
 			Scanner scan = new Scanner(System.in);
 			String in = scan.next().toLowerCase();
 			switch (in) {
@@ -170,10 +172,16 @@ public class Driver {
 						System.out.println("Please create an account if you want to upload your schedule!");
 						System.out.println("Would you like to create one now? Y/N");
 						if(scan.next().equalsIgnoreCase("y")) {
-							signupPage();
+							// signupPage();
 						}
 						break;
 					}
+				case "help":
+					System.out.println(help);
+					break;
+				case "back":
+					viewing = false;
+					break;
 				default:
 					System.out.println("no command matching: " + in);
 					break;
