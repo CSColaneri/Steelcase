@@ -43,9 +43,6 @@ public class Driver {
 					case "view":
 						viewSchedulePage();
 						break;
-					case "save":
-						saveScheduleDialogue();
-						break;
 					case "search":
 						searchCoursesPage();
 						break;
@@ -89,6 +86,7 @@ public class Driver {
 				}
 			}
 		}
+		input.close();
 	}
 
 	public void createSchedulePage() {
@@ -137,11 +135,57 @@ public class Driver {
 	public void viewSchedulePage() {
 		// System.out.println("Results should go here.");
 		//if have no schedule, say so and return
-		if(schedule == null || !schedule.hasSchedule()) {
-			System.out.println("No schedule to show.");
-		} else {//has a schedule
-			System.out.println(schedule.toString());
-			//save command saves schedule
+		boolean viewing = true;
+		
+		String help = "Options:\n"
+			+ "List: View the schedule as a list\n"
+			+ "Calendar: View the schedule as a calendar\n"
+			+ "Help: print this message again\n"
+			+ "Back: go back to the home view\n";
+		if(loggedIn) help += "Save: Upload and save your schedule\n";
+
+		while(viewing) {
+			System.out.println("~~~~~View Schedule~~~~~");
+			Scanner scan = new Scanner(System.in);
+			String in = scan.next().toLowerCase();
+			switch (in) {
+				case "list":
+					if(schedule == null || !schedule.hasSchedule()) {
+						System.out.println("No schedule to show.");
+					} else {//has a schedule
+						System.out.println(schedule.toString());
+						//save command saves schedule
+					}
+					break;
+				case "calendar":
+					if(schedule == null || !schedule.hasSchedule()) {
+						System.out.println("No schedule to show.");
+					} else {
+						schedule.printCalendar();
+					}
+					break;
+				case "save":
+					if(loggedIn) {
+						schedule.saveSchedule(account);
+						break;
+					} else {
+						System.out.println("Please create an account if you want to upload your schedule!");
+						System.out.println("Would you like to create one now? Y/N");
+						if(scan.next().equalsIgnoreCase("y")) {
+							// signupPage();
+						}
+						break;
+					}
+				case "help":
+					System.out.println(help);
+					break;
+				case "back":
+					viewing = false;
+					break;
+				default:
+					System.out.println("no command matching: " + in);
+					break;
+			}			
 		}
 	}
 
@@ -275,6 +319,7 @@ public class Driver {
 		System.out.println("Logged out successfully: " + account);
 	}
 
+	//TODO: Shouldn't throw exception
 	public void signupPage() throws Exception {
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter a new email.");

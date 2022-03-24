@@ -7,7 +7,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 
 /**
- * TODO: Test
  * Code dapated from: https://www.baeldung.com/hikaricp
  */
 public class DataSource {

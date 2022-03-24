@@ -238,6 +238,10 @@ public class Schedule {
 
   @Override
   public String toString() {
-    return "SCHEDULE toString: COMPLETE THIS";
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < schedule.size(); i++){
+        sb.append(schedule.get(i).toString());
+    }
+    return sb.toString();
   }
 }
