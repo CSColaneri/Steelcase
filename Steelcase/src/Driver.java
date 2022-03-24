@@ -358,9 +358,6 @@ public class Driver {
 		{
 			System.out.println(e);
 		}
-
-
-
 	}
 
 	//TODO: Doesn't work unless the user is signed in.
