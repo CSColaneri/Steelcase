@@ -141,8 +141,11 @@ public class Driver {
 			+ "List: View the schedule as a list\n"
 			+ "Calendar: View the schedule as a calendar\n"
 			+ "Help: print this message again\n"
-			+ "Back: go back to the home view\n";
+			+ "Back: go back to the home view\n"
+			+ "Remove: remove a course from your schedule\n";
 		if(loggedIn) help += "Save: Upload and save your schedule\n";
+
+		System.out.println(help);
 
 		while(viewing) {
 			System.out.println("~~~~~View Schedule~~~~~");
@@ -181,8 +184,19 @@ public class Driver {
 					break;
 				case "remove":
 					System.out.println("Provide course code you'd like to remove.");
-					int courseCode = scan.nextInt();
-					removeCourse(courseCode);
+					
+					String courseCode = scan.next();
+
+					try 
+					{
+						int code = Integer.parseInt(courseCode);
+						removeCourse(code);
+					} 
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+						System.out.println("Please provide an Integer.");
+					}
 					break;
 				case "back":
 					viewing = false;
