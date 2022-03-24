@@ -102,7 +102,8 @@ public class Search {
                 PreparedStatement stmt = buildStatement(conn);
                 ResultSet courses = stmt.executeQuery();
                 String s = "";
-                try {
+                System.out.println();
+            try {
                     ResultSetMetaData rsmd = courses.getMetaData();
                     int columnsNumber = rsmd.getColumnCount();
                     for (int i = 1; i <= columnsNumber; i++) {
