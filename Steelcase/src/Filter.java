@@ -3,7 +3,7 @@ public class Filter {
     private String value = "";
     private String param = "";
 
-    private String acceptedParams[] =  {"professor", "name", "description", "code", "department", "section"};
+    private String acceptedParams[] =  {"professor", "name", "description", "code", "department", "section", "id"};
 
     protected Filter() {}
 
@@ -18,7 +18,6 @@ public class Filter {
         {
             if(s.equals(acceptedParams[i]))
             {
-                
                 return true;
             }
         }
@@ -42,7 +41,14 @@ public class Filter {
 
     public void setParam(String p)
     {
-        param = p;
+        if(p.equals("name"))
+        {
+            param = "long_title";
+        }
+        else
+        {
+            param = p;
+        }
     }
 
     public String toString()
