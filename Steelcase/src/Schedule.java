@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Schedule {
   private ArrayList<Course> schedule = null;
@@ -67,6 +68,104 @@ public class Schedule {
       e.printStackTrace();
     }
     return schedule;//may return an empty Schedule
+  }
+  
+  public long strToTime (String start) {
+	  int multiplier[] = {3600000, 60000};
+      String startString = start; //read in string
+      String splits[]; //array of strings split by colons
+
+      long startTime = 0;
+      
+      splits = startString.split(":");
+      for (int x = 0; x < splits.length; x++) {
+              startTime += (Integer.parseInt(splits[x]) * multiplier[x]); 
+              //converts to milliseconds
+      }
+      return startTime;
+  }
+  
+  //TODO: please... add comments and use String.format instead of string concatenation
+  public void printCalendar() {
+	  ArrayList<String> mon = new ArrayList<String>();
+	  ArrayList<String> tue = new ArrayList<String>();
+	  ArrayList<String> wed = new ArrayList<String>();
+	  ArrayList<String> thu = new ArrayList<String>();
+	  ArrayList<String> fri = new ArrayList<String>();
+	  ArrayList<Course> copy = schedule;
+	  ArrayList<Course> ordered = new ArrayList<Course>();
+	  ArrayList<Long> times = new ArrayList<Long>();
+	  for(int i = 0; i < schedule.size(); i++) {
+		  times.add(strToTime(copy.get(i).getBegin_time()));
+	  }
+	  for(int i = 0; i < schedule.size(); i++) {
+		  Long earliest = times.get(0);
+		  int index = 0;
+		  for(int j = 0; j < copy.size(); i++) {
+			  if(times.get(j) < earliest) {
+				  index = j;
+			  }
+		  }
+		  ordered.add(copy.get(index));
+		  copy.remove(index);
+		  times.remove(index);
+	  }
+	  for(int i = 0; i < ordered.size(); i++) {
+		  Scanner days = new Scanner(ordered.get(i).getDay());
+		  days.useDelimiter("");
+		  while(days.hasNext()) {
+			  char day = days.next().charAt(0);
+			  switch (day) {
+			  case 'M' :
+				  mon.add("(" + ordered.get(i).getShort_title() + ", " +
+			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+			  case 'T' :
+				  tue.add("(" + ordered.get(i).getShort_title() + ", " +
+			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+			  case 'W' :
+				  wed.add("(" + ordered.get(i).getShort_title() + ", " +
+			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+			  case 'R' :
+				  thu.add("(" + ordered.get(i).getShort_title() + ", " +
+			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");  
+			  case 'F' :
+				  fri.add("(" + ordered.get(i).getShort_title() + ", " +
+			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+			  default :
+				  System.out.println("not a valid day");
+			  }
+		  }
+	  }
+	  System.out.print("Monday:");
+	  for(int i = 0; i < mon.size(); i++) {
+		  System.out.print(" " + mon.get(i));
+	  }
+	  System.out.println();
+	  System.out.print("Tuesday:");
+	  for(int i = 0; i < tue.size(); i++) {
+		  System.out.print(" " + tue.get(i));
+	  }
+	  System.out.println();
+	  System.out.print("Wednesday:");
+	  for(int i = 0; i < wed.size(); i++) {
+		  System.out.print(" " + wed.get(i));
+	  }
+	  System.out.println();
+	  System.out.print("Thursday:");
+	  for(int i = 0; i < thu.size(); i++) {
+		  System.out.print(" " + thu.get(i));
+	  }
+	  System.out.println();
+	  System.out.print("Friday:");
+	  for(int i = 0; i < fri.size(); i++) {
+		  System.out.print(" " + fri.get(i));
+	  }
+	  System.out.println();
   }
 
 
@@ -134,5 +233,11 @@ public class Schedule {
         throw new SQLException("Failed to insert new schedule, rolling back transaction.");
       }
     }
+  }
+
+
+  @Override
+  public String toString() {
+    return "SCHEDULE toString: COMPLETE THIS";
   }
 }

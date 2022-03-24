@@ -8,3 +8,4 @@ Steelcase/.project
 
 # This is what I'm using to upload data to db, don't run this.
 # Steelcase/src/UploadToDB.java
+/bin/

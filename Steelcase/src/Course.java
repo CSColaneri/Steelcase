@@ -1,3 +1,5 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Course {
   private int id;
@@ -15,6 +17,24 @@ public class Course {
   private int capacity;
   private int enrollment;
   private String room;
+
+  public Course() {
+    id = 0;
+    code = 0;
+    department = "";
+    section = '\0';
+    building = "";
+    long_title = "";
+    short_title = "";
+    description = "";
+    professor = "";
+    day = "";
+    begin_time = "";
+    end_time = "";
+    capacity = 0;
+    enrollment = 0;
+    room = "";
+  }
   
   // TODO: This can't be right...
   public Course(int id, int code, String department, char section, 
@@ -37,6 +57,34 @@ public class Course {
     this.capacity = capacity;
     this.enrollment = enrollment;
     this.room = room;
+  }
+  
+  /**
+   * Accepts a SQL ResultSet from a select query on the
+   * Course table. The ResultSet must include every field
+   * from the Course table or else it throws a SQLException
+   * @param course
+   * @throws SQLException
+   */
+  public Course (ResultSet course) throws SQLException {
+    this();
+    if(!course.isClosed() && !course.isAfterLast()) {
+      this.id           = course.getInt("id");
+      this.code         = course.getInt("code");
+      this.department   = course.getString("department");
+      this.section      = course.getString("section").charAt(0);
+      this.building     = course.getString("building");
+      this.long_title   = course.getString("long_title");
+      this.short_title  = course.getString("short_title");
+      this.description  = course.getString("description");
+      this.professor    = course.getString("professor");
+      this.day          = course.getString("day");
+      this.begin_time   = course.getString("begin_time");
+      this.end_time     = course.getString("end_time");
+      this.capacity     = course.getInt("capacity");
+      this.enrollment   = course.getInt("enrollment");
+      this.room         = course.getString("room");
+    }
   }
   
   public int getID() {

@@ -9,7 +9,7 @@ public class Driver {
 	private boolean running = true;
 	private boolean loggedIn = false;//maybe make this an Account object and test if null or not
 	private Account account;
-	private Schedule schedule;
+	private Schedule schedule = new Schedule();
 
 	public static void main(String argv[]) {
 		Driver driver = new Driver();
@@ -94,9 +94,46 @@ public class Driver {
 	}
 
 	public void createSchedulePage() {
-		System.out.println("Results should go here.");
-		
-
+		String help = "~~~~~Course Search Page~~~~~\n\n"
+			+ "Options:\n"
+			+ "help: Print this message again\n"
+			+	"add: add a class by its department, code, and section one at a time (i.e. add COMP300 A)\n"
+			+ "search: Begin searching for courses\n"
+			+ "back: return to the main console dialogue\n";
+		System.out.println(help);
+		Scanner scan = new Scanner(System.in);
+		boolean run = true;
+		Search s = new Search();
+		while(run) {
+			String in = scan.nextLine();
+			if(in.contains("add") && in.length() >= 13) {// handle adding by 'code'
+				in = in.substring(4);
+				// force lowercase for simpler equality checking.
+				// queries aren't messed up.
+				// string needs to have at least 13 chars; "add comp300 a"
+				if(addByDepCodeSec(in.toLowerCase(), s)) {
+					System.out.printf("Course %s added successfully\n", in);
+				} else {
+					System.out.printf("The course %s doesn't seem to exist. Check your spelling and try again.\n", in);
+				}
+			} else {
+				switch (in) {
+					case "search"://go to search
+						searchCoursesPage();
+						//fallthrough intentional
+					case "back":
+						run = false;
+						break;
+					case "help":
+						System.out.println(help);
+						break;
+					default:
+						System.out.println("Command not recognized: " + in);
+						break;
+				}					
+			}
+		}
+		// scan.close();
 	}
 
 	public void viewSchedulePage() {
@@ -190,7 +227,6 @@ public class Driver {
 			System.out.println("Close failed somehow.");
 			System.out.println(e);
 		}
-
 	}
 
 	public void courseCatalogPage() {
@@ -202,35 +238,66 @@ public class Driver {
 	// TODO		user has no schedule, goto create schedule page.
 	public void loginPage() {
 		String email;
-		Console console = System.console();
+		Scanner scan = new Scanner(System.in);
+		// Console console = System.console();
+		// if(console == null) {
+		// 	//TODO: make log function
+		// 	System.err.println("Sorry, logins are disabled at this time.");
+		// 	return;
+		// }
 
-		email = console.readLine("Username: ");
+		// email = console.readLine("Username: ");
+		System.out.printf("Username: ");
+		email = scan.nextLine();
 		// Avoids storing plaintext password by directly passing it to the login 
 		// function.
-		account = Account.login(email, console.readPassword("Password: ").toString());
+		// console.readPassword("Password: ").toString()
+		System.out.printf("Password: ");
+		account = Account.login(email, scan.nextLine());
 
 		if(account == null) {
 			System.out.println("Invalid username/password.");
 		} else {
+			loggedIn = true;
 			System.out.printf("Welcome back %s\n",account.getEmail());
 			schedule = Schedule.retrieveSchedule(account);
 			if(schedule.hasSchedule()) {
+				// scan.close();
 				viewSchedulePage();
 			} else {
+				// scan.close();
 				createSchedulePage();
 			}
 		}
+		// scan.close();
 	}
 
 	public void logoutPage() {
-		System.out.println("Results should go here.");
+		account = null; //logs out
+		schedule = null;
+		loggedIn = false;
+		System.out.println("Logged out successfully: " + account);
 	}
 
-	public void signupPage() {
-		System.out.println("Results should go here.");
+	public void signupPage() throws Exception {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter a new email.");
+		String email = input.next();
+		String pass = null;
+		Boolean match = false;
+		while(!match) {
+			System.out.println("Enter a password");
+			pass = input.next();
+			System.out.println("Confirm your password");
+			String confirm = input.next();
+			if(pass.equals(confirm)) {
+				match = true;
+			}
+		}
+		account.signup(email, pass, schedule);
 	}
 
-	public void accoutnDetailsPage(){
+	public void accountDetailsPage(){
 		System.out.println("Results should go here.");
 	}
 
@@ -255,7 +322,7 @@ public class Driver {
 					{
 						filter.setParam(in);
 						System.out.print("Parameter:  ");
-						in = input.next();
+						in = input.next();//should be nextLine if by description
 						filter.setValue(in);
 						System.out.println();
 						filters.add(filter);
@@ -270,14 +337,17 @@ public class Driver {
 		return filters;
 	}
 
+	//TODO: Doesn't work unless the user is signed in.
+	// We shouldn't be modifying it directly like this,
+	// it's easier if we use the schedule class we have.
 	protected void addCourse(int courseCode, Connection conn)
 	{
-		String s = "INSERT INTO Schedule VALUES (?, ?)";
+		String s = "INSERT INTO Schedule(email, courseID) VALUES (?, ?)";
 		try
 		{
 			PreparedStatement p = conn.prepareStatement(s);
-			p.setInt(1, courseCode);
-			p.setString(2, account.getEmail());
+			p.setString(1, account.getEmail());
+			p.setInt(2, courseCode);
 			p.executeQuery();
 			p.close();
 
@@ -298,6 +368,9 @@ public class Driver {
 		}
 	}
 
+	//TODO: Doesn't work unless the user is signed in.
+	// We shouldn't be modifying it directly like this,
+	// it's easier if we use the schedule class we have.
 	protected void removeCourse(int courseCode, Connection conn)
 	{
 		String s = "DELETE FROM Schedule VALUES WHERE courseID = ?";
@@ -323,6 +396,48 @@ public class Driver {
 		{
 			System.out.println(e);
 		}
+	}
+
+	/**
+	 * Receives a course's department, code, and section as string
+	 * and performs a search for that single course. If successfull,
+	 * that course is then added to the user's schedule.
+	 * @param in
+	 * @param s
+	 * @return
+	 */
+	public boolean addByDepCodeSec(String in, Search s) {
+		ArrayList<Course> alc = new ArrayList<>();
+		
+		Filter fdep = new Filter("department", in.substring(0, 4));
+		Filter fcode = new Filter("code", in.substring(4, 7));
+		Filter fsection = new Filter("section", (in.charAt(8) + ""));
+		
+		// TODO: Log function
+		System.out.println("Driver.addByDepCodeSec()");
+		System.out.printf("Department: %s, code: %s, section: %s.\n", fdep.getValue(), fcode.getValue(), fsection.getValue());
+		
+		ArrayList<Filter> af = new ArrayList<>();
+		af.add(fcode);
+		af.add(fdep);
+		af.add(fsection);
+		s.changeFilters(af);
+		
+		try(Connection conn = DataSource.getConnection()) {
+			alc = s.searchCoursesC(conn);
+		} catch(Exception e) {
+			System.err.println("Couldn't connect to the database.");
+			e.printStackTrace();
+			alc = null;
+		}
+
+		if(alc != null && alc.size() != 0) {
+			for(Course c : alc) {
+				schedule.add(c);
+			}
+			return true;
+		}
+		return false;
 	}
 
 }
