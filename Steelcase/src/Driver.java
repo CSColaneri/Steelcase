@@ -172,7 +172,11 @@ public class Driver {
 						System.out.println("Please create an account if you want to upload your schedule!");
 						System.out.println("Would you like to create one now? Y/N");
 						if(scan.next().equalsIgnoreCase("y")) {
+<<<<<<< Updated upstream
 							// signupPage();
+=======
+							//signupPage();
+>>>>>>> Stashed changes
 						}
 						break;
 					}
@@ -408,9 +412,6 @@ public class Driver {
 		{
 			System.out.println(e);
 		}
-
-
-
 	}
 
 	//TODO: Doesn't work unless the user is signed in.
