@@ -71,7 +71,7 @@ public class Schedule {
   }
   
   public long strToTime (String start) {
-	  int multiplier[] = {3600000, 60000};
+	  int multiplier[] = {3600000, 60000, 1000};
       String startString = start; //read in string
       String splits[]; //array of strings split by colons
 
@@ -79,8 +79,8 @@ public class Schedule {
       
       splits = startString.split(":");
       for (int x = 0; x < splits.length; x++) {
-              startTime += (Integer.parseInt(splits[x]) * multiplier[x]); 
-              //converts to milliseconds
+        startTime += (Integer.parseInt(splits[x]) * multiplier[x]); 
+        //converts to milliseconds
       }
       return startTime;
   }
@@ -101,7 +101,7 @@ public class Schedule {
 	  for(int i = 0; i < schedule.size(); i++) {
 		  Long earliest = times.get(0);
 		  int index = 0;
-		  for(int j = 0; j < copy.size(); i++) {
+		  for(int j = 0; j < copy.size(); j++) {
 			  if(times.get(j) < earliest) {
 				  index = j;
 			  }
@@ -116,27 +116,27 @@ public class Schedule {
 		  while(days.hasNext()) {
 			  char day = days.next().charAt(0);
 			  switch (day) {
-			  case 'M' :
-				  mon.add("(" + ordered.get(i).getShort_title() + ", " +
-			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-			  case 'T' :
-				  tue.add("(" + ordered.get(i).getShort_title() + ", " +
-			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-			  case 'W' :
-				  wed.add("(" + ordered.get(i).getShort_title() + ", " +
-			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-			  case 'R' :
-				  thu.add("(" + ordered.get(i).getShort_title() + ", " +
-			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");  
-			  case 'F' :
-				  fri.add("(" + ordered.get(i).getShort_title() + ", " +
-			  ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-			  ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-			  default :
+          case 'M' :
+            mon.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+          case 'T' :
+            tue.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+          case 'W' :
+            wed.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+          case 'R' :
+            thu.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");  
+          case 'F' :
+            fri.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+          default :
 				  System.out.println("not a valid day");
 			  }
 		  }

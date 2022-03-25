@@ -74,7 +74,8 @@ public class Search {
 
         try 
         {
-            System.out.println("Statement: " + statement);
+            // TODO: Make log function
+            // System.out.println("Statement: " + statement);
             PreparedStatement setdb = conn.prepareStatement(statement);
             if(hasCode)
             {
