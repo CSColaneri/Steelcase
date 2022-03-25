@@ -124,11 +124,12 @@ public class Account {
   }
 
   // TODO: Put requirements on password. Maybe new method for it.
-  public void signup(String email, String password, Schedule sched) throws Exception {
-    salt = getNewSalt();
-    setPassEncrypted(getEncryptedPassword(password, salt));
-    this.setEmail(email);
-    saveUser(sched);
+  public static Account signup(String email, String password, Schedule sched) throws Exception {
+    String salt = getNewSalt();
+    String encryptedPassword = getEncryptedPassword(password, salt);
+    Account account = new Account(email, encryptedPassword, salt);
+    account.saveUser(sched);
+    return account;
   }
 
   // Get a encrypted password using PBKDF2 hash algorithm
@@ -159,28 +160,31 @@ public class Account {
 	  String acc = "insert into Account(email, password_hash, salt) values(?, ?, ?)";
 	  String sch = "insert into Schedule(email, courseID) values(?, ?)";
 	  try(Connection conn = DataSource.getConnection();
-		PreparedStatement ps1 = conn.prepareStatement(acc);
-		PreparedStatement ps2 = conn.prepareStatement(sch);) {
-		  PreparedStatement error = conn.prepareStatement("select email from Account"
-                  + "where email = ?");
-          error.setString(1, email);
-          ResultSet err = error.executeQuery();
-          if (err.next()) {
-              System.out.println("email already exists");
-          }
-          else {
-        	  ps1.setString(1, email);
-              ps1.setString(2, passEncrypted);
-              ps1.setString(3, salt);
-              ps1.execute();
-              ps2.setString(1, email);
-              for(int i = 0; i < classes.getSchedule().size(); i++) {
-            	  ps2.setInt(2, classes.getSchedule().get(i).getID());
-            	  ps2.execute();
-              }
-          }
+		  PreparedStatement ps1 = conn.prepareStatement(acc);
+		  PreparedStatement ps2 = conn.prepareStatement(sch);) {
+		  PreparedStatement error = conn.prepareStatement("select email from Account "
+        + "where email = ?");
+      error.setString(1, email);
+      ResultSet err = error.executeQuery();
+      if (err.next()) {
+        System.out.println("email already exists");
+      }
+      else {
+        ps1.setString(1, email);
+        ps1.setString(2, passEncrypted);
+        ps1.setString(3, salt);
+        ps1.execute();
+        ps2.setString(1, email);
+        // probably doesn't work
+        for(int i = 0; i < classes.getSchedule().size(); i++) {
+          ps2.setInt(2, classes.getSchedule().get(i).getID());
+          ps2.execute();
+        }
+      }
 	  }
 	  catch (SQLException s){
+      // if the account succeeds but the schedule fails, the account
+      // will still be in there.
 		  System.err.println("Failed to add new account");
 	      s.printStackTrace();
 	  }
