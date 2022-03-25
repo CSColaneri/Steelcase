@@ -8,6 +8,14 @@ public class Driver {
 	private boolean loggedIn = false;//maybe make this an Account object and test if null or not
 	private Account account;
 	private Schedule schedule = new Schedule();
+	private String help = "Commands:\n"
+		+ "help:  brings up help dialog.\n"
+		+ "create: brings up the create schedule dialog.\n"
+		+ "view: brings up dialog to view any schedules you have made.\n"
+		+ "login: brings up the login dialog.\n"
+		+ "search: search for courses using the course search dialog.\n"
+		+ "courses: a list of courses.\n"
+		+ "exit:  exit the application.";
 
 	public static void main(String argv[]) {
 		Driver driver = new Driver();
@@ -20,14 +28,7 @@ public class Driver {
 
 	public void run() {
 		String in = "";
-		String help = "Commands:\n"
-				+ "help:  brings up help dialog.\n"
-				+ "create: brings up the create schedule dialog.\n"
-				+ "view: brings up dialog to view any schedules you have made.\n"
-				+ "login: brings up the login dialog.\n"
-				+ "search: search for courses using the course search dialog.\n"
-				+ "courses: a list of courses.\n"
-				+ "exit:  exit the application.";
+
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Welcome, User!");
@@ -50,6 +51,14 @@ public class Driver {
 						System.out.println(help);
 						break;
 					case "logout":
+						help = "Commands:\n"
+							+ "help:  brings up help dialog.\n"
+							+ "create: brings up the create schedule dialog.\n"
+							+ "view: brings up dialog to view any schedules you have made.\n"
+							+ "login: brings up the login dialog.\n"
+							+ "courses: a list of courses.\n"
+							+ "search: search for courses using the course search dialog.\n"
+							+ "exit:  exit the application.";
 						logoutPage();
 						break;
 					case "exit":
@@ -75,7 +84,18 @@ public class Driver {
 						System.out.println(help);
 						break;
 					case "login":
+						help = "Commands:\n"
+							+ "help:  brings up help dialog.\n"
+							+ "create: brings up the create schedule dialog.\n"
+							+ "view: brings up dialog to view any schedules you have made.\n"
+							+ "logout: Logs out (unsaved changes are lost)\n"
+							+ "search: search for courses using the course search dialog.\n"
+							+ "courses: a list of courses.\n"
+							+ "exit:  exit the application.";
 						loginPage();
+						break;
+					case "signup":
+						signupPage();
 						break;
 					case "exit":
 						running = false;
@@ -303,9 +323,6 @@ public class Driver {
 		System.out.println("Results should go here.");
 	}
 
-	// TODO: if succesful and:
-	// TODO		user has schedule, goto view schedule page.
-	// TODO		user has no schedule, goto create schedule page.
 	public void loginPage() {
 		String email;
 		Scanner scan = new Scanner(System.in);
@@ -362,10 +379,13 @@ public class Driver {
 			String confirm = input.next();
 			if(pass.equals(confirm)) {
 				match = true;
+			} else {
+				System.out.println("Passwords do not match");
 			}
 		}
 		try {
-			account.signup(email, pass, schedule);
+			account = Account.signup(email, pass, schedule);
+			//login the new account
 		} catch(Exception e) {
 			//TODO: make log function
 			System.err.println("Something went wrong. Please try again later.");
@@ -413,9 +433,6 @@ public class Driver {
 		return filters;
 	}
 
-	//TODO: Doesn't work unless the user is signed in.
-	// We shouldn't be modifying it directly like this,
-	// it's easier if we use the schedule class we have.
 	protected void addCourse(int courseCode, Connection conn)
 	{
 
@@ -462,9 +479,6 @@ public class Driver {
 		}
 	}
 
-	//TODO: Doesn't work unless the user is signed in.
-	// We shouldn't be modifying it directly like this,
-	// it's easier if we use the schedule class we have.
 	protected void removeCourse(int courseCode)
 	{
 		schedule.removeCourse(courseCode);
