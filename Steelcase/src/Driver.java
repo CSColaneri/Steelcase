@@ -31,9 +31,9 @@ public class Driver {
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Welcome, User!");
-		System.out.println(help);
 		while(running) {
 			System.out.println("~~~~~Home Page~~~~~\n\n");
+			System.out.println(help);
 			if(loggedIn) {
 				in = input.next();
 				switch (in) {
