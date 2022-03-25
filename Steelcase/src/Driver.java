@@ -32,9 +32,9 @@ public class Driver {
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Welcome, User!");
-		System.out.println(help);
 		while(running) {
 			System.out.println("~~~~~Home Page~~~~~\n\n");
+			System.out.println(help);
 			if(loggedIn) {
 				in = input.next();
 				switch (in) {
@@ -165,10 +165,9 @@ public class Driver {
 			+ "Remove: remove a course from your schedule\n";
 		if(loggedIn) help += "Save: Upload and save your schedule\n";
 
-		System.out.println(help);
-
 		while(viewing) {
 			System.out.println("~~~~~View Schedule~~~~~");
+			System.out.println(help);
 			Scanner scan = new Scanner(System.in);
 			String in = scan.next().toLowerCase();
 			switch (in) {
