@@ -63,11 +63,13 @@ public class Search {
             codeSpot = i;
             hasCode = true;
         }
+        else if(!filters.isEmpty())
+        {
+            statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue() + "%'";
+        }
         else
         {
-            if(!filters.isEmpty()) {
-                statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue() + "%'";
-            }
+            statement = "SELECT * FROM Course";
         }
 
         try 
@@ -102,8 +104,7 @@ public class Search {
                 PreparedStatement stmt = buildStatement(conn);
                 ResultSet courses = stmt.executeQuery();
                 String s = "";
-                System.out.println();
-            try {
+                try {
                     ResultSetMetaData rsmd = courses.getMetaData();
                     int columnsNumber = rsmd.getColumnCount();
                     for (int i = 1; i <= columnsNumber; i++) {
@@ -123,7 +124,7 @@ public class Search {
                         s = s + "\n";
                     }
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();;
                 }
                 courses.close();
                 stmt.close();

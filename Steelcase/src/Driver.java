@@ -25,7 +25,6 @@ public class Driver {
 				+ "create: brings up the create schedule dialog.\n"
 				+ "view: brings up dialog to view any schedules you have made.\n"
 				+ "login: brings up the login dialog.\n"
-				+ "search: search for courses using the course search dialog.\n"
 				+ "courses: a list of courses.\n"
 				+ "exit:  exit the application.";
 		Scanner input = new Scanner(System.in);
@@ -43,8 +42,8 @@ public class Driver {
 					case "view":
 						viewSchedulePage();
 						break;
-					case "search":
-						searchCoursesPage();
+					case "courses":
+						printCoursesPage();
 						break;
 					case "help":
 						System.out.println(help);
@@ -68,8 +67,8 @@ public class Driver {
 					case "view":
 						viewSchedulePage();
 						break;
-					case "search":
-						searchCoursesPage();
+					case "courses":
+						printCoursesPage();
 						break;
 					case "help":
 						System.out.println(help);
@@ -96,11 +95,11 @@ public class Driver {
 			+	"add: add a class by its department, code, and section one at a time (i.e. add COMP300 A)\n"
 			+ "search: Begin searching for courses\n"
 			+ "back: return to the main console dialogue\n";
-		System.out.println(help);
 		Scanner scan = new Scanner(System.in);
 		boolean run = true;
 		Search s = new Search();
 		while(run) {
+			System.out.println(help);
 			String in = scan.nextLine();
 			if(in.contains("add") && in.length() >= 13) {// handle adding by 'code'
 				in = in.substring(4);
@@ -221,6 +220,175 @@ public class Driver {
 		}
 	}
 
+	public void printCoursesPage()
+	{
+		boolean inSearch = true;
+		Scanner input = new Scanner(System.in);
+		String in = "";
+		Connection conn = null;
+		try
+		{
+			conn = DataSource.getConnection();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Connection failed.");
+			System.out.println(e);
+		}
+
+		String help = "~~~~~Course Catalog Page~~~~~\n\n"
+		+ "Options: \n"
+		+ "filter:  add filters to your search.\n"
+		+ "back: return to main console dialog.\n"
+		+ "view: view entire catalog, sorted by department";
+
+		while(inSearch)
+		{
+			System.out.println(help);
+			Search search = new Search();
+			in = input.next();
+			switch (in) {
+				case "filter":
+					try
+					{
+						search.changeFilters(takeFilters());
+						System.out.println(search.searchCourses(conn));
+					}
+					catch (Exception e)
+					{
+						System.out.println(e);
+					}
+					break;
+				case "back":
+					inSearch = false;
+					break;
+				case "view":
+					viewCourses(conn);
+					break;
+				default:
+					System.out.println("No command found: " + in);
+					break;
+			}
+		}
+		
+		try
+		{
+			conn.close();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Close failed somehow.");
+			System.out.println(e);
+		}
+	}
+
+	public void viewCourses(Connection conn)
+	{
+		Search search = new Search();
+		int checkNum = 50;
+		int finalNum = 0;
+		String s = "";
+
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM Course");
+
+			ResultSet rs = stmt.executeQuery();
+
+			rs.next();
+
+			finalNum = rs.getInt(1);
+
+			stmt.close();
+
+			rs.close();
+
+			stmt = conn.prepareStatement("SELECT * FROM Course");
+
+			ResultSet courses = stmt.executeQuery();
+			
+			ResultSetMetaData rsmd = courses.getMetaData();
+			int columnsNumber = rsmd.getColumnCount();
+			for (int i = 1; i <= columnsNumber; i++) {
+				if (i > 1) {
+					s = s + (",  ");
+				}
+				s = s + rsmd.getColumnName(i);
+			}
+			s = s + "\n";
+			while (courses.next()) {
+				for (int i = 1; i <= columnsNumber; i++) {
+					if (i > 1) {
+						s = s + (",  ");
+					}
+					s = s + courses.getString(i);
+				}
+				s = s + "\n";
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		while(true)
+		{
+			Scanner stringRead = new Scanner(s);
+			int i = 0;
+			while(i < checkNum)
+			{
+				if(i >= checkNum - 50)
+				{
+					System.out.println(stringRead.nextLine());
+				}
+				else
+				{
+					stringRead.nextLine();
+				}
+				i++;
+			}
+			Scanner input = new Scanner(System.in);
+			String in = input.next();
+			switch(in)
+			{
+				case "next":
+					if(checkNum < finalNum)
+					{
+						if(finalNum - checkNum < 50)
+						{
+							checkNum += finalNum%50;
+						}
+						else
+						{
+							checkNum += 50;
+						}
+					}
+					else
+					{
+						System.out.println("No further direction.");
+					}
+					break;
+				case "previous":
+					if(finalNum - checkNum <= 0)
+					{
+						checkNum -= finalNum%50;
+					}
+					else if(checkNum > 50)
+					{
+						checkNum -= 50;
+					}
+					else
+					{
+						System.out.println("No further pages in this direction.");
+					}
+					break;
+				case "exit":
+					return;
+				default:
+					System.out.println("Not a valid command.");
+					break;
+			}
+		}
+	}
+
 	public void searchCoursesPage() {
 		boolean inSearch = true;
 		Scanner input = new Scanner(System.in);
@@ -248,9 +416,6 @@ public class Driver {
 			Search search = new Search();
 			in = input.next();
 			switch (in) {
-				/*case "display":
-					System.out.println(search.searchCourses(conn));
-					break;*/
 				case "filter":
 					try
 					{
