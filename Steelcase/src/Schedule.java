@@ -180,6 +180,7 @@ public class Schedule {
     // clear current schedule
     Connection conn = null;
     boolean status = true;
+    boolean updatedSchedule = true; 
 
     try {
       conn = DataSource.getConnection();
@@ -192,30 +193,57 @@ public class Schedule {
 
     //if connection failed, skip this
     if(status) {
-    try(Statement statement = conn.createStatement()) {
-      conn.setAutoCommit(false);// set to false to send as one transaction
+      // try(Statement statement = conn.createStatement()) {
+      try {
+        conn.setAutoCommit(false);// set to false to send as one transaction
+        
+        // delete current schedule
+        // String sql = String.format("DELETE FROM Schedule WHERE email LIKE %s", account.getEmail());
+        String sql = String.format("DELETE FROM Schedule WHERE email LIKE ?");
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, account.getEmail());
+        ps.execute();
+        // statement.addBatch(sql);
+        
+        // insert new schedule
+        sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(?, ?)");
+        ps = conn.prepareStatement(sql);
+        for(Course c : schedule) {
+          ps.setString(1, account.getEmail());
+          ps.setInt(2, c.getID());
+          // sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(%s, %s)", account.getEmail(), c.getID());
+          // statement.addBatch(sql);
+          ps.addBatch();
+        }
+        
+        
+        // passing conn because this throws if anything failed
+        // throwIfFailed(statement.executeBatch(), conn);
+        throwIfFailed(ps.executeBatch(), conn);
 
-      // delete current schedule
-      String sql = String.format("DELETE FROM Schedule WHERE email LIKE %s", account.getEmail());
-      statement.addBatch(sql);
-      
-      // insert new schedule
-      for(Course c : schedule) {
-        sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(%s, %s)", account.getEmail(), c.getID());
-        statement.addBatch(sql);
+        conn.commit();
+        conn.setAutoCommit(true);
+      } catch(SQLException e) {
+        updatedSchedule = false;
+        //TODO: make log function
+        System.err.println("Failed to update schedule. Rolling back DB...");
+        e.printStackTrace();
+        status = false;
       }
-      
-      // passing conn because this throws if anything failed
-      throwIfFailed(statement.executeBatch(), conn);
-
-      conn.commit();
-    } catch(SQLException e) {
-      //TODO: make log function
-      e.printStackTrace();
-      status = false;
     }
+    // I know, it's bad, but it had to be done. conn.rollback needs
+    // to be called but it can throw, so it needs to be caught.
+    if(!updatedSchedule) {
+      try {
+        conn.rollback();
+        // TODO: make log function
+        System.err.println("DB Rolled Back successfully.");
+      } catch(SQLException sqlE) {
+        // TODO: make log function
+        System.err.println("Failed to rollback database after the schedule failed save!");
+        sqlE.printStackTrace();
+      }
     }
-
     return status;
   }
 
