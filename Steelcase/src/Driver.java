@@ -13,6 +13,7 @@ public class Driver {
 		+ "create: brings up the create schedule dialog.\n"
 		+ "view: brings up dialog to view any schedules you have made.\n"
 		+ "login: brings up the login dialog.\n"
+		+ "signup: Begins the account creation process\n"
 		+ "search: search for courses using the course search dialog.\n"
 		+ "courses: a list of courses.\n"
 		+ "exit:  exit the application.";
@@ -51,15 +52,16 @@ public class Driver {
 						System.out.println(help);
 						break;
 					case "logout":
+						logoutPage();
 						help = "Commands:\n"
 							+ "help:  brings up help dialog.\n"
 							+ "create: brings up the create schedule dialog.\n"
 							+ "view: brings up dialog to view any schedules you have made.\n"
 							+ "login: brings up the login dialog.\n"
-							+ "courses: a list of courses.\n"
+							+ "signup: Begins the account creation process\n"
 							+ "search: search for courses using the course search dialog.\n"
+							+ "courses: a list of courses.\n"
 							+ "exit:  exit the application.";
-						logoutPage();
 						break;
 					case "exit":
 						running = false;
@@ -84,14 +86,6 @@ public class Driver {
 						System.out.println(help);
 						break;
 					case "login":
-						help = "Commands:\n"
-							+ "help:  brings up help dialog.\n"
-							+ "create: brings up the create schedule dialog.\n"
-							+ "view: brings up dialog to view any schedules you have made.\n"
-							+ "logout: Logs out (unsaved changes are lost)\n"
-							+ "search: search for courses using the course search dialog.\n"
-							+ "courses: a list of courses.\n"
-							+ "exit:  exit the application.";
 						loginPage();
 						break;
 					case "signup":
@@ -347,6 +341,14 @@ public class Driver {
 			loggedIn = true;
 			System.out.printf("Welcome back %s\n",account.getEmail());
 			schedule = Schedule.retrieveSchedule(account);
+			help = "Commands:\n"
+				+ "help:  brings up help dialog.\n"
+				+ "create: brings up the create schedule dialog.\n"
+				+ "view: brings up dialog to view any schedules you have made.\n"
+				+ "logout: Logs out (unsaved changes are lost)\n"
+				+ "search: search for courses using the course search dialog.\n"
+				+ "courses: a list of courses.\n"
+				+ "exit:  exit the application.";
 			if(schedule.hasSchedule()) {
 				// scan.close();
 				viewSchedulePage();
