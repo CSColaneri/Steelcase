@@ -44,21 +44,23 @@ public class Schedule {
       ResultSet rs = ps.executeQuery();
       while(rs.next()) {
         // TODO: This can't be right...
-        int id = rs.getInt(1);
-        int code = rs.getInt(2);
-        String department = rs.getString(3);
-        char section = rs.getString(4).toCharArray()[0];
-        String building = rs.getString(5);
-        String long_title = rs.getString(6);
-        String short_title = rs.getString(7);
-        String description = rs.getString(8);
-        String professor = rs.getString(9);
-        String day = rs.getString(10);
-        String begin_time = rs.getTime(11).toString();
-        String end_time = rs.getTime(12).toString();
-        int capacity = rs.getInt(13);
-        int enrollment = rs.getInt(14);
-        String room = rs.getString(15);
+        int id              = rs.getInt("id");
+        int code            = rs.getInt("code");
+        String department   = rs.getString("department");
+        char section        = rs.getString("section").toCharArray()[0];
+        String building     = rs.getString("building");
+        String long_title   = rs.getString("long_title");
+        String short_title  = rs.getString("short_title");
+        String description  = rs.getString("description");
+        String professor    = rs.getString("professor");
+        String day          = rs.getString("day");
+        String begin_time   = rs.getTime("begin_time").toString();
+        String end_time     = rs.getTime("end_time").toString();
+        // System.out.println("Begin time: " + begin_time);
+        // System.out.println("End time: " + end_time);
+        int capacity        = rs.getInt("capacity");
+        int enrollment      = rs.getInt("enrollment");
+        String room         = rs.getString("room");
         // TODO: only add to schedule when all courses are successfully retrieved.
         schedule.add(new Course(id, code, department, section, building, long_title, short_title, description, professor, day, begin_time, end_time, capacity, enrollment, room));
       }
