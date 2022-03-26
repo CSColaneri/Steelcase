@@ -92,7 +92,7 @@ public class Schedule {
 	  ArrayList<String> wed = new ArrayList<String>();
 	  ArrayList<String> thu = new ArrayList<String>();
 	  ArrayList<String> fri = new ArrayList<String>();
-	  ArrayList<Course> copy = schedule;
+	  ArrayList<Course> copy = (ArrayList<Course>) schedule.clone();
 	  ArrayList<Course> ordered = new ArrayList<Course>();
 	  ArrayList<Long> times = new ArrayList<Long>();
 	  for(int i = 0; i < schedule.size(); i++) {
@@ -120,24 +120,30 @@ public class Schedule {
             mon.add("(" + ordered.get(i).getShort_title() + ", " +
           ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
           ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
           case 'T' :
             tue.add("(" + ordered.get(i).getShort_title() + ", " +
           ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
           ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
           case 'W' :
             wed.add("(" + ordered.get(i).getShort_title() + ", " +
           ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
           ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
           case 'R' :
             thu.add("(" + ordered.get(i).getShort_title() + ", " +
           ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");  
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
           case 'F' :
             fri.add("(" + ordered.get(i).getShort_title() + ", " +
           ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
           ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
           default :
 				  System.out.println("not a valid day");
+				  break;
 			  }
 		  }
 	  }
