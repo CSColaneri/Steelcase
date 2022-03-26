@@ -14,7 +14,6 @@ public class Driver {
 		+ "view: brings up dialog to view any schedules you have made.\n"
 		+ "login: brings up the login dialog.\n"
 		+ "signup: Begins the account creation process\n"
-		+ "search: search for courses using the course search dialog.\n"
 		+ "courses: a list of courses.\n"
 		+ "exit:  exit the application.";
 
@@ -58,7 +57,6 @@ public class Driver {
 							+ "view: brings up dialog to view any schedules you have made.\n"
 							+ "login: brings up the login dialog.\n"
 							+ "signup: Begins the account creation process\n"
-							+ "search: search for courses using the course search dialog.\n"
 							+ "courses: a list of courses.\n"
 							+ "exit:  exit the application.";
 						break;
@@ -103,7 +101,7 @@ public class Driver {
 	}
 
 	public void createSchedulePage() {
-		String help = "~~~~~Course Search Page~~~~~\n\n"
+		String help = "~~~~~Create Schedule Page~~~~~\n\n"
 			+ "Options:\n"
 			+ "help: Print this message again\n"
 			+	"add: add a class by its department, code, and section one at a time (i.e. add COMP300 A)\n"
@@ -506,12 +504,13 @@ public class Driver {
 			loggedIn = true;
 			System.out.printf("Welcome back %s\n",account.getEmail());
 			schedule = Schedule.retrieveSchedule(account);
+
+			// update main menu help to match logged in commands
 			help = "Commands:\n"
 				+ "help:  brings up help dialog.\n"
 				+ "create: brings up the create schedule dialog.\n"
 				+ "view: brings up dialog to view any schedules you have made.\n"
 				+ "logout: Logs out (unsaved changes are lost)\n"
-				+ "search: search for courses using the course search dialog.\n"
 				+ "courses: a list of courses.\n"
 				+ "exit:  exit the application.";
 			if(schedule.hasSchedule()) {
