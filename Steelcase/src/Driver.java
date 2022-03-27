@@ -193,7 +193,7 @@ public class Driver {
 					System.out.println(help);
 					break;
 				case "remove":
-					System.out.println("Provide course code you'd like to remove.");
+					System.out.println("Provide course id you'd like to remove.");
 					
 					String courseCode = scan.next();
 
