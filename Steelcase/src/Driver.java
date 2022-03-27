@@ -112,6 +112,11 @@ public class Driver {
 			+	"add: Add classes by their department, code, and section \n"
 			+ "search: Begin searching for courses\n"
 			+ "back: return to the main console dialogue\n";
+
+		if(loggedIn){
+			help = help + "logout: logs the user out\n";
+		}
+
 		Scanner scan = new Scanner(System.in);
 		boolean run = true;
 		while(run) {
@@ -126,6 +131,10 @@ public class Driver {
 						//fallthrough intentional
 					case "back":
 						run = false;
+						break;
+					case "logout":
+						run = false;
+						logoutPage();
 						break;
 					case "help":
 						System.out.println(help);
@@ -152,12 +161,20 @@ public class Driver {
 			+ "Save: upload your schedule to the cloud (requires account)\n"
 			+ "Back: go back to the home view\n";
 
+		if(loggedIn){
+			help = help + "logout: logs the user out\n";
+		}
+
 		while(viewing) {
 			System.out.println("~~~~~View Schedule~~~~~");
 			System.out.println(help);
 			Scanner scan = new Scanner(System.in);
 			String in = scan.next().toLowerCase();
 			switch (in) {
+				case "logout":
+					viewing = false;
+					logoutPage();
+					break;
 				case "list":
 					if(schedule == null || !schedule.hasSchedule()) {
 						System.out.println("No schedule to show.");
@@ -248,7 +265,11 @@ public class Driver {
 		+ "Options: \n"
 		+ "filter:  add filters to your search.\n"
 		+ "back: return to main console dialog.\n"
-		+ "view: view entire catalog, sorted by department";
+		+ "view: view entire catalog, sorted by department\n";
+
+		if(loggedIn){
+			help = help + "logout: log out of your account\n";
+		}
 
 		while(inSearch)
 		{
@@ -269,6 +290,10 @@ public class Driver {
 					break;
 				case "back":
 					inSearch = false;
+					break;
+				case "logout":
+					inSearch = false;
+					logoutPage();
 					break;
 				case "view":
 					viewCourses(conn);
@@ -337,8 +362,20 @@ public class Driver {
 			e.printStackTrace();
 		}
 
+		String help = "-----Options Inside Catalog-----\nnext: view the next page\n" +
+				"previous: view the last page\n" +
+				"exit: exit viewing the catalog\n";
+
+		if(loggedIn){
+			help = help + "logout: log out of your account\n";
+		}
+
 		while(true)
 		{
+//			System.out.println("-----Options Inside Catalog-----\nnext: view the next page\n" + removed to other format
+//					"previous: view the last page\n" +
+//					"exit: exit viewing the catalog\n");
+			System.out.println(help);
 			Scanner stringRead = new Scanner(s);
 			int i = 0;
 			while(i < checkNum)
@@ -388,6 +425,9 @@ public class Driver {
 						System.out.println("No further pages in this direction.");
 					}
 					break;
+				case "logout":
+					logoutPage();
+					return;
 				case "exit":
 					return;
 				default:
@@ -418,6 +458,10 @@ public class Driver {
 		+ "back: return to main console dialog.\n"
 		+ "add: add a course from the course list to your schedule\n";
 
+		if(loggedIn){
+			help = help + "logout: log out of your account\n";
+		}
+
 		while(inSearch)
 		{
 			System.out.println(help);
@@ -437,6 +481,10 @@ public class Driver {
 					break;
 				case "back":
 					inSearch = false;
+					break;
+				case "logout":
+					inSearch = false;
+					logoutPage();
 					break;
 				case "add":
 					System.out.println("Input the ID of the course you'd like to add.");
@@ -517,7 +565,7 @@ public class Driver {
 			+ "exit:  exit the application.";
 	}
 
-	private void aferLogIn() {
+	private void aferLogIn() { //nice
 		if(schedule.hasSchedule()) {
 			// scan.close();
 			viewSchedulePage();
@@ -531,7 +579,15 @@ public class Driver {
 		account = null; //logs out
 		schedule = null;
 		loggedIn = false;
+		help = "Commands:\n"  //updates help
+				+ "help:  brings up help dialog.\n"
+				+ "create: brings up the create schedule dialog.\n"
+				+ "view: brings up dialog to view any schedules you have made.\n"
+				+ "login: Log into your account\n"
+				+ "courses: a list of courses.\n"
+				+ "exit:  exit the application.";
 		System.out.println("Logged out successfully!");
+
 	}
 
 	public void signupPage() {
