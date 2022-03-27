@@ -189,6 +189,91 @@ public class Schedule {
 	  }
 	  System.out.println();
   }
+  
+  public String calString() {
+	  String cal = "";
+	  ArrayList<String> mon = new ArrayList<String>();
+	  ArrayList<String> tue = new ArrayList<String>();
+	  ArrayList<String> wed = new ArrayList<String>();
+	  ArrayList<String> thu = new ArrayList<String>();
+	  ArrayList<String> fri = new ArrayList<String>();
+	  ArrayList<Course> copy = (ArrayList<Course>) schedule.clone();
+	  ArrayList<Course> ordered = new ArrayList<Course>();
+	  ArrayList<Long> times = new ArrayList<Long>();
+	  for(int i = 0; i < schedule.size(); i++) {
+		  times.add(strToTime(copy.get(i).getBegin_time()));
+	  }
+	  for(int i = 0; i < schedule.size(); i++) {
+		  Long earliest = times.get(0);
+		  int index = 0;
+		  for(int j = 0; j < copy.size(); j++) {
+			  if(times.get(j) < earliest) {
+				  index = j;
+			  }
+		  }
+		  ordered.add(copy.get(index));
+		  copy.remove(index);
+		  times.remove(index);
+	  }
+	  for(int i = 0; i < ordered.size(); i++) {
+		  Scanner days = new Scanner(ordered.get(i).getDay());
+		  days.useDelimiter("");
+		  while(days.hasNext()) {
+			  char day = days.next().charAt(0);
+			  switch (day) {
+          case 'M' :
+            mon.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
+          case 'T' :
+            tue.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
+          case 'W' :
+            wed.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
+          case 'R' :
+            thu.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
+          case 'F' :
+            fri.add("(" + ordered.get(i).getShort_title() + ", " +
+          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
+          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+            break;
+          default :
+				  System.out.println("not a valid day");
+				  break;
+			  }
+		  }
+	  }
+	  cal += "Monday:";
+	  for(int i = 0; i < mon.size(); i++) {
+		  cal += " " + mon.get(i);
+	  }
+	  cal += "\nTuesday:";
+	  for(int i = 0; i < tue.size(); i++) {
+		  cal += " " + tue.get(i);
+	  }
+	  cal += "\nWednesday:";
+	  for(int i = 0; i < wed.size(); i++) {
+		  cal += " " + wed.get(i);
+	  }
+	  cal += "\nThursday:";
+	  for(int i = 0; i < thu.size(); i++) {
+		  cal += " " + thu.get(i);
+	  }
+	  cal += "\nFriday:";
+	  for(int i = 0; i < fri.size(); i++) {
+		  cal += " " + fri.get(i);
+	  }
+	  return cal;
+  }
 
   /**
    * Connects to the database to save this schedule object

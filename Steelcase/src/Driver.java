@@ -187,7 +187,8 @@ public class Driver {
 					if(schedule == null || !schedule.hasSchedule()) {
 						System.out.println("No schedule to show.");
 					} else {
-						schedule.printCalendar();
+						String cal = schedule.calString();
+						System.out.println(cal);
 					}
 					break;
 				case "save":
