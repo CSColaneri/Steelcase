@@ -84,9 +84,15 @@ public class Driver {
 						break;
 					case "login":
 						loginPage();
+						if(account != null) {
+							aferLogIn();
+						}
 						break;
 					case "signup":
 						signupPage();
+						if(account != null) {
+							aferLogIn();
+						}
 						break;
 					case "exit":
 						running = false;
@@ -104,25 +110,16 @@ public class Driver {
 		String help = "~~~~~Create Schedule Page~~~~~\n\n"
 			+ "Options:\n"
 			+ "help: Print this message again\n"
-			+	"add: add a class by its department, code, and section one at a time (i.e. add COMP300 A)\n"
+			+	"add: Add classes by their department, code, and section \n"
 			+ "search: Begin searching for courses\n"
 			+ "back: return to the main console dialogue\n";
 		Scanner scan = new Scanner(System.in);
 		boolean run = true;
-		Search s = new Search();
 		while(run) {
 			System.out.println(help);
-			String in = scan.nextLine();
-			if(in.contains("add") && in.length() >= 13) {// handle adding by 'code'
-				in = in.substring(4);
-				// force lowercase for simpler equality checking.
-				// queries aren't messed up.
-				// string needs to have at least 13 chars; "add comp300 a"
-				if(addByDepCodeSec(in.toLowerCase(), s)) {
-					System.out.printf("Course %s added successfully\n", in);
-				} else {
-					System.out.printf("The course %s doesn't seem to exist. Check your spelling and try again.\n", in);
-				}
+			String in = scan.next().toLowerCase();
+			if(in.equals("add")) {// handle adding by 'code'
+				beginAdd(scan);
 			} else {
 				switch (in) {
 					case "search"://go to search
@@ -501,60 +498,90 @@ public class Driver {
 		if(account == null) {
 			System.out.println("Invalid username/password.");
 		} else {
-			loggedIn = true;
-			System.out.printf("Welcome back %s\n",account.getEmail());
-			schedule = Schedule.retrieveSchedule(account);
-
-			// update main menu help to match logged in commands
-			help = "Commands:\n"
-				+ "help:  brings up help dialog.\n"
-				+ "create: brings up the create schedule dialog.\n"
-				+ "view: brings up dialog to view any schedules you have made.\n"
-				+ "logout: Logs out (unsaved changes are lost)\n"
-				+ "courses: a list of courses.\n"
-				+ "exit:  exit the application.";
-			if(schedule.hasSchedule()) {
-				// scan.close();
-				viewSchedulePage();
-			} else {
-				// scan.close();
-				createSchedulePage();
-			}
+			login();
 		}
 		// scan.close();
+	}
+
+	private void login() {
+		loggedIn = true;
+		System.out.printf("Welcome back %s\n",account.getEmail());
+		schedule = Schedule.retrieveSchedule(account);
+
+		// update main menu help to match logged in commands
+		help = "Commands:\n"
+			+ "help:  brings up help dialog.\n"
+			+ "create: brings up the create schedule dialog.\n"
+			+ "view: brings up dialog to view any schedules you have made.\n"
+			+ "logout: Logs out (unsaved changes are lost)\n"
+			+ "courses: a list of courses.\n"
+			+ "exit:  exit the application.";
+	}
+
+	private void aferLogIn() {
+		if(schedule.hasSchedule()) {
+			// scan.close();
+			viewSchedulePage();
+		} else {
+			// scan.close();
+			createSchedulePage();
+		}
 	}
 
 	public void logoutPage() {
 		account = null; //logs out
 		schedule = null;
 		loggedIn = false;
-		System.out.println("Logged out successfully: " + account);
+		System.out.println("Logged out successfully!");
 	}
 
 	public void signupPage() {
+		String email = "";
+		String pass = "";
+		boolean match = false;
 		Scanner input = new Scanner(System.in);
-		System.out.println("Enter a new email.");
-		String email = input.next();
-		String pass = null;
-		Boolean match = false;
-		while(!match) {
+		boolean signup = true;
+		// let the user put in an email. if they want to quit, they can enter
+		// 'cancel' to quit out of the signup process and go back to the page
+		// they came from.
+		do {
+			System.out.println("Enter your email (or 'cancel' to abort the signup process)");
+			email = input.next();
+			
+			// if it equals cancel, set signup to false and break out the signup loop;
+			if(email.compareToIgnoreCase("cancel") == 0) {
+				signup = false;
+				break;
+			}
+
 			System.out.println("Enter a password");
 			pass = input.next();
+			
 			System.out.println("Confirm your password");
 			String confirm = input.next();
+			
 			if(pass.equals(confirm)) {
 				match = true;
 			} else {
 				System.out.println("Passwords do not match");
 			}
-		}
-		try {
-			account = Account.signup(email, pass, schedule);
-			//login the new account
-		} catch(Exception e) {
-			//TODO: make log function
-			System.err.println("Something went wrong. Please try again later.");
-			e.printStackTrace();
+		} while(signup && !match);
+
+		// if they aborted the sign up process, skip this.
+		if(signup) {
+			try {
+				//create the new account and log them in.
+				account = Account.signup(email, pass, schedule);
+				if(account != null) {
+					login();
+				} else {
+					System.out.println("That email is already in use.");
+				}
+			} catch(Exception e) {
+				//TODO: make log function
+				System.err.println("Something went wrong. Please try again later.");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -649,31 +676,64 @@ public class Driver {
 		schedule.removeCourse(courseCode);
 	}
 
+	public void beginAdd(Scanner scan) {
+		Search search = new Search();
+		while(true) {
+			System.out.println("Add course one at a time by entering their department, code, and section (i.e. COMP 300 A)"
+			+ ", or 'exit' to stop adding courses.");
+			String course = scan.nextLine().stripLeading().stripTrailing();
+			
+			//break from loop on user's command
+			if(course.equalsIgnoreCase("exit")) {
+				break;
+			}
+			// force lowercase for simpler equality checking.
+			String[] depCodeSec = course.toLowerCase().split(" ");
+			
+			// need 3 strings, like COMP 300 A, anything more is ignored.
+			if(depCodeSec.length >= 3) {
+				// if the code isn't a number, don't try to add it to the schedule
+				if(!depCodeSec[1].matches("[0-9]+")) {
+					System.out.println("The course's code should be a number");
+				} else if(!addByDepCodeSec(depCodeSec, search)) {//if it is a number but doesn't exist, say so
+					System.out.printf("The course %s doesn't seem to exist. Check your spelling and try again.\n", course);
+				}
+				// If the course is found, addByDepCodeSec prints whether it is added or if it conflicts.
+			} else {
+				System.out.println("Make sure each piece (department, code, section) is seperated by a space and try again");
+			}
+		}
+	}
+	
 	/**
 	 * Receives a course's department, code, and section as string
 	 * and performs a search for that single course. If successfull,
 	 * that course is then added to the user's schedule.
-	 * @param in
-	 * @param s
-	 * @return
+	 * PRINTS TO CONSOLE whether the course was added or if it
+	 * conflicts. If no course found, returns false.
+	 * @param in String array containing course department, code (numerical), and section
+	 * @param s The search instance to add filters to and search using.
+	 * @return False if no course found, true otherwise
 	 */
-	public boolean addByDepCodeSec(String in, Search s) {
+	public boolean addByDepCodeSec(String[] in, Search s) {
 		ArrayList<Course> alc = new ArrayList<>();
 		
-		Filter fdep = new Filter("department", in.substring(0, 4));
-		Filter fcode = new Filter("code", in.substring(4, 7));
-		Filter fsection = new Filter("section", (in.charAt(8) + ""));
+		Filter fdep = new Filter("department", in[0]);
+		Filter fcode = new Filter("code", in[1]);
+		Filter fsection = new Filter("section", in[2]);
 		
 		// TODO: Log function
-		System.out.println("Driver.addByDepCodeSec()");
-		System.out.printf("Department: %s, code: %s, section: %s.\n", fdep.getValue(), fcode.getValue(), fsection.getValue());
+		// System.out.println("Driver.addByDepCodeSec()");
+		// System.out.printf("Department: %s, code: %s, section: %s.\n", fdep.getValue(), fcode.getValue(), fsection.getValue());
 		
+		// add filters to specify the class
 		ArrayList<Filter> af = new ArrayList<>();
 		af.add(fcode);
 		af.add(fdep);
 		af.add(fsection);
 		s.changeFilters(af);
 		
+		// search for the course
 		try(Connection conn = DataSource.getConnection()) {
 			alc = s.searchCoursesC(conn);
 		} catch(Exception e) {
@@ -682,9 +742,16 @@ public class Driver {
 			alc = null;
 		}
 
+		// if the course was found, see if it conflicts with current scheduel
+		// and add if it doesn't
 		if(alc != null && alc.size() != 0) {
 			for(Course c : alc) {
+				if(schedule.conflicts(c)) {
+					System.out.printf("Course %s conflicts with your schedule!\n", c.simpleString());
+					continue;//don't add this course
+				}
 				schedule.add(c);
+				System.out.printf("Course %s added successfully\n", c.simpleString());
 			}
 			return true;
 		}
