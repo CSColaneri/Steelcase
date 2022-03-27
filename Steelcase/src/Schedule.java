@@ -30,6 +30,14 @@ public class Schedule {
     return schedule.size() > 0;
   }
 
+  public boolean conflicts(Course c1) {
+    for(Course c : schedule) {
+      if(c.conflicts(c1))
+        return true;
+    }
+    return false;
+  }
+
   /**
    * Queries the database for the user's schedule
    * @param account The user whose schedule we're pulling
@@ -72,22 +80,28 @@ public class Schedule {
     return schedule;//may return an empty Schedule
   }
   
-  public long strToTime (String start) {
-	  int multiplier[] = {3600000, 60000, 1000};
-      String startString = start; //read in string
-      String splits[]; //array of strings split by colons
+  /**
+   * Works, gets correct number of milliseconds.
+   * @param start
+   * @return
+   */
+  public static long strToTime (String start) {
+    int multiplier[] = {3600000, 60000, 1000};
+    String startString = start; //read in string
+    String splits[]; //array of strings split by colons
 
-      long startTime = 0;
-      
-      splits = startString.split(":");
-      for (int x = 0; x < splits.length; x++) {
-        startTime += (Integer.parseInt(splits[x]) * multiplier[x]); 
-        //converts to milliseconds
-      }
-      return startTime;
+    long startTime = 0;
+    
+    splits = startString.split(":");
+    //converts to milliseconds
+    for (int x = 0; x < splits.length; x++) {
+      startTime += (Integer.parseInt(splits[x]) * multiplier[x]); 
+    }
+    return startTime;
   }
   
-  //TODO: please... add comments and use String.format instead of string concatenation
+  // TODO: please... add comments and use String.format instead of string concatenation
+  // TODO: also, this has to return a string not print to the console
   public void printCalendar() {
 	  ArrayList<String> mon = new ArrayList<String>();
 	  ArrayList<String> tue = new ArrayList<String>();
@@ -175,7 +189,6 @@ public class Schedule {
 	  }
 	  System.out.println();
   }
-
 
   /**
    * Connects to the database to save this schedule object
