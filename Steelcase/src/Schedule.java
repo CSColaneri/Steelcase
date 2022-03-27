@@ -100,96 +100,11 @@ public class Schedule {
     return startTime;
   }
   
-  // TODO: please... add comments and use String.format instead of string concatenation
-  // TODO: also, this has to return a string not print to the console
-  public void printCalendar() {
-	  ArrayList<String> mon = new ArrayList<String>();
-	  ArrayList<String> tue = new ArrayList<String>();
-	  ArrayList<String> wed = new ArrayList<String>();
-	  ArrayList<String> thu = new ArrayList<String>();
-	  ArrayList<String> fri = new ArrayList<String>();
-	  ArrayList<Course> copy = (ArrayList<Course>) schedule.clone();
-	  ArrayList<Course> ordered = new ArrayList<Course>();
-	  ArrayList<Long> times = new ArrayList<Long>();
-	  for(int i = 0; i < schedule.size(); i++) {
-		  times.add(strToTime(copy.get(i).getBegin_time()));
-	  }
-	  for(int i = 0; i < schedule.size(); i++) {
-		  Long earliest = times.get(0);
-		  int index = 0;
-		  for(int j = 0; j < copy.size(); j++) {
-			  if(times.get(j) < earliest) {
-				  index = j;
-			  }
-		  }
-		  ordered.add(copy.get(index));
-		  copy.remove(index);
-		  times.remove(index);
-	  }
-	  for(int i = 0; i < ordered.size(); i++) {
-		  Scanner days = new Scanner(ordered.get(i).getDay());
-		  days.useDelimiter("");
-		  while(days.hasNext()) {
-			  char day = days.next().charAt(0);
-			  switch (day) {
-          case 'M' :
-            mon.add("(" + ordered.get(i).getShort_title() + ", " +
-          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-            break;
-          case 'T' :
-            tue.add("(" + ordered.get(i).getShort_title() + ", " +
-          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-            break;
-          case 'W' :
-            wed.add("(" + ordered.get(i).getShort_title() + ", " +
-          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-            break;
-          case 'R' :
-            thu.add("(" + ordered.get(i).getShort_title() + ", " +
-          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-            break;
-          case 'F' :
-            fri.add("(" + ordered.get(i).getShort_title() + ", " +
-          ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-          ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
-            break;
-          default :
-				  System.out.println("not a valid day");
-				  break;
-			  }
-		  }
-	  }
-	  System.out.print("Monday:");
-	  for(int i = 0; i < mon.size(); i++) {
-		  System.out.print(" " + mon.get(i));
-	  }
-	  System.out.println();
-	  System.out.print("Tuesday:");
-	  for(int i = 0; i < tue.size(); i++) {
-		  System.out.print(" " + tue.get(i));
-	  }
-	  System.out.println();
-	  System.out.print("Wednesday:");
-	  for(int i = 0; i < wed.size(); i++) {
-		  System.out.print(" " + wed.get(i));
-	  }
-	  System.out.println();
-	  System.out.print("Thursday:");
-	  for(int i = 0; i < thu.size(); i++) {
-		  System.out.print(" " + thu.get(i));
-	  }
-	  System.out.println();
-	  System.out.print("Friday:");
-	  for(int i = 0; i < fri.size(); i++) {
-		  System.out.print(" " + fri.get(i));
-	  }
-	  System.out.println();
-  }
-  
+  /**
+   * Returns schedule as a calendar, with each day on a new line, and all of its classes
+   * including where the class is and the time  
+   * @return
+   */
   public String calString() {
 	  String cal = "";
 	  ArrayList<String> mon = new ArrayList<String>();
