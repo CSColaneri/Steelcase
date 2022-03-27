@@ -101,6 +101,7 @@ public class Account {
   /**
    * Checks given password against stored Account's password and returns
    * true or false
+   * Adapted from: https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
    * @param account An account from the db whose email matches what the user gave.
    * @param password The password given by the user logging in.
    * @return True if password matches, false if not.
@@ -124,15 +125,49 @@ public class Account {
   }
 
   // TODO: Put requirements on password. Maybe new method for it.
+  /**
+   * Adapted from:
+   * https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
+   * @param email User's inputted email.
+   * @param password User's inputted password.
+   * @param sched User's schedule
+   * @return Null if email already in use, or an Account object representing the
+   * user's account
+   * @throws Exception If something goes wrong while checking for a duplicate email
+   */
   public static Account signup(String email, String password, Schedule sched) throws Exception {
+    // check to see if the email already exists before any expensive hashing.
+    try(Connection conn = DataSource.getConnection();
+        PreparedStatement ps = conn.prepareStatement("SELECT email FROM Account WHERE email = ?")) {
+      ps.setString(1, email);
+      if(ps.executeQuery().next()) {//if the email already exists, just return null now.
+        // System.out.println("Email already in use.");
+        return null;
+      }
+    } catch(Exception e) {
+      //on any exception, couldn't check if email already exists. return null.
+      //TODO: Make logging function
+      System.err.println("Something went wrong, please try again later.");
+      e.printStackTrace();
+      throw new Exception("Couldn't check for duplicate emails.");
+    }
+
+    // At this point, email not in use
     String salt = getNewSalt();
     String encryptedPassword = getEncryptedPassword(password, salt);
     Account account = new Account(email, encryptedPassword, salt);
-    account.saveUser(sched);
-    return account;
+    return account.saveUser(sched);
   }
 
   // Get a encrypted password using PBKDF2 hash algorithm
+  /**
+   * Adapted from:
+   * https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
+   * @param password
+   * @param salt
+   * @return
+   * @throws Exception
+   */
   public static String getEncryptedPassword(String password, String salt) throws Exception {
     String algorithm = "PBKDF2WithHmacSHA1";
     int derivedKeyLength = 160; // for SHA1
@@ -147,6 +182,12 @@ public class Account {
   }
 
   // Returns base64 encoded salt
+  /**
+   * Adapted from:
+   * https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
+   * @return
+   * @throws Exception
+   */
   public static String getNewSalt() throws Exception {
     // Don't use Random!
     SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
@@ -155,39 +196,40 @@ public class Account {
     random.nextBytes(salt);
     return Base64.getEncoder().encodeToString(salt);
   }
-
-  private void saveUser(Schedule classes) {
+  
+  /**
+   * Name comes from 
+   * https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html,
+   * but all contents are original
+   * 
+   * @param classes
+   */
+  private Account saveUser(Schedule classes) {
 	  String acc = "insert into Account(email, password_hash, salt) values(?, ?, ?)";
 	  String sch = "insert into Schedule(email, courseID) values(?, ?)";
 	  try(Connection conn = DataSource.getConnection();
 		  PreparedStatement ps1 = conn.prepareStatement(acc);
 		  PreparedStatement ps2 = conn.prepareStatement(sch);) {
-		  PreparedStatement error = conn.prepareStatement("select email from Account "
-        + "where email = ?");
-      error.setString(1, email);
-      ResultSet err = error.executeQuery();
-      if (err.next()) {
-        System.out.println("email already exists");
-      }
-      else {
-        ps1.setString(1, email);
-        ps1.setString(2, passEncrypted);
-        ps1.setString(3, salt);
-        ps1.execute();
-        ps2.setString(1, email);
-        // probably doesn't work
-        for(int i = 0; i < classes.getSchedule().size(); i++) {
-          ps2.setInt(2, classes.getSchedule().get(i).getID());
-          ps2.execute();
-        }
+		  
+      ps1.setString(1, email);
+      ps1.setString(2, passEncrypted);
+      ps1.setString(3, salt);
+      ps1.execute();
+      ps2.setString(1, email);
+      // probably doesn't work
+      for(int i = 0; i < classes.getSchedule().size(); i++) {
+        ps2.setInt(2, classes.getSchedule().get(i).getID());
+        ps2.execute();
       }
 	  }
-	  catch (SQLException s){
+	  catch (SQLException s) {
       // if the account succeeds but the schedule fails, the account
-      // will still be in there.
+      // will still be in there. This is good
+      // TODO: make log function
 		  System.err.println("Failed to add new account");
-	      s.printStackTrace();
+      s.printStackTrace();
 	  }
+    return this;
   }
 
   public void logout() {
