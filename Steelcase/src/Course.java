@@ -147,6 +147,33 @@ public class Course {
     return room;
   }
 
+  /**
+   * Returns true if the calling course conflicts in time with the given course.
+   * For some cursed reason, java.sql.Time screws up the time its sent.
+   * Only compares the hours
+   * @param c1 A course to check
+   * @return Returns true if the calling course conflicts in time with the given course
+   */
+  public boolean conflicts(Course c1) {
+    String[] thisBegin= this.getBegin_time().split(":");
+    String[] thisEnd  = this.getEnd_time().split(":");
+    String[] c1Begin  = c1.getBegin_time().split(":");
+    String[] c1End    = c1.getEnd_time().split(":");
+
+    // if thisBegin > (after) c1End or thisEnd < (before) c1Begin, no conflict
+    if(
+        Integer.parseInt(thisBegin[0]) > Integer.parseInt(c1End[0]) || 
+        Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0])) {
+      return false;
+
+    }
+    return true;
+  }
+
+  public String simpleString() {
+    return String.format("%s %s %s", this.department, this.code, this.section);
+  }
+
   //Code, department, Section, building, short_title. begin_time, end_time, day, room
   @Override
   public String toString(){
