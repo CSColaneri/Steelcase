@@ -1,6 +1,7 @@
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.sql.*;
-
+import java.lang.System;
 
 public class Driver {
 	private boolean running = true;
@@ -17,12 +18,29 @@ public class Driver {
 		+ "exit:  exit the application.";
 
 	public static void main(String argv[]) {
+		// turn off hikari logging for demo
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "OFF");
+		triggerAwkwardLogDump();
 		Driver driver = new Driver();
 		driver.run();
 	}
 
-	public Driver(){
+	public Driver(){}
 
+	private static void triggerAwkwardLogDump() {
+		try(Connection conn = DataSource.getConnection()) {
+			PreparedStatement ps = conn.prepareStatement("SELECT courseID from Schedule limit 1");
+			ps.execute();
+			TimeUnit.SECONDS.sleep(3);
+		} catch(SQLException e) {
+			//TODO: make log fxn
+			// System.err.println("Couldn't complete db connection/transaction.");
+			// e.printStackTrace();
+		} catch(InterruptedException e) {
+			// TODO: Make log fxn
+			// System.err.println("Initial wait for logs dump was interrupted");
+			// e.printStackTrace();
+		}
 	}
 
 	public void run() {
