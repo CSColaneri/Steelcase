@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 import java.sql.*;
 
@@ -146,11 +145,12 @@ public class Driver {
 		boolean viewing = true;
 		
 		String help = "Options:\n"
+			+ "Help: print this message again\n"
 			+ "List: View the schedule as a list\n"
 			+ "Calendar: View the schedule as a calendar\n"
-			+ "Help: print this message again\n"
-			+ "Back: go back to the home view\n"
-			+ "Remove: remove a course from your schedule\n";
+			+ "Remove: remove a course from your schedule\n"
+			+ "Save: upload your schedule to the cloud (requires account)\n"
+			+ "Back: go back to the home view\n";
 		if(loggedIn) help += "Save: Upload and save your schedule\n";
 
 		while(viewing) {
