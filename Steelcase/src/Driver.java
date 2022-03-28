@@ -175,6 +175,7 @@ public class Driver {
 			+ "Help: print this message again\n"
 			+ "List: View the schedule as a list\n"
 			+ "Calendar: View the schedule as a calendar\n"
+			+ "Export: Send list and calendar views to a file you specify\n"
 			+ "Remove: remove a course from your schedule\n"
 			+ "Save: upload your schedule to the cloud (requires account)\n"
 			+ "Back: go back to the home view\n";
@@ -207,6 +208,28 @@ public class Driver {
 					} else {
 						String cal = schedule.calString();
 						System.out.println(cal);
+					}
+					break;
+				case "export":
+					if(schedule == null || !schedule.hasSchedule()) {
+						System.out.println("No schedule to show.");
+					} else {
+						String file = "schedule.txt";
+						Scanner scnr = new Scanner(System.in);
+						System.out.println("What is the file name would you like to export to, .txt is appended to the end");
+						while(true) {
+							String attempt = scnr.next();
+							String regex = "^[\\w\\-\\. ]+$";
+							if(attempt.matches(regex)) {
+								file = attempt + ".txt";
+								break;
+							}
+							else {
+								System.out.println("Bad file name. Try again");
+							}
+						}
+						String result = schedule.export(file);
+						System.out.println(result);
 					}
 					break;
 				case "save":

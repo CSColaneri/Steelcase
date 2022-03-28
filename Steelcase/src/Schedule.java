@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Schedule {
   private ArrayList<Course> schedule = null;
@@ -188,6 +190,20 @@ public class Schedule {
 		  cal += " " + fri.get(i);
 	  }
 	  return cal;
+  }
+  
+  public String export(String file) {
+	  try {
+		  FileOutputStream fos = new FileOutputStream(file);
+		  String output = "List view:\n" + toString();
+		  output += "\n\nCalendar view:\n"  + calString();
+		  fos.write(output.getBytes());
+		  fos.flush();
+		  return "export successful";
+	  }
+	  catch(IOException e) {
+		  return "export failed";
+	  }
   }
 
   /**
