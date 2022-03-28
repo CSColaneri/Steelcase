@@ -158,6 +158,7 @@ public class Search {
 
     //input: date/time selection
     //output: list of course names from the database
+    // TODO: Combine this function with the other search function.  Not a minimum requirement but it would be nice. 
     public static String searchByTime(String date, String start, String end) {
       int multiplier[] = {3600000, 60000};
       String startString = start; //read in string from user

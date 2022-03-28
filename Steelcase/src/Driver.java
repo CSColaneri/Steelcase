@@ -318,7 +318,6 @@ public class Driver {
 
 	public void viewCourses(Connection conn)
 	{
-		Search search = new Search();
 		int checkNum = 50;
 		int finalNum = 0;
 		String s = "";
