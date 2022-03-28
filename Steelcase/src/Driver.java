@@ -40,6 +40,11 @@ public class Driver {
 			// TODO: Make log fxn
 			// System.err.println("Initial wait for logs dump was interrupted");
 			// e.printStackTrace();
+		} catch (Exception e) {
+			//TODO: Make log fxn
+			System.err.println("Something went wrong, please reopen the application.");
+			System.exit(1);
+			return;
 		}
 	}
 
