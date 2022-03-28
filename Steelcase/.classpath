@@ -14,6 +14,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/HikariCP-5.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit-4.13.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.36.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/slf4j-jdk14-1.7.36.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-simple-1.7.36.jar"/>
 </classpath>
