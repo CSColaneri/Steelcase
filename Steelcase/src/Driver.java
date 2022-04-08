@@ -15,6 +15,7 @@ public class Driver {
 		+ "login: brings up the login dialog.\n"
 		+ "signup: Begins the account creation process\n"
 		+ "courses: a list of courses.\n"
+		+ "account: view account details.\n"
 		+ "exit:  exit the application.";
 
 	public static void main(String argv[]) {
@@ -58,7 +59,10 @@ public class Driver {
 			System.out.println(help);
 			if(loggedIn) {
 				in = input.next();
-				switch (in) {
+				switch(in) {
+					case "account":
+						accountDetailsPage();
+						break;
 					case "create":
 						createSchedulePage();
 						break;
@@ -91,7 +95,7 @@ public class Driver {
 				}
 			} else {
 				in = input.next();
-				switch (in) {
+				switch(in) {
 					case "create":
 						createSchedulePage();
 						break;
@@ -687,7 +691,32 @@ public class Driver {
 	}
 
 	public void accountDetailsPage(){
-		System.out.println("Results should go here.");
+		String help = "Commands:\n"
+			+ "help: prints this message again.\n"
+			+ "change_password: Let's you change your password.\n"
+			+ "change_email: Let's you change your email. Sends "
+			+ "an email to the new email address on success.\n"
+			+ "back: return to the previous page.";
+			System.out.println(help);
+			String cmd;
+			Scanner scan = new Scanner(System.in);
+			do {
+				System.out.println("~~~~~ Account Details ~~~~~\n");
+				cmd = scan.next().toLowerCase();
+				switch (cmd) {
+					case "help":
+						System.out.println(help);
+						break;
+					case "change_password":
+						changePassword(scan);
+						break;
+					case "change_email":
+						changeEmail(scan);
+						break;
+					default:
+						break;
+				}
+			} while(!cmd.equalsIgnoreCase("back"));
 	}
 
 	public ArrayList<Filter> takeFilters()
@@ -859,4 +888,47 @@ public class Driver {
 		return false;
 	}
 
+	private void changePassword(Scanner scan) {
+		
+		System.out.print("New Password: ");
+		String newP = scan.next();
+		System.out.println();
+		
+		System.out.print("Confirm Password: ");
+		String confirmP = scan.next();
+		System.out.println();
+		
+		if(!newP.equals(confirmP)) {
+			System.out.println("Passwords do not match.");
+			return;
+		}
+
+		// passwords match
+		try {
+			this.account.changePassword(newP);
+		} catch(Exception e) {
+			System.out.println("Failed to update password. Try again later");
+			// TODO: Log
+			// e,printCoursesPage();
+			return;
+		}
+		System.out.println("Password changed!");
+	}
+
+	private void changeEmail(Scanner scan) {
+		System.out.print("New Email: ");
+		String newEmail = scan.next();
+		try {
+			this.account.changeEmail(newEmail);
+		} catch(SQLException e) {
+			System.out.println("That email is already in use!");
+			// TODO: log
+			// e.printStackTrace();
+			return;
+		} catch(Exception e) {
+			System.out.println("Something went wrong! Try again later");
+			return;
+		}
+		System.out.println("Email successfully updated! Check the new email address for a confirmation email.");
+	}
 }
