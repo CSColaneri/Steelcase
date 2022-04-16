@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JavaFx.Register">
+   <children>
+      <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
+         <children>
+            <BorderPane layoutX="293.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <top>
+                  <AnchorPane prefHeight="75.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <HBox alignment="CENTER" layoutY="35.0" prefHeight="29.0" prefWidth="1280.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#switchToMain" prefHeight="80.0" prefWidth="256.0" text="Home" textAlignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#switchToSchedule" prefHeight="80.0" prefWidth="256.0" text="Schedule" textAlignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#switchToCalender" prefHeight="80.0" prefWidth="256.0" text="Calender" textAlignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#switchToSearch" prefHeight="80.0" prefWidth="256.0" text="Search Classes" textAlignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#switchToLogin" prefHeight="80.0" prefWidth="256.0" text="Login" textAlignment="CENTER" />
+                           </children>
+                        </HBox>
+                        <Text scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" textAlignment="CENTER" x="40.0" y="20.0" />
+                     </children>
+                  </AnchorPane>
+               </top>
+               <center>
+                  <VBox prefHeight="668.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
+                           <VBox.margin>
+                              <Insets left="500.0" top="150.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextField>
+                           <VBox.margin>
+                              <Insets left="500.0" right="500.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                           <VBox.margin>
+                              <Insets left="500.0" top="25.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextField>
+                           <VBox.margin>
+                              <Insets left="500.0" right="500.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Text layoutX="510.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm password">
+                           <VBox.margin>
+                              <Insets left="500.0" top="25.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextField layoutX="510.0" layoutY="242.0">
+                           <VBox.margin>
+                              <Insets left="500.0" right="500.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button mnemonicParsing="false" text="Register">
+                                 <HBox.margin>
+                                    <Insets left="200.0" top="25.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="340.0" left="500.0" right="500.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </center>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
