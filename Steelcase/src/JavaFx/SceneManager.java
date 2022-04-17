@@ -19,7 +19,6 @@ public class SceneManager{
     private Scene scene;
     private Parent root;
 
-
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
         System.out.println("Switching to main");

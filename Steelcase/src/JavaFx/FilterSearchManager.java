@@ -3,23 +3,24 @@ package JavaFx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FilterSearchManager implements Initializable {
+public class FilterSearchManager implements Initializable{
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -37,6 +38,22 @@ public class FilterSearchManager implements Initializable {
     private TableColumn<mockUser, String> courseAdd;
     @FXML
     private TableView<mockUser> viewShed;
+    @FXML
+    private ChoiceBox<String> choiceBox;
+    @FXML
+    private TextField searchText;
+
+    EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                search();
+            }
+        }
+    };
+
+    //populating choice box
+    private String[] choices = {"Code", "Professor", "Description", "Etc..."};
 
     public ObservableList<mockUser> list = FXCollections.observableArrayList(
             new mockUser(204, 500, "12:00 PM", "Phyc")
@@ -49,6 +66,10 @@ public class FilterSearchManager implements Initializable {
                 System.out.println("Adding Course");
             }
         }
+    }
+
+    public void search(){
+        System.out.println("Searching by: " + searchText.getText() + " with filer: " + choiceBox.getValue());
     }
 
     @FXML
@@ -111,8 +132,11 @@ public class FilterSearchManager implements Initializable {
         stage.show();
     }
 
+    //root element has been added, this allows us to change it
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        searchText.addEventHandler(KeyEvent.KEY_PRESSED, eventHandler);
+        choiceBox.getItems().addAll(choices);
         cid.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("cid"));
         locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("locationRoom"));
         time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("time"));
@@ -120,4 +144,5 @@ public class FilterSearchManager implements Initializable {
         courseAdd.setCellValueFactory(new PropertyValueFactory<mockUser, String>("add"));
         viewShed.setItems(list);
     }
+
 }
