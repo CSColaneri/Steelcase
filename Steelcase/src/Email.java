@@ -18,7 +18,7 @@ public class Email {
 		// intro
 		System.out.println("This tests sending emails. In my tests, it hangs for a long time, and "
 		+ "when you pause it, it'll always be in SocketInputStream.socketRead0, a native function "
-		+ "call. Hopefully you get past that!");
+		+ "call. Hopefully you get past that! If it hangs for a minute or two just kill the program.");
 
 		do {
 			System.out.println("What email should receive the test email?"
@@ -26,7 +26,7 @@ public class Email {
 			
 			to = scan.next().strip();
 		} while(!to.matches(regex));
-		
+
 		scan.nextLine();//trailing newlin
 
 		System.out.println("Enter a subject to use for the email.");
