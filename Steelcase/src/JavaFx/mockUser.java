@@ -41,6 +41,8 @@ public class mockUser {
         this.add = new CheckBox();
     }
 
+    public mockUser(){}
+
     public int getCid() {
         return cid;
     }
