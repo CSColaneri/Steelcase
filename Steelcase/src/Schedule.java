@@ -115,13 +115,13 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	public String calString() {
-		String cal = "";
-		ArrayList<String> mon = new ArrayList<String>();
-		ArrayList<String> tue = new ArrayList<String>();
-		ArrayList<String> wed = new ArrayList<String>();
-		ArrayList<String> thu = new ArrayList<String>();
-		ArrayList<String> fri = new ArrayList<String>();
+	public ArrayList<ArrayList<Course>> calString() {
+		ArrayList<ArrayList<Course>> cal = new ArrayList<ArrayList<Course>>();
+		ArrayList<Course> mon = new ArrayList<Course>();
+		ArrayList<Course> tue = new ArrayList<Course>();
+		ArrayList<Course> wed = new ArrayList<Course>();
+		ArrayList<Course> thu = new ArrayList<Course>();
+		ArrayList<Course> fri = new ArrayList<Course>();
 		ArrayList<Course> copy = (ArrayList<Course>) schedule.clone();
 		ArrayList<Course> ordered = new ArrayList<Course>();
 		ArrayList<Long> times = new ArrayList<Long>();
@@ -147,29 +147,19 @@ public class Schedule {
 				char day = days.next().charAt(0);
 				switch (day) {
 					case 'M':
-						mon.add("(" + ordered.get(i).getShort_title() + ", " +
-								ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-								ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+						mon.add(ordered.get(i));
 						break;
 					case 'T':
-						tue.add("(" + ordered.get(i).getShort_title() + ", " +
-								ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-								ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+						tue.add(ordered.get(i));
 						break;
 					case 'W':
-						wed.add("(" + ordered.get(i).getShort_title() + ", " +
-								ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-								ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+						wed.add(ordered.get(i));
 						break;
 					case 'R':
-						thu.add("(" + ordered.get(i).getShort_title() + ", " +
-								ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-								ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+						thu.add(ordered.get(i));
 						break;
 					case 'F':
-						fri.add("(" + ordered.get(i).getShort_title() + ", " +
-								ordered.get(i).getBuilding() + " " + ordered.get(i).getRoom() + ", " +
-								ordered.get(i).getBegin_time() + "-" + ordered.get(i).getEnd_time() + ")");
+						fri.add(ordered.get(i));
 						break;
 					default:
 						System.out.println("not a valid day");
@@ -177,26 +167,11 @@ public class Schedule {
 				}
 			}
 		}
-		cal += "Monday:";
-		for (int i = 0; i < mon.size(); i++) {
-			cal += " " + mon.get(i);
-		}
-		cal += "\nTuesday:";
-		for (int i = 0; i < tue.size(); i++) {
-			cal += " " + tue.get(i);
-		}
-		cal += "\nWednesday:";
-		for (int i = 0; i < wed.size(); i++) {
-			cal += " " + wed.get(i);
-		}
-		cal += "\nThursday:";
-		for (int i = 0; i < thu.size(); i++) {
-			cal += " " + thu.get(i);
-		}
-		cal += "\nFriday:";
-		for (int i = 0; i < fri.size(); i++) {
-			cal += " " + fri.get(i);
-		}
+		cal.add(mon);
+		cal.add(tue);
+		cal.add(wed);
+		cal.add(thu);
+		cal.add(fri);
 		return cal;
 	}
 
@@ -204,7 +179,6 @@ public class Schedule {
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
 			String output = "List view:\n" + toString();
-			output += "\n\nCalendar view:\n" + calString();
 			fos.write(output.getBytes());
 			fos.flush();
 			return "export successful";
