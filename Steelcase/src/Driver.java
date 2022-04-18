@@ -504,24 +504,40 @@ public class Driver {
 
 		String help = "~~~~~Course Search Page~~~~~\n\n"
 		+ "Options: \n"
-		+ "filter:  add filters to your search.\n"
+		+ "filter:  search by multiple filters.\n"
+		+ "addFilter:  add a single filter to your search.\n"
+		+ "clear:  clear search filters.\n"
 		+ "back: return to main console dialog.\n"
 		+ "add: add a course from the course list to your schedule\n";
 
 		if(loggedIn){
 			help = help + "logout: log out of your account\n";
 		}
+		Search search = new Search();
 
 		while(inSearch)
 		{
 			System.out.println(help);
-			Search search = new Search();
 			in = input.next();
 			switch (in) {
+				case "clear":
+					search = new Search();
+					break;
 				case "filter":
 					try
 					{
 						search.changeFilters(takeFilters());
+						System.out.println(search.searchCourses(conn));
+					}
+					catch (Exception e)
+					{
+						System.out.println(e);
+					}
+					break;
+				case "addFilter":
+					try
+					{
+						search.addFilter(takeOne());
 						System.out.println(search.searchCourses(conn));
 					}
 					catch (Exception e)
@@ -753,6 +769,35 @@ public class Driver {
 			}
 		}
 		return filters;
+	}
+
+	public Filter takeOne()
+	{
+		Scanner input = new Scanner(System.in);
+		String in = "";
+		System.out.println("Provide filter type, or type exit to exit\n" + 
+			"Sort types: professor, name, description, code, department");
+			in = input.next();
+			switch (in) {
+				case "exit":
+					return null;
+				default:
+					Filter filter = new Filter();
+					if(filter.isValidParam(in))
+					{
+						filter.setParam(in);
+						System.out.print("Parameter:  ");
+						in = input.next();//should be nextLine if by description
+						filter.setValue(in);
+						System.out.println();
+						return filter;
+					}
+					else
+					{
+						System.out.println("Not a valid filter type.");
+						return null;
+					}
+			}
 	}
 
 	protected void addCourse(int courseCode, Connection conn)
