@@ -5,6 +5,10 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 public class Email {
+	// If this won't run at school, try running it with a VPN enabled.
+	// I keep getting Web Login Required, probably because of the
+	// location being flagged as suspicious (vpn's be dropping me
+	// in the bermuda triangle).
 	public static void main(String[] args) {
 		String regex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 		// this email exists as of 4/17/2022.
@@ -47,7 +51,7 @@ public class Email {
 		Session session = Session.getInstance(prop,
 				new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(from, "steelcase");
+						return new PasswordAuthentication(from, "jatwvstqwbypxfwh");
 					}
 				});
 		session.setDebug(true);
