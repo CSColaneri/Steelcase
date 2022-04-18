@@ -163,7 +163,8 @@ public class Course {
     // if thisBegin > (after) c1End or thisEnd < (before) c1Begin, no conflict
     if(
         Integer.parseInt(thisBegin[0]) > Integer.parseInt(c1End[0]) || 
-        Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0])) {
+        Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0])
+    ) {
       return false;
 
     }
