@@ -10,8 +10,9 @@ public class Email {
 		// this email exists as of 4/17/2022.
 		
 		String from = "noreply.gcc.teamsteelcase@gmail.com";
-
 		String to = "";
+		String port = "587";	//alternative is 465
+		String host = "smtp.gmail.com";
 
 		Scanner scan = new Scanner(System.in);
 
@@ -35,10 +36,13 @@ public class Email {
 		Properties prop = new Properties();
 		// using tls, port info from: 
 		// https://support.google.com/mail/answer/7126229?hl=en#zippy=%2Cstep-change-smtp-other-settings-in-your-email-client
+		prop.put("mail.smtp.host", host);
+		prop.put("mail.smtp.port", port);
+		prop.put("mail.smtp.auth", "true");
 		prop.put("mail.smtp.starttls.enable", "true");
-		prop.put("mail.smtp.host", "smtp.gmail.com");
-		prop.put("mail.smtp.port", "587");
-		prop.put("mail.smtp.auth", true);
+		prop.put("mail.smtp.starttls.require", "true");
+		prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
+		prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
 		Session session = Session.getInstance(prop,
 				new javax.mail.Authenticator() {
