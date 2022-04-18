@@ -1,14 +1,22 @@
 import java.util.*;
 import java.sql.*;
 
-
+/**
+ * A class for building and aiding database searches.
+ */
 public class Search {
     ArrayList<Filter> filters = new ArrayList<Filter>();
 
-
+    /**
+     * Unused constructor:  As largely a utility class, no constructor is strictly necessary.
+     */
     protected Search()
     {}
 
+    /**
+     * Adds a list of filters, of the Filter utility class, to be used to search the database.
+     * @param f
+     */
     public void changeFilters(ArrayList<Filter> f)
     {
         filters = f;
@@ -29,26 +37,27 @@ public class Search {
         return s;
     }
 
-    //todo: please use String.format instead of string concatenation
+    //TODO: please use String.format instead of string concatenation
     public PreparedStatement buildStatement(Connection conn) throws Exception {
         int i = 0;
         String statement = "SELECT * FROM Course WHERE ";
         boolean hasCode = false;
         int codeSpot = 0;
 
+        // if there are multiple filters
         if (filters.size() > 1) 
         {
+            // concatenate all filters into one SQL query string.
             for (i = 0; i < filters.size() - 1; i++) 
             {
+                // handle unique case for numerical data fields which SQL queries handle differently 
                 if (filters.get(i).getParam().equals("code") || filters.get(i).getParam().equals("id")) 
                 {
                     statement = statement + "" + filters.get(i).getParam() + " = ? AND ";
                     codeSpot = i;
                     hasCode = true;
-                } else if (filters.get(i).getParam().equals("begin_time") || filters.get(i).getParam().equals("end_time")) {
-                    statement = statement + "" + filters.get(i).getParam() + " = " + filters.get(i).getValue() + " ";
-
-                }
+                } 
+                // otherwise build statement normally
                 else 
                 {
                     statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue()
@@ -57,16 +66,19 @@ public class Search {
             }
         }
 
+        // For individual filter requests, handle unique case where filtering by numerical data fields, 
         if(filters.size() != 0 && (filters.get(i).getParam().equals("code") || filters.get(i).getParam().equals("id")))
         {
             statement = statement + "" + filters.get(i).getParam() + " = ?";
             codeSpot = i;
             hasCode = true;
         }
+        // otherwise handle regular filters
         else if(!filters.isEmpty())
         {
             statement = statement + "" + filters.get(i).getParam() + " LIKE '%" + filters.get(i).getValue() + "%'";
         }
+        // otherwise return entire database - for use in paginated course catalog variant.
         else
         {
             statement = "SELECT * FROM Course";
@@ -75,12 +87,17 @@ public class Search {
         try 
         {
             // TODO: Make log function
-            // System.out.println("Statement: " + statement);
+
+            //Create prepared statement using pre-established database connection
             PreparedStatement setdb = conn.prepareStatement(statement);
+
+            //in unique case where user is searching numerical data field, pass numerical value to prepared statement
             if(hasCode)
             {
                 setdb.setInt(1, Integer.parseInt(filters.get(codeSpot).getValue()));
             }
+
+            // return prepared statement to be used in pulling information from the database.
             return setdb;
         }
         catch (SQLException e) 
@@ -102,12 +119,18 @@ public class Search {
     public String searchCourses(Connection conn) {
         if (!filters.isEmpty()) {
             try {
+                // Get previously built query
                 PreparedStatement stmt = buildStatement(conn);
+
+                //Create result set from data pulled by previously created query
                 ResultSet courses = stmt.executeQuery();
                 String s = "";
                 try {
+                    // Using the meta data from the resultset, find the number of columns
                     ResultSetMetaData rsmd = courses.getMetaData();
                     int columnsNumber = rsmd.getColumnCount();
+                    // run through each column and get the column name from it, 
+                    // formatting it into a presentable string of comma seperated values
                     for (int i = 1; i <= columnsNumber; i++) {
                         if (i > 1) {
                             s = s + (",  ");
@@ -115,6 +138,10 @@ public class Search {
                         s = s + rsmd.getColumnName(i);
                     }
                     s = s + "\n";
+
+                    // run through each item in the database, and for each column
+                    // get the data from the column, 
+                    // formatting it into a presentable string of comma seperated values
                     while (courses.next()) {
                         for (int i = 1; i <= columnsNumber; i++) {
                             if (i > 1) {
