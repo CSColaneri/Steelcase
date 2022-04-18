@@ -22,6 +22,11 @@ public class Search {
         filters = f;
     }
 
+    public void addFilter(Filter f)
+    {
+        filters.add(f);
+    }
+
     public ArrayList<Filter> getFilters()
     {
         return filters;
