@@ -58,7 +58,7 @@ public class Email {
 					Message.RecipientType.TO, InternetAddress.parse(to));
 			message.setSubject(subject);
 
-			message.setText("This is the body of the test email. Nice!");;
+			message.setText("SECRET TUNNEL");;
 
 			Transport.send(message);
 			System.out.println("Email sent! If you see this let me (Ethan) know, I never got this far.");
