@@ -36,6 +36,12 @@ public class UploadToDB {
       System.exit(1);
       return;
     }
+
+    // adding credit data for each course
+    /**
+      ALTER TABLE table_name
+      ADD column_name datatype;
+     */
     
     // initial data
     // insert_initial_data(conn);
