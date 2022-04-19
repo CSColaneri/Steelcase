@@ -223,8 +223,8 @@ public class Driver {
 					if(schedule == null || !schedule.hasSchedule()) {
 						System.out.println("No schedule to show.");
 					} else {
-						String cal = schedule.calString();
-						System.out.println(cal);
+					//	String cal = schedule.calString();
+					//	System.out.println(cal);
 					}
 					break;
 				case "export":
