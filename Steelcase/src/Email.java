@@ -51,7 +51,10 @@ public class Email {
 	 * @return
 	 */
 	public static boolean sendEmail(Account account, Schedule schedule) throws AddressException {
-		return sendEmail(InternetAddress.parse(account.getEmail()), schedule);
+		return sendEmail(InternetAddress.parse(account.getEmail()), schedule, "Course Schedule", "");
+	}
+	public static boolean sendEmail(Account account, Schedule schedule, String subject, String body) throws AddressException {
+		return sendEmail(InternetAddress.parse(account.getEmail()), schedule, subject, body);
 	}
 
 	/**
@@ -67,13 +70,31 @@ public class Email {
 		if(emails.size() == 0) {
 			return true;
 		}
+		Address[] emailAddresses = addressFromArraylist(emails);
+		return sendEmail(emailAddresses, schedule, "Course Schedule", "");
+	}
+
+	public static boolean sendEmail(ArrayList<String> emails, Schedule schedule, String subject, String body) throws AddressException {
+		// no emails to send to, auto succeed.
+		if(emails.size() == 0) {
+			return true;
+		}
+		Address[] emailAddresses = addressFromArraylist(emails);
+		return sendEmail(emailAddresses, schedule, subject, body);
+	}
+
+	/**
+	 * Takes an ArrayList of emails and puts them into an {@code Address[]} array.
+	 * @param emails An arraylist of valid email addresses.
+	 * @return The email addresses from the parameter but in an Address array instead.
+	 * @throws AddressException if the addresses couldn't be parsed into the Address array. 
+	 */
+	private static Address[] addressFromArraylist(ArrayList<String> emails) throws AddressException {
 		String addrList = "";
-		Address[] emailAddresses = new Address[emails.size()];
 		for(int i = 0; i < emails.size(); ++i) {
 			addrList = addrList.concat(emails.get(i)+",");
 		}
-		emailAddresses = InternetAddress.parse(addrList);
-		return sendEmail(emailAddresses, schedule);
+		return InternetAddress.parse(addrList);
 	}
 
 	/**
@@ -84,30 +105,42 @@ public class Email {
 	 * @param schedule A schedule
 	 * @return true if email successfully sent, false otherwise
 	 */
-	public static boolean sendEmail(Address[] to, Schedule schedule) {
+	public static boolean sendEmail(Address[] to, Schedule schedule, String subject, String body) {
 		try {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(FROM));
 
 			message.setRecipients(Message.RecipientType.BCC, to);
 			
-			// TODO: set an applicable subject.
-			message.setSubject("Your Course Schedule");
+			message.setSubject(subject);
 			
-			//TODO: use html for schedule
-			message.setText("Schedule goes here.");
-			// message.setContent("<h1>This is actual message</h1>", "text/html");
+			// TODO: use html for schedule
+			message.setContent(buildHtml(body, schedule), "text/html");
 			// maybe attachement. tutorial: https://www.tutorialspoint.com/java/java_sending_email.htm
 
 			Transport.send(message);
 			return true;
 		} catch (MessagingException e) {
+			// TODO: Logging
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-
+	private static String buildHtml(String body, Schedule schedule) {
+		String html = String.format("<h1>%s</h1>\n", body);
+		// User's body set.
+		// Build course list. TODO: Check if we can use some other method here.
+		html += "<div id=\"list\">\n<ul>";
+		for(Course c : schedule.getSchedule()) {
+			html += String.format("<li>%s</li>\n", c.toString());
+		}
+		html += "</ul>\n</div>";
+		html += "<div id=\"calendar\" style=\"padding:1rem 0 0 0;\">\n";
+		// html += "CALENDAR HERE"; // TODO: DO THIS
+		html += "</div>";
+		return html;
+	}
 
 	// If this won't run at school, try running it with a VPN enabled.
 	// I keep getting Web Login Required, probably because of the
