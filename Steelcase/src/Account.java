@@ -1,5 +1,7 @@
 import java.util.*;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
@@ -10,6 +12,8 @@ import java.sql.Statement;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+
+import org.apache.http.auth.InvalidCredentialsException;
 
 // much of the methods are grabbed from 
 // https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
@@ -184,9 +188,11 @@ public class Account {
 	 * @param password
 	 * @param salt
 	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
 	 * @throws Exception
 	 */
-	public static String getEncryptedPassword(String password, String salt) throws Exception {
+	public static String getEncryptedPassword(String password, String salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		String algorithm = "PBKDF2WithHmacSHA1";
 		int derivedKeyLength = 160; // for SHA1
 		int iterations = 20000; // NIST specifies 10000
@@ -316,10 +322,24 @@ public class Account {
 
 	}
 
-	public void logout() {
-
+	public static boolean deleteAccount(Account account, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidCredentialsException {
+		String pHash = getEncryptedPassword(password, account.salt);
+		if(!pHash.equals(account.passEncrypted)) {
+			throw new InvalidCredentialsException("Passwords do not match");
+		}
+		// passwords match, continue.
+		String sql = String.format("DELETE FROM Account WHERE email = %s", account.email);
+		try(Connection conn = DataSource.getConnection();) {
+			Statement s = conn.createStatement();
+			s.execute(sql);
+			s.close();
+			return true;
+		} catch(SQLException e) {
+			// TODO: log
+			e.printStackTrace();
+		}
+		return false;		
 	}
-
 	/**
 	 * Updates the user's password to the given password.
 	 * @param password The new password to use.
