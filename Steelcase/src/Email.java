@@ -81,6 +81,17 @@ public class Email {
 		return sendEmail(emailAddresses, schedule, "Course Schedule", "");
 	}
 
+	/**
+	 * Sends the given schedule to each email in the given arraylist of
+	 * valid emails. Sets the subject and body of the email to the given
+	 * values
+	 * @param emails An arraylist of email addresses to send to
+	 * @param schedule The schedule to send in emails
+	 * @param subject The subject of the email
+	 * @param body The body of the email
+	 * @return True on success or false on fail.
+	 * @throws AddressException 
+	 */
 	public static boolean sendEmail(ArrayList<String> emails, Schedule schedule, String subject, String body) throws AddressException {
 		// no emails to send to, auto succeed.
 		if(emails.size() == 0) {
@@ -259,5 +270,4 @@ public class Email {
 		} while(again.equalsIgnoreCase("y"));
 		scan.close();
 	}
-		
 }
