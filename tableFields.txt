@@ -1,0 +1,38 @@
+Course table
++-------------+----------------------+------+-----+---------+-------------------+
+| field       | type                 | NULL | Key | Default | Extra             |
++-------------+----------------------+------+-----+---------+-------------------+
+| id          | bigint(20)  unsigned | NO   | PRI |         | auto_increment    |
+| code        | smallint(6)          | YES  |     |         |                   |
+| department  | varchar(50)          | YES  |     |         |                   |
+| section     | char(1)              | YES  |     |         |                   |
+| building    | varchar(5)           | YES  |     |         |                   |
+| long_title  | varchar(50)          | YES  |     |         |                   |
+| short_title | varchar(25)          | YES  |     |         |                   |
+| description | varchar(100)         | YES  |     |         |                   |
+| professor   | varchar(50)          | YES  |     |         |                   |
+| day         | varchar(7)           | YES  |     |         |                   |
+| begin_time  | time                 | YES  |     |         |                   |
+| end_time    | time                 | YES  |     |         |                   |
+| capacity    | smallint(6)          | NO   |     |    1    |                   |
+| enrollment  | smallint(6)          | YES  |     |         |                   |
+| room        | varchar(10)          | YES  |     |         |                   |
++-------------+----------------------+------+-----+---------+-------------------+
+
+Schedule Table
++----------+---------------------+------+-----+
+| field    | type                | NULL | Key |
++----------+---------------------+------+-----+
+| email    | varchar(50)         | NO   | PRI |
+| courseID | bigint(20) unsigned | NO   | PRI |
++----------+---------------------+------+-----+
+
+Account Table
++---------------+-------------+------+-------------------+-----+
+| field         | type        | NULL | Default           | Key |
++---------------+-------------+------+-------------------+-----+
+| email         | varchar(50) | NO   |                   | PRI |
+| password_hash | char(60)    | NO   |                   |     |
+| time_created  | timestamp   | NO   | CURRENT_TIMESTAMP |     |
+| salt          | char(12)    | YES  |                   |     |
++---------------+-------------+------+-------------------+-----+

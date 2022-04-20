@@ -7,6 +7,12 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="test" path="test"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-socket-factory-connector-j-8-1.4.4-SNAPSHOT-jar-with-dependencies.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-8.0.18.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hamcrest-core-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/HikariCP-5.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.13.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.36.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-simple-1.7.36.jar"/>
 </classpath>

@@ -1,0 +1,51 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch Current File",
+      "request": "launch",
+      "mainClass": "${file}",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "DB_PASSWORD": "admin",
+        "DB_USERNAME": "admin"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Launch DBConnectionTest",
+      "request": "launch",
+      "mainClass": "DBConnectionTest",
+      "projectName": "steelcase_repo_504f08f5",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "DB_PASSWORD": "admin",
+        "DB_USERNAME": "admin"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Launch Driver",
+      "request": "launch",
+      "mainClass": "Driver",
+      "projectName": "steelcase_repo_504f08f5",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Launch UploadToDB",
+      "request": "launch",
+      "mainClass": "UploadToDB",
+      "projectName": "steelcase_repo_504f08f5",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+      }
+    }
+  ]
+}
