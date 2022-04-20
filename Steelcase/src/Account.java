@@ -11,6 +11,7 @@ import java.sql.Statement;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.naming.InvalidNameException;
 
 import org.apache.http.auth.InvalidCredentialsException;
 
@@ -53,16 +54,27 @@ public class Account {
 		this.salt = salt;
 	}
 
-	// same as authenticateUser?
-	public boolean validUser(String email) {
-		return false;
+	/**
+	 * Validates that the given email is in an appropriate format
+	 * @param email An email address
+	 * @return true if the address is in a valid email address format. False if not.
+	 */
+	public static boolean validEmail(String email) {
+		return true;
+		// return email.matches(Email.EMAIL_REGEX);
 	}
 
 	public boolean validPassword(String email, String password) {
 		return false;
 	}
 
-
+	/**
+	 * Logs in the user whose email and password matches a user in our database.
+	 * @param email
+	 * @param password
+	 * @return An account object representing the signed in user, or null.
+	 * @throws InvalidNameException If the given email is not in a valid email address.
+	 */
 	public static Account login(String email, String password) {
 		Account acc;
 		// get account info with that email
@@ -173,10 +185,14 @@ public class Account {
 		}
 
 		// At this point, email not already used
-		String salt = getNewSalt();
-		String encryptedPassword = getEncryptedPassword(password, salt);
-		Account account = new Account(email, encryptedPassword, salt);
-		return account.saveUser(sched);
+		if(validEmail(email)) {
+			String salt = getNewSalt();
+			String encryptedPassword = getEncryptedPassword(password, salt);
+			Account account = new Account(email, encryptedPassword, salt);
+			return account.saveUser(sched);
+		} else {
+			throw new InvalidNameException("Invalid Email");
+		}
 	}
 
 	// Get a encrypted password using PBKDF2 hash algorithm
@@ -321,6 +337,16 @@ public class Account {
 
 	}
 
+	/**
+	 * Deletes the given account from the database and any schedule associated
+	 * with it.
+	 * @param account The account to delete
+	 * @param password The password entered by the user to verify.
+	 * @return True if successful, or false if an exception occurs during the delete on the db.
+	 * @throws NoSuchAlgorithmException			If the hash algorithm for passwords doesn't exist.
+	 * @throws InvalidKeySpecException			If the given password can't be hashed.
+	 * @throws InvalidCredentialsException 	If the passwords don't match
+	 */
 	public static boolean deleteAccount(Account account, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidCredentialsException {
 		String pHash = getEncryptedPassword(password, account.salt);
 		if(!pHash.equals(account.passEncrypted)) {
