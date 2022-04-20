@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
@@ -7,12 +9,15 @@ import javax.mail.internet.*;
 
 
 public class Email {
+	// regex to validate email strings
 	private static final String EMAIL_REGEX = "(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+	// this email exists as of 4/17/2022.
 	private static final String FROM = "noreply.gcc.teamsteelcase@gmail.com";
 	private static final String HOST = "smtp.gmail.com";
 	private static final String PORT = "587";	//alternative is 465
 
 	private static final String OTP = System.getenv("EMAIL_OTP");
+	private static final String DEBUG = System.getenv("DEBUG");
 
 	private static Session session = null;
 	
@@ -39,8 +44,10 @@ public class Email {
 				}
 			});
 		// if we're debugging
-		if(System.getenv("DEBUG") != null && System.getenv("DEBUG").equals("true"))
+		if(DEBUG != null && DEBUG.equals("true")) {
+			System.err.println("Debug On");
 			session.setDebug(true);
+		}
 	}
 
 	/**
@@ -127,18 +134,49 @@ public class Email {
 		return false;
 	}
 
-	private static String buildHtml(String body, Schedule schedule) {
-		String html = String.format("<h1>%s</h1>\n", body);
-		// User's body set.
-		// Build course list. TODO: Check if we can use some other method here.
-		html += "<div id=\"list\">\n<ul>";
-		for(Course c : schedule.getSchedule()) {
-			html += String.format("<li>%s</li>\n", c.toString());
+	private static String buildHtml(String message, Schedule schedule) {
+		// build html
+		String html;
+		try {// if the template can be found do this
+			Scanner fin = new Scanner(new File("Steelcase/emailTemplate.html"));
+			StringBuilder body = new StringBuilder();
+			while(fin.hasNext()) {
+				body.append(fin.nextLine());
+			}
+	
+			//// list view
+			StringBuilder ul = new StringBuilder();
+			ul.append("<ul>\n");
+	
+			Scanner schedScan = new Scanner(schedule.toString());
+			while(schedScan.hasNext()) {
+				ul.append(String.format("<li>%s</li>", schedScan.nextLine()));
+			}
+			
+			ul.append("</ul>\n");
+	
+			//// calendar view
+			StringBuilder calendar = new StringBuilder();
+			calendar.append("Calendar Here");
+	
+			html = String.format(body.toString(),"firstname", "lastname", ul.toString(), calendar.toString());
+			// end html
+		} catch(FileNotFoundException e) { // else use this.
+			html = String.format("<h1>%s</h1>\n", message);
+			// User's body set.
+			// Build course list. TODO: Check if we can use some other method here.
+			html += "<div id=\"list\">\n<ul>";//open div and ul
+			for(Course c : schedule.getSchedule()) {
+				html += String.format("<li>%s</li>\n", c.toString());
+			}
+			html += "</ul>\n</div>";// close ul and div
+			// open calendar div
+			html += "<div id=\"calendar\" style=\"padding:1rem 0 0 0;\">\n";
+			html += "CALENDAR HERE"; // TODO: DO THIS
+			// close calendar div
+			html += "</div>";	
 		}
-		html += "</ul>\n</div>";
-		html += "<div id=\"calendar\" style=\"padding:1rem 0 0 0;\">\n";
-		// html += "CALENDAR HERE"; // TODO: DO THIS
-		html += "</div>";
+
 		return html;
 	}
 
@@ -147,7 +185,7 @@ public class Email {
 	// location being flagged as suspicious (vpn's be dropping me
 	// in the bermuda triangle).
 	public static void main(String[] args) {
-		// this email exists as of 4/17/2022.
+		// session.setDebug(true);
 		String to = "";
 
 		Scanner scan = new Scanner(System.in);
@@ -156,32 +194,70 @@ public class Email {
 		System.out.println("This tests sending emails. In my tests, it hangs for a long time, and "
 		+ "when you pause it, it'll always be in SocketInputStream.socketRead0, a native function "
 		+ "call. Hopefully you get past that! If it hangs for a minute or two just kill the program.");
-
+		String again = "";
 		do {
-			System.out.println("What email should receive the test email?"
-			 + " It should be one you have access to so you can check it.");
-			
-			to = scan.next().strip();
-		} while(!to.matches(EMAIL_REGEX));
+			do {
+				System.out.println("What email should receive the test email?"
+				 + " It should be one you have access to so you can check it.");
+				
+				to = scan.next().strip();
+			} while(!to.matches(EMAIL_REGEX));
+	
+			scan.nextLine();//trailing newline
+	
+			System.out.println("Enter a subject to use for the email.");
+			String subject = scan.nextLine();
+	
+			try {
+				Message message = new MimeMessage(session);
+				message.setFrom(new InternetAddress(FROM));
+	
+				message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+				
+				message.setSubject(subject);
+				
+				// build html
+				Scanner fin = new Scanner(new File("Steelcase/emailTemplate.html"));
+				StringBuilder body = new StringBuilder();
+				while(fin.hasNext()) {
+					body.append(fin.nextLine());
+				}
 
-		scan.nextLine();//trailing newline
+				//// list view
+				StringBuilder ul = new StringBuilder();
+				ul.append("<ul>\n");
+				
+				// example schedule
+				Schedule s = new Schedule();
+				s.add(new Course(3,300,"ABRD",'A',"OFFCP","STUDY ABROAD","STUDY ABROAD","","","","","",20,17,"NULL"));
+				String desc = "Course topics include accounting for debt and stockholder’s equity, financial statement analysis, statement of cash flows, as well as introductions to managerial accounting techniques including cost-volume-profit analysis, budgeting, product costing...";
+				s.add(new Course(4,202,"ACCT",'A',"HAL","PRINCIPLES OF ACCOUNTING II","PRIN OF ACCOUNT",desc,"Tricia Shultz","MWF","08:00:00","08:50:00",44,37,"306"));
+				
+				Scanner schedScan = new Scanner(s.toString());
+				while(schedScan.hasNext()) {
+					ul.append(String.format("<li>%s</li>", schedScan.nextLine()));
+				}
+				ul.append("</ul>\n");
 
-		System.out.println("Enter a subject to use for the email.");
-		String subject = scan.nextLine();
+				//// calendar view
+				StringBuilder calendar = new StringBuilder();
+				calendar.append("Calendar Here");
 
-		try {
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(FROM));
+				String html = String.format(body.toString(),"firstname", "lastname", ul.toString(), calendar.toString());
+				// end html
 
-			message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			
-			message.setSubject(subject);
-			
-			message.setText("SECRET TUNNEL");
-
-			Transport.send(message);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
+				message.setContent(html, "text/html");
+	
+				Transport.send(message);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Send another email? Y/N");
+			again = scan.next();
+		} while(again.equalsIgnoreCase("y"));
+		scan.close();
 	}
+		
 }

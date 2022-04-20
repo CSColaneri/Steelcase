@@ -46,6 +46,17 @@
         "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
         "EMAIL_OTP": "jatwvstqwbypxfwh"
       }
+    },
+    {
+      "type": "java",
+      "name": "Launch Email Debug",
+      "request": "launch",
+      "mainClass": "Email",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh",
+        "DEBUG":"true"
+      }
     }
   ]
 }
