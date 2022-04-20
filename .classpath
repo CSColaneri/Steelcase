@@ -14,5 +14,14 @@
 	<classpathentry kind="lib" path="Steelcase/lib/slf4j-simple-1.7.36.jar"/>
 	<classpathentry kind="lib" path="Steelcase/lib/mail.jar"/>
 	<classpathentry kind="lib" path="Steelcase/lib/activation.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx-swt.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.base.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.media.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.properties"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.web.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
