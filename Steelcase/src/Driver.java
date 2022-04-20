@@ -8,6 +8,8 @@ public class Driver {
 	private boolean loggedIn = false;//maybe make this an Account object and test if null or not
 	private Account account;
 	private Schedule schedule = new Schedule();
+	private ArrayList<State> state = new ArrayList<State>();
+	private int statePosition;
 	private String help = "Commands:\n"
 		+ "help:  brings up help dialog.\n"
 		+ "create: brings up the create schedule dialog.\n"
@@ -60,6 +62,12 @@ public class Driver {
 			if(loggedIn) {
 				in = input.next();
 				switch(in) {
+					/*case "undo":
+						undo();
+						break;
+					case "redo":
+						redo();
+						break;*/
 					case "account":
 						accountDetailsPage();
 						break;
@@ -844,10 +852,23 @@ public class Driver {
 			e.printStackTrace();
 			System.out.println("AddCourse error.");
 		}
+
+		/**
+		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
+		 */
+		state.add(new State("addToSchedule"));
 	}
 
 	protected void removeCourse(int courseCode)
 	{
+		Course course = schedule.getCourse(courseCode);
+		if(course != null)
+		{
+			/**
+		 	*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW removeFromSchedule
+		 	*/
+			state.add(new State("removeFromSchedule", course));
+		}
 		schedule.removeCourse(courseCode);
 	}
 
@@ -928,6 +949,12 @@ public class Driver {
 				schedule.add(c);
 				System.out.printf("Course %s added successfully\n", c.simpleString());
 			}
+			/**
+		 	*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
+		 	*/
+			state.add(new State("addToSchedule"));
+
+
 			return true;
 		}
 		return false;
@@ -958,6 +985,11 @@ public class Driver {
 			return;
 		}
 		System.out.println("Password changed!");
+
+		/**
+		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW changePassword
+		 */
+		state.add(new State("changePassword"));
 	}
 
 	private void changeEmail(Scanner scan) {
@@ -975,5 +1007,68 @@ public class Driver {
 			return;
 		}
 		System.out.println("Email successfully updated! Check the new email address for a confirmation email.");
+		
+		/**
+		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW changeEmail
+		 */
+		state.add(new State("changeEmail"));
 	}
+
+/*
+		case "undo":
+			undo();
+			break;
+		case "redo":
+			redo();
+			break;
+*/
+	
+	public void undo()
+	{
+		Scanner input = new Scanner(System.in);
+		System.out.println("Undoing will undo your last action, " + state.get(state.size() - 1) + ".");
+		System.out.println("Are you sure you want to do that?  Enter Y for yes, or anything else for no.");
+		String check = input.next();
+
+		if(!(check == "Y" || check == "y"))
+		{
+			return;
+		}
+
+		switch(state.get(statePosition).getPreviousAction())
+		{
+			case "changeEmail":
+				// I'm going to have to figure out how to store the previous Email and revert.  Look into database undo.
+				break;
+			case "changePassword":
+				break;
+			case "addToSchedule":
+				// Remove last item from list of courses in schedule - this will always be the last item added.
+				break;
+			case "removeFromSchedule":
+				// We're going to have to store items in order to restore them in the event of an undo
+				break;
+			default:
+				break;
+		}
+
+	}
+
+	public void redo()
+	{
+
+	}
+
+	public void updateState(String action, String location)
+    {
+       if(statePosition != state.size() - 1)
+       {
+            for(int i = state.size() - 1; i > statePosition; i--)
+            {
+                state.remove(i);
+            }
+            state.add(new State(action));
+            statePosition = state.size() - 1;
+       }
+    }
 }

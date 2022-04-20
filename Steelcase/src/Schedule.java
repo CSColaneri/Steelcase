@@ -297,6 +297,16 @@ public class Schedule {
 		}
 	}
 
+	public Course getCourse(int id)
+	{
+		for (int i = 0; i < schedule.size(); i++) {
+			if (schedule.get(i).getID() == id) {
+				return schedule.get(i);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
