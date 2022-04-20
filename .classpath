@@ -12,5 +12,7 @@
 	<classpathentry kind="lib" path="Steelcase/lib/HikariCP-5.0.1.jar"/>
 	<classpathentry kind="lib" path="Steelcase/lib/slf4j-api-1.7.36.jar"/>
 	<classpathentry kind="lib" path="Steelcase/lib/slf4j-simple-1.7.36.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/mail.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/activation.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

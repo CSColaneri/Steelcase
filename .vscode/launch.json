@@ -11,8 +11,7 @@
       "mainClass": "${file}",
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
-        "DB_PASSWORD": "admin",
-        "DB_USERNAME": "admin"
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
       }
     },
     {
@@ -23,8 +22,7 @@
       "projectName": "steelcase_repo_504f08f5",
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
-        "DB_PASSWORD": "admin",
-        "DB_USERNAME": "admin"
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
       }
     },
     {
@@ -34,7 +32,8 @@
       "mainClass": "Driver",
       "projectName": "steelcase_repo_504f08f5",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
       }
     },
     {
@@ -44,7 +43,19 @@
       "mainClass": "UploadToDB",
       "projectName": "steelcase_repo_504f08f5",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Launch Email Debug",
+      "request": "launch",
+      "mainClass": "Email",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh",
+        "DEBUG":"true"
       }
     }
   ]
