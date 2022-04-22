@@ -28,6 +28,14 @@ public class loginManager {
         GuiMain.account = Account.login(em, pass);
         if (GuiMain.account == null) {
             System.out.println("Invalid username/password");
+        } else {
+            System.out.println("Valid account information");
+            GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account);
+            if(GuiMain.schedule.hasSchedule()) {
+                switchToSchedule(e);
+            } else {
+                switchToSearch(e);
+            }
         }
     }
 
