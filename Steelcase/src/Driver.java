@@ -1015,7 +1015,7 @@ public class Driver {
 			System.out.println("Something went wrong! Try again later");
 			return;
 		}
-		System.out.println("Email successfully updated! Check the new email address for a confirmation email.");
+		System.out.println("Email successfully updated!");
 		
 		/**
 		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW changeEmail
