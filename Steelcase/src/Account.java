@@ -267,7 +267,7 @@ public class Account {
 	 * @param classes
 	 */
 	private Account saveUser(Schedule classes) {
-		String acc = "insert into Account(email, password_hash, salt) values(?, ?, ?)";
+		String acc = "insert into Account(email, password_hash, salt, first_name, last_name) values(?, ?, ?, ?, ?)";
 		String sch = "insert into Schedule(email, courseID) values(?, ?)";
 		try (
 			Connection conn = DataSource.getConnection();
@@ -277,6 +277,8 @@ public class Account {
 			ps1.setString(1, email);
 			ps1.setString(2, passEncrypted);
 			ps1.setString(3, salt);
+			ps1.setString(4, firstName);
+			ps1.setString(5, lastName);
 			ps1.execute();
 			ps2.setString(1, email);
 			// probably doesn't work
