@@ -1,87 +1,55 @@
-package JavaFx;
-
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class SearchManager {
+public class accountManager {
     private Stage stage;
     private Scene scene;
     private Parent root;
 
     @FXML
-    private TextField cidOne;
-    @FXML
-    private TextField cidTwo;
-    @FXML
-    private TextField cidThree;
-    @FXML
-    private TextField cidFour;
-    @FXML
-    private TextField cidFive;
-    @FXML
-    private TextField cidSix;
-    @FXML
-    private Text successText;
+    private Text accountHolderText;
 
-    ArrayList<Integer> submittedInfo = new ArrayList<>();
+    @FXML
+    private Button cPBtn;
 
-    public void submitted(ActionEvent e){
-        try {
-            submittedInfo.add(Integer.parseInt(cidOne.getText()));
-            submittedInfo.add(Integer.parseInt(cidTwo.getText()));
-            submittedInfo.add(Integer.parseInt(cidThree.getText()));
-            submittedInfo.add(Integer.parseInt(cidFour.getText()));
-            submittedInfo.add(Integer.parseInt(cidFive.getText()));
-            submittedInfo.add(Integer.parseInt(cidSix.getText()));
-        } catch (NumberFormatException exception){
-            successText.setText("Please enter numbers");
-        } catch (Exception exception){
-            exception.getCause();
-        }
-        for(Integer c : submittedInfo){
-            System.out.println(c);
-        }
+    @FXML
+    private Button dAccountBtn;
 
-        //Setting the text back to empty
-        cidOne.setText("");
-        cidTwo.setText("");
-        cidThree.setText("");
-        cidFour.setText("");
-        cidFive.setText("");
-        cidSix.setText("");
+    @FXML
+    private Text emailText;
 
-        //check success, maybe some bool?
 
+    public void setAccountHolderText(String accountHolder){
+        accountHolderText.setText("Account Holder: " + accountHolder);
+    }
+
+    public void setEmailText(String email){
+        emailText.setText("Email: " + email);
+    }
+
+    public void dAccount(ActionEvent e){
+        System.out.println("Deleting the account");
+        //run deletion code here
+    }
+
+    public void cPBtn(ActionEvent e){
+        System.out.println("Changing the password");
+        //maybe do a popup
+        //change password
     }
 
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
         System.out.println("Switching to main");
         root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    public void switchToClassSearch(ActionEvent e)throws IOException {
-        System.out.println("Switching to main");
-        root = FXMLLoader.load(getClass().getResource("searchFilter.fxml"));
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -137,5 +105,4 @@ public class SearchManager {
         stage.setScene(scene);
         stage.show();
     }
-
 }

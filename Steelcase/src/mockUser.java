@@ -1,5 +1,3 @@
-package JavaFx;
-
 import javafx.scene.control.CheckBox;
 
 public class mockUser {

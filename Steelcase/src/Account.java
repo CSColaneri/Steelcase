@@ -140,6 +140,7 @@ public class Account {
 			String userPassHash = getEncryptedPassword(password, account.salt);
 			if (account.getPassEncrypted().equals(userPassHash)) {
 				// credentials are valid
+				System.out.println("Valid account information");
 				return account;
 			}
 		} catch (Exception e) {

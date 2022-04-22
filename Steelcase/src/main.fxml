@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JavaFx.ViewManager">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SceneManager">
    <children>
       <BorderPane layoutX="293.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -23,20 +21,10 @@
                         <Button mnemonicParsing="false" onAction="#switchToLogin" prefHeight="80.0" prefWidth="256.0" text="Login" textAlignment="CENTER" />
                      </children>
                   </HBox>
-                  <Text scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule" textAlignment="CENTER" x="40.0" y="20.0" />
+                  <Text scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Home" textAlignment="CENTER" x="40.0" y="20.0" />
                </children>
             </AnchorPane>
          </top>
-         <center>
-            <TableView fx:id="viewShed" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-              <columns>
-                <TableColumn fx:id="title" prefWidth="75.0" text="Course Title" />
-                <TableColumn fx:id="cid" prefWidth="75.0" text="Course ID" />
-                  <TableColumn fx:id="locationRoom" prefWidth="75.0" text="Location" />
-                  <TableColumn fx:id="time" prefWidth="75.0" text="Time" />
-              </columns>
-            </TableView>
-         </center>
       </BorderPane>
    </children>
 </AnchorPane>
