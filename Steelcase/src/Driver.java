@@ -668,6 +668,8 @@ public class Driver {
 	public void signupPage() {
 		String email = "";
 		String pass = "";
+		String fName = "";
+		String lName = "";
 		boolean match = false;
 		Scanner input = new Scanner(System.in);
 		boolean signup = true;
@@ -683,6 +685,12 @@ public class Driver {
 				signup = false;
 				break;
 			}
+
+			System.out.println("Enter your first name");
+			fName = input.next();
+
+			System.out.println("Enter you last name");
+			lName = input.next();
 
 			System.out.println("Enter a password");
 			pass = input.next();
@@ -701,7 +709,7 @@ public class Driver {
 		if(signup) {
 			try {
 				//create the new account and log them in.
-				account = Account.signup(email, pass, schedule);
+				account = Account.signup(email, pass, schedule, fName, lName);
 				if(account != null) {
 					login();
 				} else {

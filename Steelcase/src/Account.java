@@ -180,6 +180,8 @@ public class Account {
 	 * @param email    User's inputted email.
 	 * @param password User's inputted password.
 	 * @param sched    User's schedule
+	 * @param firstName User's first name
+	 * @param lastName User's last name
 	 * @return Null if email already in use, or an Account object representing the
 	 *         user's account
 	 * @throws Exception If something goes wrong while checking for a duplicate
