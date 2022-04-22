@@ -44,6 +44,11 @@ public class RegisterManager {
                 GuiMain.account = Account.signup(email.getText(), password.getText(), GuiMain.schedule, fname.getText(), lname.getText());
                 if(GuiMain.account != null) {
                     GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account);
+                    if(GuiMain.schedule.hasSchedule()) {
+                        switchToCalender(e);
+                    } else {
+                        switchToSearch(e);
+                    }
                 }
             } catch(InvalidNameException ex) {
                 // TODO invalid email. do something here
