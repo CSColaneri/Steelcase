@@ -33,12 +33,32 @@
                <center>
                   <VBox prefHeight="668.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
                      <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First Name" translateY="123.0">
+                           <VBox.margin>
+                              <Insets left="500.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextField fx:id="fname" translateY="125.0">
+                           <VBox.margin>
+                              <Insets left="500.0" right="500.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name" translateY="137.0">
+                           <VBox.margin>
+                              <Insets left="500.0" />
+                           </VBox.margin>
+                        </Text>
+                        <TextField fx:id="lname" translateY="137.5">
+                           <VBox.margin>
+                              <Insets left="500.0" right="500.0" />
+                           </VBox.margin>
+                        </TextField>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
                            <VBox.margin>
                               <Insets left="500.0" top="150.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField>
+                        <TextField fx:id="email">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
@@ -48,7 +68,7 @@
                               <Insets left="500.0" top="25.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField>
+                        <TextField fx:id="password">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
@@ -58,14 +78,14 @@
                               <Insets left="500.0" top="25.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField layoutX="510.0" layoutY="242.0">
+                        <TextField fx:id="confirmPass" layoutX="510.0" layoutY="242.0">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
                         </TextField>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Register">
+                              <Button fx:id="registerButton" mnemonicParsing="false" onAction="#submitted" text="Register">
                                  <HBox.margin>
                                     <Insets left="200.0" top="25.0" />
                                  </HBox.margin>
