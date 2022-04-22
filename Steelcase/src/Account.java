@@ -22,16 +22,22 @@ public class Account {
 	private String email;
 	private String passEncrypted;
 	private String salt;
+	private String firstName;
+	private String lastName;
 
 	private static final String PASSWORD_FIELD= "password_hash";
 	private static final String EMAIL_FIELD 	= "email";
 	private static final String SALT_FIELD 		= "salt";
+	private static final String FIRST_NAME_FIELD = "first_name";
+	private static final String LAST_NAME_FIELD = "last_name";
 	// private static final String ROLE_FIELD = "role";
 
-	private Account(String email, String pword, String salt) {
+	private Account(String email, String pword, String salt, String firstName, String lastName) {
 		this.setEmail(email);
 		this.setPassEncrypted(pword);
 		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public String getPassEncrypted() {
@@ -52,6 +58,14 @@ public class Account {
 
 	private void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public String getLastName() {
+		return this.lastName;
 	}
 
 	/**
@@ -98,9 +112,11 @@ public class Account {
 	 *         salt from the database.
 	 */
 	private static Account getAccountDetails(String email) {
-		String sql = "SELECT * FROM Account where email like ?";
-		String pHash;
-		String salt;
+		String sql = "SELECT * FROM Account WHERE email like ?";
+		String pHash,
+					salt,
+					firstName,
+					lastName;
 		try (
 			Connection conn = DataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -110,7 +126,10 @@ public class Account {
 			if (rs.next()) {// account exists in db.
 				pHash = rs.getString(PASSWORD_FIELD);
 				salt = rs.getString(SALT_FIELD);
-				return new Account(email, pHash, salt);
+				firstName = rs.getString(FIRST_NAME_FIELD);
+				lastName = rs.getString(LAST_NAME_FIELD);
+
+				return new Account(email, pHash, salt, firstName, lastName);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -166,7 +185,7 @@ public class Account {
 	 * @throws Exception If something goes wrong while checking for a duplicate
 	 *                   email
 	 */
-	public static Account signup(String email, String password, Schedule sched) throws Exception {
+	public static Account signup(String email, String password, Schedule sched, String firstName, String lastName) throws Exception {
 		// check to see if the email already exists before any expensive hashing.
 		try (
 			Connection conn = DataSource.getConnection();
@@ -189,7 +208,7 @@ public class Account {
 		if(validEmail(email)) {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
-			Account account = new Account(email, encryptedPassword, salt);
+			Account account = new Account(email, encryptedPassword, salt, firstName, lastName);
 			return account.saveUser(sched);
 		} else {
 			throw new InvalidNameException("Invalid Email");
@@ -376,7 +395,7 @@ public class Account {
 
 		// using a new salt doesn't necessarily increase security.
 		String encP = getEncryptedPassword(password, this.salt);
-		Account update = new Account(this.email, encP, this.salt);
+		Account update = new Account(this.email, encP, this.salt, this.firstName, this.lastName);
 		updateUser(update);
 	}
 
@@ -391,7 +410,7 @@ public class Account {
 		// TODO: Email requirements and validation
 
 		if(getAccountDetails(newEmail) == null) {
-			updateUser(new Account(newEmail, this.passEncrypted, this.salt));
+			updateUser(new Account(newEmail, this.passEncrypted, this.salt, this.firstName, this.lastName));
 			return;
 		}
 		// TODO: Log
