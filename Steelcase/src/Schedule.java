@@ -115,7 +115,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	public ArrayList<ArrayList<Course>> calString() {
+	public ArrayList<ArrayList<Course>> calData() {
 		ArrayList<ArrayList<Course>> cal = new ArrayList<ArrayList<Course>>();
 		ArrayList<Course> mon = new ArrayList<Course>();
 		ArrayList<Course> tue = new ArrayList<Course>();

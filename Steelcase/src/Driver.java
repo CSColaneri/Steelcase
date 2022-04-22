@@ -222,9 +222,10 @@ public class Driver {
 				case "calendar":
 					if(schedule == null || !schedule.hasSchedule()) {
 						System.out.println("No schedule to show.");
-					} else {
-					//	String cal = schedule.calString();
-					//	System.out.println(cal);
+					} 
+					else {
+						ArrayList<ArrayList<Course>> cal = schedule.calData();
+						calToString(cal);
 					}
 					break;
 				case "export":
@@ -1071,4 +1072,35 @@ public class Driver {
             statePosition = state.size() - 1;
        }
     }
+	
+	public void calToString(ArrayList<ArrayList<Course>> cal) {
+		for(int i = 0; i < cal.size(); i++) {
+			switch (i) {
+			case 0 :
+				System.out.print("Monday: ");
+				break;
+			case 1:
+				System.out.print("Tuesday: ");
+				break;
+			case 2:
+				System.out.print("Wednesday: ");
+				break;
+			case 3:
+				System.out.print("Thursday: ");
+				break;
+			case 4:
+				System.out.print("Friday: ");
+				break;
+			}
+			for(int j = 0; j < cal.get(i).size(); j++) {
+				System.out.print(cal.get(i).get(j).getDepartment() + " " + cal.get(i).get(j).getCode()
+						+ " " + cal.get(i).get(j).getBuilding() + " " + cal.get(i).get(j).getRoom()
+						+ " (" + cal.get(i).get(j).getBegin_time() + "-" + cal.get(i).get(j).getEnd_time());
+				if(j < cal.get(i).size() - 1) {
+					System.out.print(", ");
+				}
+			}
+			System.out.println();
+		}
+	}
 }
