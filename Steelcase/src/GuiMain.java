@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 
 public class GuiMain extends Application{
     public static Account account;
+    public static Schedule schedule = new Schedule();
     public static boolean loggedIn = false;
 
     public static void main(String[] args) {
