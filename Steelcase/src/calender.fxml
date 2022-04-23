@@ -33,7 +33,7 @@
                <children>
                   <TableView fx:id="timeTable" fixedCellSize="60.5" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="timeColumn" prefWidth="165.0" text="Time" />
+                      <TableColumn fx:id="timeColumn" prefWidth="165.0" sortable="false" text="Time" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -43,7 +43,7 @@
                      <children>
                         <TableView fx:id="mondayTable" fixedCellSize="60.5" prefHeight="645.0" prefWidth="100.0">
                           <columns>
-                            <TableColumn fx:id="mondayColumn" prefWidth="221.0" text="Monday" />
+                            <TableColumn fx:id="mondayColumn" prefWidth="221.0" sortable="false" text="Monday" />
                           </columns>
                         </TableView>
                      </children>
@@ -52,7 +52,7 @@
                      <children>
                         <TableView fx:id="tuesdayTable" fixedCellSize="90.0" prefHeight="672.0" prefWidth="223.0">
                           <columns>
-                            <TableColumn fx:id="tuesdayColumn" prefWidth="222.0" text="Tuesday" />
+                            <TableColumn fx:id="tuesdayColumn" prefWidth="222.0" sortable="false" text="Tuesday" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -64,7 +64,7 @@
                      <children>
                         <TableView fx:id="wednesdayTable" fixedCellSize="60.5" prefHeight="670.0" prefWidth="256.0">
                           <columns>
-                            <TableColumn fx:id="wednesdayColumn" prefWidth="222.0" text="Wednesday" />
+                            <TableColumn fx:id="wednesdayColumn" prefWidth="222.0" sortable="false" text="Wednesday" />
                           </columns>
                         </TableView>
                      </children>
@@ -73,7 +73,7 @@
                      <children>
                         <TableView fx:id="thursdayTable" fixedCellSize="90.0" prefHeight="697.0" prefWidth="256.0">
                           <columns>
-                            <TableColumn fx:id="thursdayColumn" prefWidth="221.0" text="Thursday" />
+                            <TableColumn fx:id="thursdayColumn" prefWidth="221.0" sortable="false" text="Thursday" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -85,7 +85,7 @@
                      <children>
                         <TableView fx:id="fridayTable" fixedCellSize="60.5" prefHeight="722.0" prefWidth="256.0">
                           <columns>
-                            <TableColumn fx:id="fridayColumn" prefWidth="222.0" text="Friday" />
+                            <TableColumn fx:id="fridayColumn" prefWidth="222.0" sortable="false" text="Friday" />
                           </columns>
                         </TableView>
                      </children>
