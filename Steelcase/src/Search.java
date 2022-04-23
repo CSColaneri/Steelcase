@@ -168,6 +168,52 @@ public class Search {
                 // System.exit(1);//this quits the program
                 return null;
             }
+        }else{
+            int checkNum = 50;
+            int finalNum = 0;
+            String s = "";
+
+            try {
+                PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM Course");
+
+                ResultSet rs = stmt.executeQuery();
+
+                rs.next();
+
+                finalNum = rs.getInt(1);
+
+                stmt.close();
+
+                rs.close();
+
+                stmt = conn.prepareStatement("SELECT * FROM Course");
+
+                ResultSet courses = stmt.executeQuery();
+
+                ResultSetMetaData rsmd = courses.getMetaData();
+                int columnsNumber = rsmd.getColumnCount();
+//                for (int i = 1; i <= columnsNumber; i++) {
+//                    if (i > 1) {
+//                        s = s + (",  ");
+//                    }
+//                    s = s + rsmd.getColumnName(i);
+//                }
+                s = s + "\n";
+                while (courses.next()) {
+                    for (int i = 1; i <= columnsNumber; i++) {
+                        if (i > 1) {
+                            s = s + (",  ");
+                        }
+                        s = s + courses.getString(i);
+                    }
+                    s = s + ":\n";
+                }
+                stmt.close();
+                courses.close();
+                return s;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

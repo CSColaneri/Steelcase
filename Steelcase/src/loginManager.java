@@ -30,7 +30,7 @@ public class loginManager {
             System.out.println("Invalid username/password");
         } else {
             System.out.println("Valid account information");
-            GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account);
+            GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account); //gets the shed. to the account given
             if(GuiMain.schedule.hasSchedule()) {
                 switchToSchedule(e);
             } else {
