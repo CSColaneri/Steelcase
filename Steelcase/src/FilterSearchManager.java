@@ -16,7 +16,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class FilterSearchManager implements Initializable{
     private Stage stage;
@@ -51,10 +53,11 @@ public class FilterSearchManager implements Initializable{
     };
 
     //populating choice box
-    private String[] choices = {"Code", "Professor", "Description", "Etc..."};
+    private String[] choices = {"Professor", "Name", "Description", "Code", "Department"};
 
     public ObservableList<mockUser> list = FXCollections.observableArrayList(
-            new mockUser(204, 500, "12:00 PM", "Phyc")
+            //need to create a wrapper here for the data.
+
     );
 
     public void addCourses(){
@@ -67,7 +70,12 @@ public class FilterSearchManager implements Initializable{
     }
 
     public void search(){
-        System.out.println("Searching by: " + searchText.getText() + " with filer: " + choiceBox.getValue());
+        //running the search by filters
+        Search search = new Search();
+        String allCoursesUnf = search.searchCourses(GuiMain.conn); //search the courses
+        //Sending the String to be Parsed into object type courses
+        parseCourseToOCourse(allCoursesUnf);
+        System.out.println(allCoursesUnf);
     }
 
     @FXML
@@ -135,12 +143,23 @@ public class FilterSearchManager implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         searchText.addEventHandler(KeyEvent.KEY_PRESSED, eventHandler);
         choiceBox.getItems().addAll(choices);
-        cid.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("cid"));
-        locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("locationRoom"));
-        time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("time"));
-        title.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        courseAdd.setCellValueFactory(new PropertyValueFactory<mockUser, String>("add"));
+//        cid.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("cid"));
+//        locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("locationRoom"));
+//        time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("time"));
+//        title.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
+//        courseAdd.setCellValueFactory(new PropertyValueFactory<mockUser, String>("add"));
         viewShed.setItems(list);
+    }
+
+    public ArrayList<Course> parseCourseToOCourse(String s){
+        ArrayList<Course> returnArray = new ArrayList<>();
+        String[] sSep = s.split(":");
+
+        for(String str : sSep){
+            System.out.println(str);
+        }
+
+        return returnArray;
     }
 
 }
