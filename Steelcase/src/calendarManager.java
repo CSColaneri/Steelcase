@@ -1,6 +1,4 @@
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,13 +6,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class calendarManager implements Initializable {
@@ -23,66 +28,22 @@ public class calendarManager implements Initializable {
     private Parent root;
 
     @FXML
-    private TableColumn<mockUser, String> fridayColumn;
+    private VBox friday;
 
     @FXML
-    private TableView<mockUser> fridayTable;
+    private VBox monday;
 
     @FXML
-    private TableColumn<mockUser, String> mondayColumn;
+    private VBox thursday;
 
     @FXML
-    private TableView<mockUser> mondayTable;
+    private VBox tuesday;
 
     @FXML
-    private TableColumn<mockUser, String> thursdayColumn;
+    private VBox wednesday;
 
     @FXML
-    private TableView<mockUser> thursdayTable;
-
-    @FXML
-    private TableColumn<String, String> timeColumn;
-
-    @FXML
-    private TableView<String> timeTable;
-
-    @FXML
-    private TableColumn<mockUser, String> tuesdayColumn;
-
-    @FXML
-    private TableView<mockUser> tuesdayTable;
-
-    @FXML
-    private TableColumn<mockUser, String> wednesdayColumn;
-
-    @FXML
-    private TableView<mockUser> wednesdayTable;
-
-    //for the times
-    public ObservableList<String> timesList = FXCollections.observableArrayList(
-            "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-            "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"
-    );
-
-    public ObservableList<mockUser> mondayTimes = FXCollections.observableArrayList(
-            new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser()
-    );
-
-    public ObservableList<mockUser> tuesdayTimes = FXCollections.observableArrayList(
-            new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser()
-    );
-
-    public ObservableList<mockUser> wednesdayTimes = FXCollections.observableArrayList(
-            new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser()
-    );
-
-    public ObservableList<mockUser> thursdayTimes = FXCollections.observableArrayList(
-            new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser()
-    );
-
-    public ObservableList<mockUser> fridayTimes = FXCollections.observableArrayList(
-            new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser(), new mockUser()
-    );
+    private Button login;
 
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
@@ -146,24 +107,70 @@ public class calendarManager implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        timeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue()));
-        timeTable.setItems(timesList);
+        if (GuiMain.loggedIn) {
+            try {
+                login.setText("Account");
+            }catch (Exception e){
+                e.getCause();
+            }
+            login.setOnAction(actionEvent -> {
+                System.out.println("Switching to Register");
+                try {
+                    root = FXMLLoader.load(getClass().getResource("account.fxml"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            });
+        }
 
-        mondayColumn.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        mondayTable.setItems(mondayTimes);
-        mondayTable.getItems().get(4).setTitle("CODE");
+        Collections.sort(GuiMain.schedule.getSchedule(), calendarManager.courseComparator);
+        for(Course c : GuiMain.schedule.getSchedule()){
+            System.out.println(c.getIntStartTime());
+        }
 
-        tuesdayColumn.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        tuesdayTable.setItems(tuesdayTimes);
-        tuesdayTable.getItems().get(2).setTitle("TEST");
-
-        wednesdayColumn.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        wednesdayTable.setItems(wednesdayTimes);
-
-        thursdayColumn.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        thursdayTable.setItems(thursdayTimes);
-
-        fridayColumn.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        fridayTable.setItems(fridayTimes);
+        for(Course c:GuiMain.schedule.getSchedule()) {
+            if(c.getDay().contains("M")) {
+                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
+                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                monday.getChildren().add(t);
+            }
+            if(c.getDay().contains("T")) {
+                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
+                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                tuesday.getChildren().add(t);
+            }
+            if(c.getDay().contains("W")) {
+                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
+                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                wednesday.getChildren().add(t);
+            }
+            if(c.getDay().contains("T")) {
+                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
+                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                thursday.getChildren().add(t);
+            }
+            if(c.getDay().contains("F")) {
+                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
+                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
+                friday.getChildren().add(t);
+            }
+        }
     }
+
+    public static Comparator<Course> courseComparator = new Comparator<Course>() {
+        public int compare(Course s1, Course s2)
+        {
+
+            int c1 = s1.getIntStartTime();
+            int c2 = s2.getIntStartTime();
+
+
+            // For descending order
+            return c1-c2;
+        }
+    };
 }

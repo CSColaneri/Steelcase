@@ -31,6 +31,7 @@ public class loginManager {
         } else {
             System.out.println("Valid account information");
             GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account); //gets the shed. to the account given
+            GuiMain.loggedIn = true;
             if(GuiMain.schedule.hasSchedule()) {
                 switchToSchedule(e);
             } else {
