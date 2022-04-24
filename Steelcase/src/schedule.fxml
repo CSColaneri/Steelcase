@@ -30,10 +30,13 @@
          <center>
             <TableView fx:id="viewShed" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <columns>
-                <TableColumn fx:id="title" prefWidth="75.0" text="Course Title" />
-                <TableColumn fx:id="cid" prefWidth="75.0" text="Course ID" />
-                  <TableColumn fx:id="locationRoom" prefWidth="75.0" text="Location" />
-                  <TableColumn fx:id="time" prefWidth="75.0" text="Time" />
+                  <TableColumn fx:id="dep" editable="false" prefWidth="75.0" text="Department" />
+                <TableColumn fx:id="cid" editable="false" prefWidth="75.0" text="Course ID" />
+                <TableColumn fx:id="title" editable="false" prefWidth="75.0" text="Course Title" />
+                  <TableColumn fx:id="begin_time" editable="false" prefWidth="75.0" text="Begin Time" />
+                  <TableColumn fx:id="end_time" editable="false" prefWidth="75.0" text="End Time" />
+                  <TableColumn fx:id="locationRoom" editable="false" prefWidth="75.0" text="Location" />
+                  <TableColumn fx:id="building" editable="false" prefWidth="75.0" text="Building" />
               </columns>
             </TableView>
          </center>

@@ -26,19 +26,23 @@ public class ViewManager implements Initializable {
 
     /*View Schedule ids*/
     @FXML
+    private TableColumn<mockUser, String> dep;
+    @FXML
     private TableColumn<mockUser, Integer> cid;
-    @FXML
-    private TableColumn<mockUser, Integer> locationRoom;
-    @FXML
-    private TableColumn<mockUser, String> time;
     @FXML
     private TableColumn<mockUser, String> title;
     @FXML
+    private TableColumn<mockUser, String> begin_time;
+    @FXML
+    private TableColumn<mockUser, String> end_time;
+    @FXML
+    private TableColumn<mockUser, String> locationRoom;
+    @FXML
+    private TableColumn<mockUser, String> building;
+    @FXML
     private TableView<mockUser> viewShed;
 
-    public ObservableList<mockUser> list = FXCollections.observableArrayList(
-        /*put course data here*/
-    );
+    public ObservableList<mockUser> list = FXCollections.observableArrayList();
 
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
@@ -102,10 +106,28 @@ public class ViewManager implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        System.out.println("view schedule init before adding courses to schedule");
+        if(GuiMain.schedule.hasSchedule()) {
+            for(Course c : GuiMain.schedule.getSchedule()) {
+                list.add(new mockUser(c));
+            }
+        }
+        System.out.println("view schedule init after adding courses to schedule");
+        
+
+        System.out.println("before setCellValueFactories");
+
+        dep.setCellValueFactory(new PropertyValueFactory<mockUser, String>("dep"));
         cid.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("cid"));
-        locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("locationRoom"));
-        time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("time"));
         title.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
+        begin_time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("begin_time"));
+        end_time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("end_time"));
+        building.setCellValueFactory(new PropertyValueFactory<mockUser, String>("building"));
+        locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, String>("locationRoom"));
+        
+        System.out.println("after setCellValueFactories");
+
+        System.out.println("Before set items");
         viewShed.setItems(list);
     }
 }
