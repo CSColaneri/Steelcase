@@ -26,23 +26,23 @@ public class ViewManager implements Initializable {
 
     /*View Schedule ids*/
     @FXML
-    private TableColumn<mockUser, String> dep;
+    private TableColumn<Course, String> dep;
     @FXML
-    private TableColumn<mockUser, Integer> cid;
+    private TableColumn<Course, Integer> cid;
     @FXML
-    private TableColumn<mockUser, String> title;
+    private TableColumn<Course, String> title;
     @FXML
-    private TableColumn<mockUser, String> begin_time;
+    private TableColumn<Course, String> begin_time;
     @FXML
-    private TableColumn<mockUser, String> end_time;
+    private TableColumn<Course, String> end_time;
     @FXML
-    private TableColumn<mockUser, String> locationRoom;
+    private TableColumn<Course, String> locationRoom;
     @FXML
-    private TableColumn<mockUser, String> building;
+    private TableColumn<Course, String> building;
     @FXML
-    private TableView<mockUser> viewShed;
+    private TableView<Course> viewShed;
 
-    public ObservableList<mockUser> list = FXCollections.observableArrayList();
+    public ObservableList<Course> list = FXCollections.observableArrayList();
 
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
@@ -109,7 +109,7 @@ public class ViewManager implements Initializable {
         System.out.println("view schedule init before adding courses to schedule");
         if(GuiMain.schedule.hasSchedule()) {
             for(Course c : GuiMain.schedule.getSchedule()) {
-                list.add(new mockUser(c));
+                list.add(c);
             }
         }
         System.out.println("view schedule init after adding courses to schedule");
@@ -117,13 +117,13 @@ public class ViewManager implements Initializable {
 
         System.out.println("before setCellValueFactories");
 
-        dep.setCellValueFactory(new PropertyValueFactory<mockUser, String>("dep"));
-        cid.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("cid"));
-        title.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-        begin_time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("begin_time"));
-        end_time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("end_time"));
-        building.setCellValueFactory(new PropertyValueFactory<mockUser, String>("building"));
-        locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, String>("locationRoom"));
+        dep.setCellValueFactory(new PropertyValueFactory<Course, String>("department"));
+        cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));
+        title.setCellValueFactory(new PropertyValueFactory<Course, String>("short_title"));
+        begin_time.setCellValueFactory(new PropertyValueFactory<Course, String>("begin_time"));
+        end_time.setCellValueFactory(new PropertyValueFactory<Course, String>("end_time"));
+        building.setCellValueFactory(new PropertyValueFactory<Course, String>("building"));
+        locationRoom.setCellValueFactory(new PropertyValueFactory<Course, String>("room"));
         
         System.out.println("after setCellValueFactories");
 

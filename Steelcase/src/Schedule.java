@@ -230,7 +230,7 @@ public class Schedule {
 				ps = conn.prepareStatement(sql);
 				for (Course c : schedule) {
 					ps.setString(1, account.getEmail());
-					ps.setInt(2, c.getID());
+					ps.setInt(2, c.getId());
 					// sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(%s, %s)",
 					// account.getEmail(), c.getID());
 					// statement.addBatch(sql);
@@ -286,7 +286,7 @@ public class Schedule {
 	public void removeCourse(int id) {
 		boolean removed = false;
 		for (int i = 0; i < schedule.size(); i++) {
-			if (schedule.get(i).getID() == id) {
+			if (schedule.get(i).getId() == id) {
 				schedule.remove(i);
 				removed = true;
 				break;
@@ -300,7 +300,7 @@ public class Schedule {
 	public Course getCourse(int id)
 	{
 		for (int i = 0; i < schedule.size(); i++) {
-			if (schedule.get(i).getID() == id) {
+			if (schedule.get(i).getId() == id) {
 				return schedule.get(i);
 			}
 		}
