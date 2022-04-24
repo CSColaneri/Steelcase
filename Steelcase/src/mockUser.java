@@ -56,6 +56,7 @@ public class mockUser {
         this.locationRoom = locationRoom;
         this.add = new CheckBox();
     }
+
     public mockUser(Course c) {
         this.dep = c.getDepartment();
         this.cid = c.getCode();
@@ -65,7 +66,6 @@ public class mockUser {
         this.building = c.getBuilding();
         this.locationRoom = c.getRoom();
         this.add = new CheckBox();
-
     }
 
     public mockUser(){}

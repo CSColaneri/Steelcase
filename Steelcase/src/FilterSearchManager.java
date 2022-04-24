@@ -27,21 +27,23 @@ public class FilterSearchManager implements Initializable{
 
     /*View Schedule ids*/
     @FXML
-    private TableColumn<mockUser, Integer> cid;
+    private TableColumn<Course, Integer> cid;
     @FXML
-    private TableColumn<mockUser, Integer> locationRoom;
+    private TableColumn<Course, Integer> locationRoom;
     @FXML
-    private TableColumn<mockUser, String> time;
+    private TableColumn<Course, String> time;
     @FXML
-    private TableColumn<mockUser, String> title;
+    private TableColumn<Course, String> title;
     @FXML
-    private TableColumn<mockUser, String> courseAdd;
+    private TableColumn<Course, String> courseAdd;
     @FXML
-    private TableView<mockUser> viewShed;
+    private TableView<Course> viewShed;
     @FXML
     private ChoiceBox<String> choiceBox;
     @FXML
     private TextField searchText;
+
+    private ArrayList<Course> allCourses;
 
     EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
         @Override
@@ -55,16 +57,15 @@ public class FilterSearchManager implements Initializable{
     //populating choice box
     private String[] choices = {"Professor", "Name", "Description", "Code", "Department"};
 
-    public ObservableList<mockUser> list = FXCollections.observableArrayList(
-            //need to create a wrapper here for the data.
+    public ObservableList<Course> list = FXCollections.observableArrayList(
 
     );
 
     public void addCourses(){
         //call the course thingy
-        for(mockUser u : list){
+        for(Course u : list){
             if(u.getAdd().isSelected()){
-                System.out.println("Adding Course");
+
             }
         }
     }
@@ -72,10 +73,7 @@ public class FilterSearchManager implements Initializable{
     public void search(){
         //running the search by filters
         Search search = new Search();
-        String allCoursesUnf = search.searchCourses(GuiMain.conn); //search the courses
-        //Sending the String to be Parsed into object type courses
-        parseCourseToOCourse(allCoursesUnf);
-        System.out.println(allCoursesUnf);
+        allCourses = search.searchCoursesC(GuiMain.conn); //has all the courses
     }
 
     @FXML
@@ -143,23 +141,13 @@ public class FilterSearchManager implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         searchText.addEventHandler(KeyEvent.KEY_PRESSED, eventHandler);
         choiceBox.getItems().addAll(choices);
-//        cid.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("cid"));
-//        locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, Integer>("locationRoom"));
-//        time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("time"));
-//        title.setCellValueFactory(new PropertyValueFactory<mockUser, String>("title"));
-//        courseAdd.setCellValueFactory(new PropertyValueFactory<mockUser, String>("add"));
+        search(); //fills the allCourses
+        list.addAll(allCourses);
+        cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("id"));
+        locationRoom.setCellValueFactory(new PropertyValueFactory<Course, Integer>("room"));
+        time.setCellValueFactory(new PropertyValueFactory<Course, String>("begin_time"));
+        title.setCellValueFactory(new PropertyValueFactory<Course, String>("short_title"));
+        courseAdd.setCellValueFactory(new PropertyValueFactory<Course, String>("add"));
         viewShed.setItems(list);
     }
-
-    public ArrayList<Course> parseCourseToOCourse(String s){
-        ArrayList<Course> returnArray = new ArrayList<>();
-        String[] sSep = s.split(":");
-
-        for(String str : sSep){
-            System.out.println(str);
-        }
-
-        return returnArray;
-    }
-
 }

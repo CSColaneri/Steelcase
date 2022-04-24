@@ -138,7 +138,7 @@ public class Search {
                     // formatting it into a presentable string of comma seperated values
                     for (int i = 1; i <= columnsNumber; i++) {
                         if (i > 1) {
-                            s = s + (",  ");
+                            s = s + (",");
                         }
                         s = s + rsmd.getColumnName(i);
                     }
@@ -198,15 +198,17 @@ public class Search {
 //                    }
 //                    s = s + rsmd.getColumnName(i);
 //                }
-                s = s + "\n";
+              //  s = s + "\n";
                 while (courses.next()) {
                     for (int i = 1; i <= columnsNumber; i++) {
                         if (i > 1) {
-                            s = s + (",  ");
+                            s = s + (",");
                         }
-                        s = s + courses.getString(i);
+                        if(i != 8) {
+                            s = s + courses.getString(i);
+                        }
                     }
-                    s = s + ":\n";
+                    s = s + "~\n";
                 }
                 stmt.close();
                 courses.close();

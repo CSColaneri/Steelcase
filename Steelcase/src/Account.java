@@ -282,7 +282,7 @@ public class Account {
 			ps2.setString(1, email);
 			// probably doesn't work
 			for (int i = 0; i < classes.getSchedule().size(); i++) {
-				ps2.setInt(2, classes.getSchedule().get(i).getID());
+				ps2.setInt(2, classes.getSchedule().get(i).getId());
 				ps2.execute();
 			}
 		} catch (SQLException s) {
