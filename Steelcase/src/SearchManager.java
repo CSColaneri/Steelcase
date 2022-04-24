@@ -34,6 +34,7 @@ public class SearchManager {
     ArrayList<Integer> submittedInfo = new ArrayList<>();
 
     public void submitted(ActionEvent e){
+        Search search = new Search();
         try {
             submittedInfo.add(Integer.parseInt(cidOne.getText()));
             submittedInfo.add(Integer.parseInt(cidTwo.getText()));
@@ -47,7 +48,7 @@ public class SearchManager {
             exception.getCause();
         }
         for(Integer c : submittedInfo){
-            System.out.println(c);
+            //GuiMain.schedule.add()
         }
 
         //Setting the text back to empty
@@ -59,7 +60,6 @@ public class SearchManager {
         cidSix.setText("");
 
         //check success, maybe some bool?
-
     }
 
     @FXML

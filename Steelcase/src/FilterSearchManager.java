@@ -13,10 +13,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -27,11 +29,21 @@ public class FilterSearchManager implements Initializable{
 
     /*View Schedule ids*/
     @FXML
+    private TableColumn<Course, Integer> cCode;
+    @FXML
     private TableColumn<Course, Integer> cid;
     @FXML
     private TableColumn<Course, Integer> locationRoom;
     @FXML
-    private TableColumn<Course, String> time;
+    private TableColumn<Course, String> description;
+    @FXML
+    private TableColumn<Course, String> startTime;
+    @FXML
+    private TableColumn<Course, String> professor;
+    @FXML
+    private TableColumn<Course, String> endTime;
+    @FXML
+    private TableColumn<Course, String> department;
     @FXML
     private TableColumn<Course, String> title;
     @FXML
@@ -55,7 +67,7 @@ public class FilterSearchManager implements Initializable{
     };
 
     //populating choice box
-    private String[] choices = {"Professor", "Name", "Description", "Code", "Department"};
+    private String[] choices = {"Professor", "Class Name", "Description", "Code", "Department", "ID"};
 
     public ObservableList<Course> list = FXCollections.observableArrayList(
 
@@ -65,7 +77,8 @@ public class FilterSearchManager implements Initializable{
         //call the course thingy
         for(Course u : list){
             if(u.getAdd().isSelected()){
-
+                System.out.println("Adding course: " + u.getLong_title());
+                GuiMain.schedule.add(u);
             }
         }
     }
@@ -73,7 +86,61 @@ public class FilterSearchManager implements Initializable{
     public void search(){
         //running the search by filters
         Search search = new Search();
-        allCourses = search.searchCoursesC(GuiMain.conn); //has all the courses
+        if(choiceBox.getValue() == null) {
+            allCourses = search.searchCoursesC(GuiMain.conn); //has all the courses
+        }else{
+            ArrayList<Course> filteredCourses = new ArrayList<>();
+            //do a filtered search
+            System.out.println("Doing a filtered search: " + choiceBox.getValue());
+            list.removeAll(allCourses); //refreshed the list to an empty state
+            //add the courses that you want to show to the user after the filter search
+            if(choiceBox.getValue().equals("Code")){
+                System.out.println("Doing a code filtered search");
+                for(Course c : allCourses){
+                    if(c.getCode() == Integer.parseInt(searchText.getText())){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            }else if(choiceBox.getValue().equals("Professor")){
+                System.out.println("Doing a professor filtered search");
+                for(Course c : allCourses){
+                    if(c.getProfessor() != null && c.getProfessor().contains(searchText.getText())){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            }else if(choiceBox.getValue().equals("Description")){
+                System.out.println("Doing a description filtered search");
+                for(Course c : allCourses){
+                    if(c.getDescription() != null && c.getDescription().contains(searchText.getText())){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            }else if(choiceBox.getValue().equals("Class Name")){
+                System.out.println("Doing a description class name search");
+                for(Course c : allCourses){
+                    if(c.getLong_title() != null && c.getLong_title().contains(searchText.getText().toUpperCase(Locale.ROOT))){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            }else if(choiceBox.getValue().equals("Department")){
+                System.out.println("Doing a department name search");
+                for(Course c : allCourses){
+                    if(c.getDepartment() != null && c.getDepartment().contains(searchText.getText().toUpperCase(Locale.ROOT))){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            }else if(choiceBox.getValue().equals("ID")){
+                System.out.println("Doing a id name search");
+                for(Course c : allCourses){
+                    if(c.getId() == Integer.parseInt(searchText.getText())){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            }
+
+
+            list.addAll(filteredCourses);
+        }
     }
 
     @FXML
@@ -143,11 +210,18 @@ public class FilterSearchManager implements Initializable{
         choiceBox.getItems().addAll(choices);
         search(); //fills the allCourses
         list.addAll(allCourses);
-        cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("id"));
+        cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));
         locationRoom.setCellValueFactory(new PropertyValueFactory<Course, Integer>("room"));
-        time.setCellValueFactory(new PropertyValueFactory<Course, String>("begin_time"));
+        startTime.setCellValueFactory(new PropertyValueFactory<Course, String>("begin_time"));
+        endTime.setCellValueFactory(new PropertyValueFactory<Course, String>("end_time"));
         title.setCellValueFactory(new PropertyValueFactory<Course, String>("short_title"));
+        description.setCellValueFactory(new PropertyValueFactory<Course, String>("description"));
+        professor.setCellValueFactory(new PropertyValueFactory<Course, String>("professor"));
         courseAdd.setCellValueFactory(new PropertyValueFactory<Course, String>("add"));
+        department.setCellValueFactory(new PropertyValueFactory<Course, String>("department"));
+        cCode.setCellValueFactory(new PropertyValueFactory<Course, Integer>("id"));
         viewShed.setItems(list);
     }
+
+
 }

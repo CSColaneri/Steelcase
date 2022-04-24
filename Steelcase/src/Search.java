@@ -204,9 +204,6 @@ public class Search {
                         if (i > 1) {
                             s = s + (",");
                         }
-                        if(i != 8) {
-                            s = s + courses.getString(i);
-                        }
                     }
                     s = s + "~\n";
                 }
