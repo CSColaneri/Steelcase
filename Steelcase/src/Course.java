@@ -1,3 +1,5 @@
+import javafx.scene.control.CheckBox;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,6 +19,7 @@ public class Course {
   private int capacity;
   private int enrollment;
   private String room;
+  private CheckBox add;
 
   public Course() {
     id = 0;
@@ -34,6 +37,7 @@ public class Course {
     capacity = 0;
     enrollment = 0;
     room = "";
+    this.add = new CheckBox();
   }
   
   // TODO: This can't be right...
@@ -57,6 +61,7 @@ public class Course {
     this.capacity = capacity;
     this.enrollment = enrollment;
     this.room = room;
+    this.add = new CheckBox();
   }
   
   /**
@@ -84,10 +89,11 @@ public class Course {
       this.capacity     = course.getInt("capacity");
       this.enrollment   = course.getInt("enrollment");
       this.room         = course.getString("room");
+      this.add          = new CheckBox();
     }
   }
   
-  public int getID() {
+  public int getId() {
 	  return id;
   }
 
@@ -143,6 +149,10 @@ public class Course {
     return enrollment;
   }
 
+  public CheckBox getAdd() {
+    return add;
+  }
+
   public String getRoom() {
     return room;
   }
@@ -178,6 +188,6 @@ public class Course {
   //Code, department, Section, building, short_title. begin_time, end_time, day, room
   @Override
   public String toString(){
-    return "ID: " + this.getID() + " Course Code: " + this.getCode() + " Department: " + this.getDepartment() + " Section: " + this.getSection() + " Building: " + this.getBuilding() + " Title: " + this.getShort_title() + " Start Time: " + this.getBegin_time() + " End Time: " + this.getEnd_time() + " Day: " + this.getDay() + " Room: " + this.getRoom() + "\n";
+    return "ID: " + this.getId() + " Course Code: " + this.getCode() + " Department: " + this.getDepartment() + " Section: " + this.getSection() + " Building: " + this.getBuilding() + " Title: " + this.getShort_title() + " Start Time: " + this.getBegin_time() + " End Time: " + this.getEnd_time() + " Day: " + this.getDay() + " Room: " + this.getRoom() + "\n";
   }
 }
