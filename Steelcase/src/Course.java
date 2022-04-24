@@ -1,5 +1,4 @@
 import javafx.scene.control.CheckBox;
-import org.checkerframework.checker.units.qual.C;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -90,6 +89,7 @@ public class Course {
       this.capacity     = course.getInt("capacity");
       this.enrollment   = course.getInt("enrollment");
       this.room         = course.getString("room");
+      this.add          = new CheckBox();
     }
   }
   
