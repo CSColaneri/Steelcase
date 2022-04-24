@@ -29,6 +29,8 @@ public class accountManager implements Initializable {
     @FXML
     private Text emailText;
 
+    @FXML
+    private Button login;
 
     public void setAccountHolderText(String accountHolder){
         accountHolderText.setText("Account Holder: " + accountHolder);
@@ -111,6 +113,25 @@ public class accountManager implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (GuiMain.loggedIn) {
+            try {
+                login.setText("Account");
+            }catch (Exception e){
+                e.getCause();
+            }
+            login.setOnAction(actionEvent -> {
+                System.out.println("Switching to Register");
+                try {
+                    root = FXMLLoader.load(getClass().getResource("account.fxml"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            });
+        }
         setAccountHolderText(GuiMain.account.getFirstName() + " " + GuiMain.account.getLastName());
         setEmailText(GuiMain.account.getEmail());
     }

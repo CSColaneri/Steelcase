@@ -37,7 +37,7 @@
                <children>
                   <VBox prefHeight="645.0" prefWidth="280.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule by Code">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule by Course ID">
                            <VBox.margin>
                               <Insets top="150.0" />
                            </VBox.margin>
