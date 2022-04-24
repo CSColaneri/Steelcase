@@ -102,20 +102,6 @@ public class Email {
 	}
 
 	/**
-	 * Takes an ArrayList of emails and puts them into an {@code Address[]} array.
-	 * @param emails An arraylist of valid email addresses.
-	 * @return The email addresses from the parameter but in an Address array instead.
-	 * @throws AddressException if the addresses couldn't be parsed into the Address array. 
-	 */
-	private static Address[] addressFromArraylist(ArrayList<String> emails) throws AddressException {
-		String addrList = "";
-		for(int i = 0; i < emails.size(); ++i) {
-			addrList = addrList.concat(emails.get(i)+",");
-		}
-		return InternetAddress.parse(addrList);
-	}
-
-	/**
 	 * Sends the given schedule to the given email {@code to}. Returns
 	 * true if and only if the email is successfully send. False in 
 	 * all other cases.
@@ -132,20 +118,33 @@ public class Email {
 			
 			message.setSubject(subject);
 			
-			// TODO: use html for schedule
-			message.setContent(buildHtml(body, schedule), "text/html");
 			// maybe attachement. tutorial: https://www.tutorialspoint.com/java/java_sending_email.htm
+			message.setContent(buildScheduleHtml(body, schedule), "text/html");
 
 			Transport.send(message);
 			return true;
 		} catch (MessagingException e) {
-			// TODO: Logging
+			// TODO: Log
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-	private static String buildHtml(String message, Schedule schedule) {
+	/**
+	 * Takes an ArrayList of emails and puts them into an {@code Address[]} array.
+	 * @param emails An arraylist of valid email addresses.
+	 * @return The email addresses from the parameter but in an Address array instead.
+	 * @throws AddressException if the addresses couldn't be parsed into the Address array. 
+	 */
+	private static Address[] addressFromArraylist(ArrayList<String> emails) throws AddressException {
+		String addrList = "";
+		for(int i = 0; i < emails.size(); ++i) {
+			addrList = addrList.concat(emails.get(i)+",");
+		}
+		return InternetAddress.parse(addrList);
+	}
+
+	private static String buildScheduleHtml(String message, Schedule schedule) {
 		// build html
 		String html;
 		try {// if the template can be found do this
@@ -194,6 +193,43 @@ public class Email {
 	public static boolean isValidEmail(String email) {
 		return email.matches(EMAIL_REGEX);
 	}
+
+	/**
+	 * Sends an email confirmation code to the given account.
+	 * If the account has a newEmail address, sends the email
+	 * there. If it doesn't, then the user is signing up and
+	 * the email should go to their current email.
+	 * @param account
+	 * @return
+	 */
+	public static boolean sendConfirmationEmail(Account account) {
+		String to;
+		// If the user is changing their email, 
+		// 	send to the new email.
+		// else the user is signing up, 
+		// 	send to their current email
+		if(!account.getNewEmail().isBlank()) {
+			to = account.getNewEmail();
+		} else {
+			to = account.getEmail();
+		}
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(FROM));
+
+			message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			message.setText("Your confirmation code is: " + account.getConfirmationCode());
+
+			Transport.send(message);
+			return true;
+		} catch(MessagingException e) {
+			// TODO: Log
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 
 	// If this won't run at school, try running it with a VPN enabled.
 	// I keep getting Web Login Required, probably because of the

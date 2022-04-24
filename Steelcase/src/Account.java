@@ -108,7 +108,9 @@ public class Account {
 		return this.isEmailConfirmed;
 	}
 
-	// no getConfirmationCode
+	public String getConfirmationCode() {
+		return this.confirmationCode;
+	}
 
 	private void setEmail(String email) {
 		this.email = email;
@@ -275,7 +277,11 @@ public class Account {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
 			Account account = new Account(email, encryptedPassword, salt, firstName, lastName);
-			return account.saveUser(sched);
+			account = account.saveUser(sched);
+			if(!Email.sendConfirmationEmail(account)) {
+				System.err.println("Failed to send confirmation email");
+			}
+			return account;
 		} else {
 			throw new InvalidNameException("Invalid Email");
 		}
