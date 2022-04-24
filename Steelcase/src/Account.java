@@ -24,12 +24,18 @@ public class Account {
 	private String salt;
 	private String firstName;
 	private String lastName;
+	private String newEmail;
+	private boolean isEmailConfirmed;
+	private String confirmationCode;
 
 	private static final String PASSWORD_FIELD= "password_hash";
 	private static final String EMAIL_FIELD 	= "email";
 	private static final String SALT_FIELD 		= "salt";
 	private static final String FIRST_NAME_FIELD = "first_name";
 	private static final String LAST_NAME_FIELD = "last_name";
+	private static final String NEW_EMAIL_FIELD = "NEW_EMAIL";
+	private static final String EMAIL_CONFIRMATION_FIELD = "EMAIL_CONFIRMATION";
+	private static final String CONFIRMATION_CODE_FIELD = "CONFIRMATION_CODE";
 	// private static final String ROLE_FIELD = "role";
 
 	private Account(String email, String pword, String salt, String firstName, String lastName) {
@@ -38,27 +44,53 @@ public class Account {
 		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.newEmail = "";
+		this.isEmailConfirmed = false;
+		this.confirmationCode = "";
 	}
 
-	public String getPassEncrypted() {
-		return passEncrypted;
+	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.newEmail = newEmail;
+		this.isEmailConfirmed = false;
+		this.confirmationCode = getNewEmailConfirmationCode();
 	}
-
-	private void setPassEncrypted(String passEncrypted) {
-		this.passEncrypted = passEncrypted;
+	
+	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.newEmail = newEmail;
+		this.isEmailConfirmed = emailIsConfirmed;
+		this.confirmationCode = getNewEmailConfirmationCode();
+	}
+	
+	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed, String code) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.newEmail = newEmail;
+		this.isEmailConfirmed = emailIsConfirmed;
+		this.confirmationCode = code;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	private void setEmail(String email) {
-		this.email = email;
+	public String getPassEncrypted() {
+		return passEncrypted;
 	}
 
-	private void setSalt(String salt) {
-		this.salt = salt;
-	}
+	// no getSalt function
 
 	public String getFirstName() {
 		return this.firstName;
@@ -68,14 +100,47 @@ public class Account {
 		return this.lastName;
 	}
 
+	public String getNewEmail() {
+		return this.newEmail;
+	}
+
+	public boolean emailIsConfirmed() {
+		return this.isEmailConfirmed;
+	}
+
+	// no getConfirmationCode
+
+	private void setEmail(String email) {
+		this.email = email;
+	}
+
+	private void setPassEncrypted(String passEncrypted) {
+		this.passEncrypted = passEncrypted;
+	}
+
+	private void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	private void setNewEmail(String newEmail) {
+		this.newEmail = newEmail;
+	}
+
+	private void setIsEmailConfirmed(boolean bool) {
+		this.isEmailConfirmed = bool;
+	}
+
+	private void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
+	}
+
 	/**
 	 * Validates that the given email is in an appropriate format
 	 * @param email An email address
 	 * @return true if the address is in a valid email address format. False if not.
 	 */
-	public static boolean validEmail(String email) {
-		return true;
-		// return email.matches(Email.EMAIL_REGEX);
+	public static boolean isValidEmail(String email) {
+		return email.matches(Email.EMAIL_REGEX);
 	}
 
 	public boolean validPassword(String email, String password) {
@@ -206,7 +271,7 @@ public class Account {
 		}
 
 		// At this point, email not already used
-		if(validEmail(email)) {
+		if(isValidEmail(email)) {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
 			Account account = new Account(email, encryptedPassword, salt, firstName, lastName);
@@ -259,6 +324,20 @@ public class Account {
 	}
 
 	/**
+	 * Returns a pseudorandomly generated 6 digit code.
+	 * Random.nextInt(10) is called for each digit.
+	 * @return A 6 digit String.
+	 */
+	public static String getNewEmailConfirmationCode() {
+		String code = "";
+		Random rand = new Random();
+		for(int i = 0; i < 6; ++i) {
+			code += ""+rand.nextInt(10);
+		}
+		return code;
+	}
+
+	/**
 	 * Name comes from
 	 * https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html,
 	 * but all content is original
@@ -266,7 +345,7 @@ public class Account {
 	 * @param classes
 	 */
 	private Account saveUser(Schedule classes) {
-		String acc = "insert into Account(email, password_hash, salt, first_name, last_name) values(?, ?, ?, ?, ?)";
+		String acc = "insert into Account(email, password_hash, salt, first_name, last_name, email_confirmed, confirmation_code) values(?, ?, ?, ?, ?, ?, ?)";
 		String sch = "insert into Schedule(email, courseID) values(?, ?)";
 		try (
 			Connection conn = DataSource.getConnection();
@@ -278,6 +357,8 @@ public class Account {
 			ps1.setString(3, salt);
 			ps1.setString(4, firstName);
 			ps1.setString(5, lastName);
+			ps1.setBoolean(6, isEmailConfirmed);
+			ps1.setString(7, confirmationCode);
 			ps1.execute();
 			ps2.setString(1, email);
 			// probably doesn't work
@@ -316,32 +397,52 @@ public class Account {
 			throw e;
 		}
 		try {
-			// only update DB with what's actually changed.
-			if (!this.email.equals(newAccount.email)) {
-				// update the email in db
+			// if actual email is diff, update.
+			if(!this.email.equals(newAccount.email)) {
 				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", EMAIL_FIELD, newAccount.email, this.email);
 				stmt.addBatch(sql);
 			}
-
+			
+			// If password is diff, update
 			if (!this.passEncrypted.equals(newAccount.passEncrypted)) {
-				// update the password in db
 				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", PASSWORD_FIELD, newAccount.passEncrypted, this.email);
 				stmt.addBatch(sql);
 			}
 			
+			// if salt is diff, update 
 			if(!this.salt.equals(newAccount.salt)) {
-				// update salt in db
 				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", SALT_FIELD, newAccount.salt, this.email);
 				stmt.addBatch(sql);
 			}
 
-			// on fail throws exception. TODO: does it throw if empty? hopefully not.
+			// if newEmail is diff, update.
+			if(!this.newEmail.equals(newAccount.newEmail)) {
+				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", NEW_EMAIL_FIELD, newAccount.newEmail, this.email);
+				stmt.addBatch(sql);
+			}
+			
+			// email confirmation?
+			if(newAccount.emailIsConfirmed()) {
+				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", EMAIL_CONFIRMATION_FIELD, newAccount.isEmailConfirmed, this.email);
+				stmt.addBatch(sql);
+			}
+			
+			// if confirmation code is diff, update
+			if(!this.confirmationCode.equals(newAccount.confirmationCode)) {
+				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", CONFIRMATION_CODE_FIELD, newAccount.confirmationCode, this.email);
+				stmt.addBatch(sql);
+			}
+
+			// on fail throws exception.
 			stmt.executeBatch();
 
 			// if DB updated, update the calling account object.
 			this.setEmail(newAccount.email);
 			this.setPassEncrypted(newAccount.passEncrypted);
 			this.setSalt(newAccount.salt);
+			this.setNewEmail(newAccount.newEmail);
+			this.setIsEmailConfirmed(newAccount.isEmailConfirmed);
+			this.setConfirmationCode(newAccount.confirmationCode);
 
 			conn.commit();
 		} catch(SQLException e) {
@@ -357,7 +458,6 @@ public class Account {
 			e.printStackTrace();
 			throw new Exception("Failed to close connection.");
 		}
-
 	}
 
 	/**
@@ -393,13 +493,12 @@ public class Account {
 	 * @param password The new password to use.
 	 * @throws Exception If the password cannot be hashed, throws an Exception.
 	 */
-	public void changePassword(String password) throws Exception {
+	public void changePassword(String password) throws SQLException, Exception {
 		// check password requirements
 
 		// using a new salt doesn't necessarily increase security.
 		String encP = getEncryptedPassword(password, this.salt);
-		Account update = new Account(this.email, encP, this.salt, this.firstName, this.lastName);
-		updateUser(update);
+		updateUser(new Account(email, encP, salt, firstName, lastName, newEmail, isEmailConfirmed, confirmationCode));
 	}
 
 	/**
@@ -409,11 +508,15 @@ public class Account {
 	 * @param newEmail the email to change to.
 	 * @throws Exception If the email is already in use.
 	 */
-	public void changeEmail(String newEmail) throws Exception {
-		// TODO: Email requirements and validation
+	public void changeEmail(String newEmail) throws InvalidNameException, Exception {
+		// Check Email requirements and validation
+		if(!isValidEmail(newEmail)) {
+			throw new InvalidNameException("Invalid Email");
+		}
 
 		if(getAccountDetails(newEmail) == null) {
-			updateUser(new Account(newEmail, this.passEncrypted, this.salt, this.firstName, this.lastName));
+			// email is available.
+			updateUser(new Account(this.email, this.passEncrypted, this.salt, this.firstName, this.lastName, newEmail, false, getNewEmailConfirmationCode()));
 			return;
 		}
 		// TODO: Log
@@ -421,11 +524,22 @@ public class Account {
 		throw new Exception("That email is already in use!");
 	}
 
-	// public static void main(String[] args) throws Exception {
-	// String salt = "cuPMHgO5LJg=";
-	// String password = "123456"; <---- password
-	// String email = "testEmail@gmail.com"; <-----
-	// System.out.println(salt);
-	// System.out.println(getEncryptedPassword(password, salt));
-	// }
+	public void confirmEmail(String code) throws SQLException, Exception {
+		// if the user provides the right code, update the account
+		// with the newEmail as the main email & emailConfirmed as true
+		if(code.equals(this.confirmationCode)) {
+			updateUser(new Account(newEmail, passEncrypted, salt, firstName, lastName, "", true, ""));
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		// String salt = getNewSalt();
+		// String password = "changeme"; //<---- password
+		// String email = "admin@gmail.com"; //<-----email
+		// String role = "admin";//<----- role
+		// String encryptedPassword = getEncryptedPassword(password, salt);
+		// Account account = new Account(email, encryptedPassword, salt, "admin", "admin", role);
+		// account.saveUser(new Schedule());
+		// System.out.println("done");
+	}
 }
