@@ -24,13 +24,14 @@ public class Account {
 	private String salt;
 	private String firstName;
 	private String lastName;
+	private String role;
 
 	private static final String PASSWORD_FIELD= "password_hash";
 	private static final String EMAIL_FIELD 	= "email";
 	private static final String SALT_FIELD 		= "salt";
 	private static final String FIRST_NAME_FIELD = "first_name";
 	private static final String LAST_NAME_FIELD = "last_name";
-	// private static final String ROLE_FIELD = "role";
+	private static final String ROLE_FIELD = "role";
 
 	private Account(String email, String pword, String salt, String firstName, String lastName) {
 		this.setEmail(email);
@@ -38,8 +39,28 @@ public class Account {
 		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		role = "user";
+	}
+	
+	private Account(String email, String pword, String salt, String firstName, String lastName, String role) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = role;
+	}
+	
+	public String getRole() {
+		return role;
 	}
 
+	public void setRole(String role) {
+		if(role.equals("user") || role.equals("admin")) {
+			this.role = role;
+		}
+	}
+	
 	public String getPassEncrypted() {
 		return passEncrypted;
 	}
@@ -266,7 +287,7 @@ public class Account {
 	 * @param classes
 	 */
 	private Account saveUser(Schedule classes) {
-		String acc = "insert into Account(email, password_hash, salt, first_name, last_name) values(?, ?, ?, ?, ?)";
+		String acc = "insert into Account(email, password_hash, salt, first_name, last_name, role) values(?, ?, ?, ?, ?, ?)";
 		String sch = "insert into Schedule(email, courseID) values(?, ?)";
 		try (
 			Connection conn = DataSource.getConnection();
@@ -278,6 +299,7 @@ public class Account {
 			ps1.setString(3, salt);
 			ps1.setString(4, firstName);
 			ps1.setString(5, lastName);
+			ps1.setString(6, role);
 			ps1.execute();
 			ps2.setString(1, email);
 			// probably doesn't work
