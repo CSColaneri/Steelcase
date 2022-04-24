@@ -23,7 +23,7 @@ public class loginManager {
     public void login(ActionEvent e) throws Exception {
         String em = email.getText();
         String pass = password.getText();
-        System.out.println("Email: " + em + " Pass: " + pass);
+        System.out.println("Email: " + em + " Pass: <REMOVED>");
         //need to then do an account grab
         GuiMain.account = Account.login(em, pass);
         if (GuiMain.account == null) {
