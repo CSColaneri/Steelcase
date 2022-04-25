@@ -23,5 +23,6 @@
 	<!-- <classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.properties"/> -->
 	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.swing.jar"/>
 	<classpathentry kind="lib" path="Steelcase/lib/javafx-sdk-18/lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="Steelcase/lib/tika-app-2.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

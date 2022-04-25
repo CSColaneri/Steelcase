@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch pdfHandler",
+      "request": "launch",
+      "mainClass": "pdfHandler",
+      "projectName": "Steelcase"
+    },
+    {
+      "type": "java",
       "name": "Gui",
       "request": "launch",
       "mainClass": "GuiMain",
