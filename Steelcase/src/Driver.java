@@ -1080,7 +1080,7 @@ public class Driver {
 		{
 			case "addToSchedule":
 				// Remove last item from list of courses in schedule - this will always be the last item added.
-				schedule.removeCourse(state.get(statePosition).getRemovedCourse().getID());
+				schedule.removeCourse(state.get(statePosition).getRemovedCourse().getId());
 				break;
 			case "removeFromSchedule":
 				// We're going to have to store items in order to restore them in the event of an undo
@@ -1118,7 +1118,7 @@ public class Driver {
 				break;
 			case "removeFromSchedule":
 				// We're going to have to store items in order to restore them in the event of an undo
-				schedule.removeCourse(state.get(statePosition).getRemovedCourse().getID());
+				schedule.removeCourse(state.get(statePosition).getRemovedCourse().getId());
 				break;
 			default:
 				break;
