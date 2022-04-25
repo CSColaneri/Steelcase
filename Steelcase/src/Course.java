@@ -173,6 +173,7 @@ public class Course {
    * @return Returns true if the calling course conflicts in time with the given course
    */
   public boolean conflicts(Course c1) {
+    boolean conflict = false;
     String[] thisBegin= this.getBegin_time().split(":");
     String[] thisEnd  = this.getEnd_time().split(":");
     String[] c1Begin  = c1.getBegin_time().split(":");
@@ -183,10 +184,14 @@ public class Course {
         Integer.parseInt(thisBegin[0]) > Integer.parseInt(c1End[0]) || 
         Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0])
     ) {
-      return false;
-
+      System.out.println("Conflicting time");
+      conflict = true;
     }
-    return true;
+    if(!conflict && c1.code == this.code && c1.department.equals(this.department)) {
+      conflict = true;
+      System.out.println("Conflicting code & dep");
+    }
+    return conflict;
   }
 
   public String simpleString() {
