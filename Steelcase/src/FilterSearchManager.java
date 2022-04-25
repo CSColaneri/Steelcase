@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.checkerframework.checker.units.qual.A;
 
@@ -28,6 +30,8 @@ public class FilterSearchManager implements Initializable{
     private Parent root;
 
     /*View Schedule ids*/
+    @FXML
+    private Button clearBtn;
     @FXML
     private TableColumn<Course, String> day;
     @FXML
@@ -81,6 +85,7 @@ public class FilterSearchManager implements Initializable{
         //call the course thingy
         for(Course u : list){
             if(u.getAdd().isSelected()){
+                u.getAdd().setSelected(false);
                 System.out.println("Adding course: " + u.getLong_title());
                 GuiMain.schedule.add(u);
             }
@@ -90,9 +95,11 @@ public class FilterSearchManager implements Initializable{
     public void search(){
         //running the search by filters
         Search search = new Search();
+
         if(choiceBox.getValue() == null) {
             allCourses = search.searchCoursesC(GuiMain.conn); //has all the courses
         }else{
+            clearBtn.setVisible(true);
             ArrayList<Course> filteredCourses = new ArrayList<>();
             //do a filtered search
             System.out.println("Doing a filtered search: " + choiceBox.getValue());
@@ -101,8 +108,12 @@ public class FilterSearchManager implements Initializable{
             if(choiceBox.getValue().equals("Code")){
                 System.out.println("Doing a code filtered search");
                 for(Course c : allCourses){
-                    if(c.getCode() == Integer.parseInt(searchText.getText())){
-                        filteredCourses.add(c); //add the class
+                    try {
+                        if (c.getCode() == Integer.parseInt(searchText.getText())) {
+                            filteredCourses.add(c); //add the class
+                        }
+                    }catch (NumberFormatException e){
+                        System.out.println("User inputted a number, throws exception");
                     }
                 }
             }else if(choiceBox.getValue().equals("Professor")){
@@ -136,8 +147,12 @@ public class FilterSearchManager implements Initializable{
             }else if(choiceBox.getValue().equals("ID")){
                 System.out.println("Doing a id name search");
                 for(Course c : allCourses){
-                    if(c.getId() == Integer.parseInt(searchText.getText())){
-                        filteredCourses.add(c); //add the class
+                    try {
+                        if (c.getId() == Integer.parseInt(searchText.getText())) {
+                            filteredCourses.add(c); //add the class
+                        }
+                    }catch (NumberFormatException e){
+                        System.out.println("User entered a non-number");
                     }
                 }
             }else if(choiceBox.getValue().equals("Day")){
@@ -234,11 +249,22 @@ public class FilterSearchManager implements Initializable{
                 stage.show();
             });
         }
+        clearBtn.setVisible(false);
 
         searchText.addEventHandler(KeyEvent.KEY_PRESSED, eventHandler);
         choiceBox.getItems().addAll(choices);
         search(); //fills the allCourses
         list.addAll(allCourses);
+        for(Course c : list){
+            if(GuiMain.schedule.conflicts(c)){
+                c.getAdd().setDisable(true);
+                c.getAdd().setOnMouseClicked(actionEvent -> {
+                    Text text = new Text("Conflicting course can not add");
+                    Popup popup = new Popup();
+                    popup.getContent().add(text);
+                });
+            }
+        }
         cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));
         day.setCellValueFactory(new PropertyValueFactory<Course, String>("day"));
         locationRoom.setCellValueFactory(new PropertyValueFactory<Course, Integer>("room"));
@@ -251,6 +277,13 @@ public class FilterSearchManager implements Initializable{
         department.setCellValueFactory(new PropertyValueFactory<Course, String>("department"));
         cCode.setCellValueFactory(new PropertyValueFactory<Course, Integer>("id"));
         viewShed.setItems(list);
+    }
+
+    public void reset(){
+        choiceBox.setValue(null);
+        clearBtn.setVisible(false);
+        list.removeAll(allCourses);
+        list.addAll(allCourses);
     }
 
 

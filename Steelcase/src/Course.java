@@ -174,15 +174,24 @@ public class Course {
    */
   public boolean conflicts(Course c1) {
     boolean conflict = false;
-    String[] thisBegin= this.getBegin_time().split(":");
-    String[] thisEnd  = this.getEnd_time().split(":");
-    String[] c1Begin  = c1.getBegin_time().split(":");
-    String[] c1End    = c1.getEnd_time().split(":");
-
+    boolean timeExists = true;
+    String[] thisBegin = {""};
+    String[] thisEnd = {""};
+    String[] c1Begin = {""};
+    String[] c1End = {""};
+    if(this.getBegin_time() == null || this.getEnd_time() == null || c1.getBegin_time() == null || c1.getEnd_time() == null) {
+      timeExists = false;
+    } else {
+      timeExists= true;
+      thisBegin = this.getBegin_time().split(":");
+      thisEnd   = this.getEnd_time().split(":");
+      c1Begin   = c1.getBegin_time().split(":");
+      c1End     = c1.getEnd_time().split(":");
+    }
     // if thisBegin > (after) c1End or thisEnd < (before) c1Begin, no conflict
-    if(
-        Integer.parseInt(thisBegin[0]) > Integer.parseInt(c1End[0]) || 
-        Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0])
+    if( timeExists &&
+        (Integer.parseInt(thisBegin[0]) > Integer.parseInt(c1End[0]) ||
+        Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0]))
     ) {
       System.out.println("Conflicting time");
       conflict = true;
