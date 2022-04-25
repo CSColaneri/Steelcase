@@ -42,11 +42,11 @@ public class ViewManager implements Initializable {
     @FXML
     private TableColumn<Course, String> building;
     @FXML
-    private TableView<mockUser> viewShed;
+    private TableView<Course> viewShed;
     @FXML
     private Button login;
     @FXML
-    private TableColumn<mockUser, String> delete;
+    private TableColumn<Course, String> delete;
 
 
     public ObservableList<Course> list = FXCollections.observableArrayList();
