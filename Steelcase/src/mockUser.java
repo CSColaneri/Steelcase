@@ -9,6 +9,7 @@ public class mockUser {
     private String locationRoom; //location of the course
     private String building; //location of the course
     private CheckBox add;
+    private int id;
 
     public CheckBox getAdd() {
         return add;
@@ -66,6 +67,11 @@ public class mockUser {
         this.building = c.getBuilding();
         this.locationRoom = c.getRoom();
         this.add = new CheckBox();
+        this.id = c.getId();
+    }
+
+    public int getId(){
+        return this.id;
     }
 
     public mockUser(){}

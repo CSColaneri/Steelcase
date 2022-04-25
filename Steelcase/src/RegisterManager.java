@@ -42,6 +42,7 @@ public class RegisterManager {
         if(password.getText().equals(confirmPass.getText())) {
             try {
                 GuiMain.account = Account.signup(email.getText(), password.getText(), GuiMain.schedule, fname.getText(), lname.getText());
+                GuiMain.loggedIn = true;
                 if(GuiMain.account != null) {
                     GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account);
                     if(GuiMain.schedule.hasSchedule()) {

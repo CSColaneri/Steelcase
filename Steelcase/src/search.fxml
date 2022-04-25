@@ -25,7 +25,7 @@
                         <Button mnemonicParsing="false" onAction="#switchToSchedule" prefHeight="80.0" prefWidth="256.0" text="Schedule" textAlignment="CENTER" />
                         <Button mnemonicParsing="false" onAction="#switchToCalender" prefHeight="80.0" prefWidth="256.0" text="Calender" textAlignment="CENTER" />
                         <Button mnemonicParsing="false" onAction="#switchToSearch" prefHeight="80.0" prefWidth="256.0" text="Search Classes" textAlignment="CENTER" />
-                        <Button mnemonicParsing="false" onAction="#switchToLogin" prefHeight="80.0" prefWidth="256.0" text="Login" textAlignment="CENTER" />
+                        <Button fx:id="login" mnemonicParsing="false" onAction="#switchToLogin" prefHeight="80.0" prefWidth="256.0" text="Login" textAlignment="CENTER" />
                      </children>
                   </HBox>
                   <Text scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search" textAlignment="CENTER" x="40.0" y="20.0" />
@@ -37,7 +37,7 @@
                <children>
                   <VBox prefHeight="645.0" prefWidth="280.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule by Code">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule by Course ID">
                            <VBox.margin>
                               <Insets top="150.0" />
                            </VBox.margin>

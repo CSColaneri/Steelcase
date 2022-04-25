@@ -18,6 +18,7 @@ public class Course {
   private String end_time;
   private int capacity;
   private int enrollment;
+  private int intStartTime; //used for sorting later
   private String room;
   private CheckBox add;
 
@@ -61,6 +62,7 @@ public class Course {
     this.capacity = capacity;
     this.enrollment = enrollment;
     this.room = room;
+    this.intStartTime = Integer.parseInt(this.begin_time.split(":")[0]);
     this.add = new CheckBox();
   }
   
@@ -155,6 +157,12 @@ public class Course {
 
   public String getRoom() {
     return room;
+  }
+
+  public int getIntStartTime(){return intStartTime;}
+
+  public void setLong_title(String lt){
+    this.long_title = lt;
   }
 
   /**

@@ -29,6 +29,8 @@ public class FilterSearchManager implements Initializable{
 
     /*View Schedule ids*/
     @FXML
+    private TableColumn<Course, String> day;
+    @FXML
     private TableColumn<Course, Integer> cCode;
     @FXML
     private TableColumn<Course, Integer> cid;
@@ -54,6 +56,8 @@ public class FilterSearchManager implements Initializable{
     private ChoiceBox<String> choiceBox;
     @FXML
     private TextField searchText;
+    @FXML
+    private Button login;
 
     private ArrayList<Course> allCourses;
 
@@ -67,7 +71,7 @@ public class FilterSearchManager implements Initializable{
     };
 
     //populating choice box
-    private String[] choices = {"Professor", "Class Name", "Description", "Code", "Department", "ID"};
+    private String[] choices = {"Professor", "Class Name", "Description", "Code", "Department", "ID", "Day"};
 
     public ObservableList<Course> list = FXCollections.observableArrayList(
 
@@ -136,9 +140,14 @@ public class FilterSearchManager implements Initializable{
                         filteredCourses.add(c); //add the class
                     }
                 }
+            }else if(choiceBox.getValue().equals("Day")){
+                System.out.println("Doing a day search");
+                for(Course c : allCourses){
+                    if(c.getDay().contains(searchText.getText())){
+                        filteredCourses.add(c); //add the class
+                    }
+                }
             }
-
-
             list.addAll(filteredCourses);
         }
     }
@@ -206,11 +215,32 @@ public class FilterSearchManager implements Initializable{
     //root element has been added, this allows us to change it
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (GuiMain.loggedIn) {
+            try {
+                login.setText("Account");
+            }catch (Exception e){
+                e.getCause();
+            }
+            login.setOnAction(actionEvent -> {
+                System.out.println("Switching to Register");
+                try {
+                    root = FXMLLoader.load(getClass().getResource("account.fxml"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            });
+        }
+
         searchText.addEventHandler(KeyEvent.KEY_PRESSED, eventHandler);
         choiceBox.getItems().addAll(choices);
         search(); //fills the allCourses
         list.addAll(allCourses);
         cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));
+        day.setCellValueFactory(new PropertyValueFactory<Course, String>("day"));
         locationRoom.setCellValueFactory(new PropertyValueFactory<Course, Integer>("room"));
         startTime.setCellValueFactory(new PropertyValueFactory<Course, String>("begin_time"));
         endTime.setCellValueFactory(new PropertyValueFactory<Course, String>("end_time"));
