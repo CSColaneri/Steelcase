@@ -15,5 +15,16 @@
 	<classpathentry exported="true" kind="lib" path="lib/junit-4.13.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.36.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-simple-1.7.36.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx-swt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.base.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.controls.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.fxml.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.graphics.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.media.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.properties"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.swing.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javafx-sdk-18/lib/javafx.web.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/tike-app-2.3.0.jar"/>
 </classpath>

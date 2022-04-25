@@ -21,8 +21,14 @@ public class Schedule {
 
 	// TODO: check for duplicate course and time conflicts
 	public boolean add(Course c) {
-		return schedule.add(c);
+		// check for conflicts here.
+		if(!schedule.contains(c) || conflicts(c)) {
+			return schedule.add(c);
+		}
+		return false;
 	}
+
+	// Can add conflicting courses to schedule (not db, just local obj)
 
 	/**
 	 * Checks if the schedule has any classes in it.
@@ -115,7 +121,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	public ArrayList<ArrayList<Course>> calString() {
+	public ArrayList<ArrayList<Course>> calData() {
 		ArrayList<ArrayList<Course>> cal = new ArrayList<ArrayList<Course>>();
 		ArrayList<Course> mon = new ArrayList<Course>();
 		ArrayList<Course> tue = new ArrayList<Course>();
@@ -190,12 +196,14 @@ public class Schedule {
 	/**
 	 * Connects to the database to save this schedule object
 	 * to the given account. First it clears the account's
-	 * current schedule,
+	 * current schedule.
 	 * 
 	 * @param account The account to save to.
 	 * @return true if successfull, false if it fails at any point
 	 */
 	public boolean saveSchedule(Account account) {
+		// check for conflicts in schedule.
+
 		// clear current schedule
 		Connection conn = null;
 		boolean status = true;
@@ -230,7 +238,7 @@ public class Schedule {
 				ps = conn.prepareStatement(sql);
 				for (Course c : schedule) {
 					ps.setString(1, account.getEmail());
-					ps.setInt(2, c.getID());
+					ps.setInt(2, c.getId());
 					// sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(%s, %s)",
 					// account.getEmail(), c.getID());
 					// statement.addBatch(sql);
@@ -286,7 +294,7 @@ public class Schedule {
 	public void removeCourse(int id) {
 		boolean removed = false;
 		for (int i = 0; i < schedule.size(); i++) {
-			if (schedule.get(i).getID() == id) {
+			if (schedule.get(i).getId() == id) {
 				schedule.remove(i);
 				removed = true;
 				break;
@@ -300,7 +308,7 @@ public class Schedule {
 	public Course getCourse(int id)
 	{
 		for (int i = 0; i < schedule.size(); i++) {
-			if (schedule.get(i).getID() == id) {
+			if (schedule.get(i).getId() == id) {
 				return schedule.get(i);
 			}
 		}

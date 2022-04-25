@@ -238,9 +238,10 @@ public class Driver {
 				case "calendar":
 					if(schedule == null || !schedule.hasSchedule()) {
 						System.out.println("No schedule to show.");
-					} else {
-					//	String cal = schedule.calString();
-					//	System.out.println(cal);
+					} 
+					else {
+						ArrayList<ArrayList<Course>> cal = schedule.calData();
+						calToString(cal);
 					}
 					break;
 				case "export":
@@ -690,6 +691,8 @@ public class Driver {
 	public void signupPage() {
 		String email = "";
 		String pass = "";
+		String fName = "";
+		String lName = "";
 		boolean match = false;
 		Scanner input = new Scanner(System.in);
 		boolean signup = true;
@@ -705,6 +708,12 @@ public class Driver {
 				signup = false;
 				break;
 			}
+
+			System.out.println("Enter your first name");
+			fName = input.next();
+
+			System.out.println("Enter you last name");
+			lName = input.next();
 
 			System.out.println("Enter a password");
 			pass = input.next();
@@ -723,7 +732,7 @@ public class Driver {
 		if(signup) {
 			try {
 				//create the new account and log them in.
-				account = Account.signup(email, pass, schedule);
+				account = Account.signup(email, pass, schedule, fName, lName);
 				if(account != null) {
 					login();
 				} else {
@@ -1034,6 +1043,11 @@ public class Driver {
 			return;
 		}
 		System.out.println("Email successfully updated! Check the new email address for a confirmation email.");
+		
+		/**
+		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW changeEmail
+		 */
+		state.add(new State("changeEmail"));
 	}
 
 /*
@@ -1126,4 +1140,35 @@ public class Driver {
 		   statePosition++;
 	   }
     }
+	
+	public void calToString(ArrayList<ArrayList<Course>> cal) {
+		for(int i = 0; i < cal.size(); i++) {
+			switch (i) {
+			case 0 :
+				System.out.print("Monday: ");
+				break;
+			case 1:
+				System.out.print("Tuesday: ");
+				break;
+			case 2:
+				System.out.print("Wednesday: ");
+				break;
+			case 3:
+				System.out.print("Thursday: ");
+				break;
+			case 4:
+				System.out.print("Friday: ");
+				break;
+			}
+			for(int j = 0; j < cal.get(i).size(); j++) {
+				System.out.print(cal.get(i).get(j).getDepartment() + " " + cal.get(i).get(j).getCode()
+						+ " " + cal.get(i).get(j).getBuilding() + " " + cal.get(i).get(j).getRoom()
+						+ " (" + cal.get(i).get(j).getBegin_time() + "-" + cal.get(i).get(j).getEnd_time());
+				if(j < cal.get(i).size() - 1) {
+					System.out.print(", ");
+				}
+			}
+			System.out.println();
+		}
+	}
 }

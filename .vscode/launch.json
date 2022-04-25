@@ -13,25 +13,23 @@
     },
     {
       "type": "java",
+      "name": "Gui",
+      "request": "launch",
+      "mainClass": "GuiMain",
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
+      },
+      "vmArgs": "--module-path Steelcase/lib/javafx-sdk-18/lib --add-modules javafx.controls,javafx.fxml",
+    },
+    {
+      "type": "java",
       "name": "Launch Current File",
       "request": "launch",
       "mainClass": "${file}",
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
-        "DB_PASSWORD": "admin",
-        "DB_USERNAME": "admin"
-      }
-    },
-    {
-      "type": "java",
-      "name": "Launch DBConnectionTest",
-      "request": "launch",
-      "mainClass": "DBConnectionTest",
-      "projectName": "steelcase_repo_504f08f5",
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
-        "DB_PASSWORD": "admin",
-        "DB_USERNAME": "admin"
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
       }
     },
     {
@@ -39,19 +37,20 @@
       "name": "Launch Driver",
       "request": "launch",
       "mainClass": "Driver",
-      "projectName": "steelcase_repo_504f08f5",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh"
       }
     },
     {
       "type": "java",
-      "name": "Launch UploadToDB",
+      "name": "Launch Email Debug",
       "request": "launch",
-      "mainClass": "UploadToDB",
-      "projectName": "steelcase_repo_504f08f5",
+      "mainClass": "Email",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
+        "EMAIL_OTP": "jatwvstqwbypxfwh",
+        "DEBUG":"true"
       }
     }
   ]

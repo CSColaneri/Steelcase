@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SearchManager">
+   <children>
+      <BorderPane layoutX="293.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <AnchorPane prefHeight="75.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" layoutY="35.0" prefHeight="29.0" prefWidth="1280.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#switchToMain" prefHeight="80.0" prefWidth="256.0" text="Home" textAlignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#switchToSchedule" prefHeight="80.0" prefWidth="256.0" text="Schedule" textAlignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#switchToCalender" prefHeight="80.0" prefWidth="256.0" text="Calender" textAlignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#switchToSearch" prefHeight="80.0" prefWidth="256.0" text="Search Classes" textAlignment="CENTER" />
+                        <Button fx:id="login" mnemonicParsing="false" onAction="#switchToLogin" prefHeight="80.0" prefWidth="256.0" text="Login" textAlignment="CENTER" />
+                     </children>
+                  </HBox>
+                  <Text scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search" textAlignment="CENTER" x="40.0" y="20.0" />
+               </children>
+            </AnchorPane>
+         </top>
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="645.0" prefWidth="280.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule by Course ID">
+                           <VBox.margin>
+                              <Insets top="150.0" />
+                           </VBox.margin>
+                        </Text>
+                        <GridPane prefHeight="197.0" prefWidth="280.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <VBox.margin>
+                              <Insets top="25.0" />
+                           </VBox.margin>
+                           <children>
+                              <TextField fx:id="cidOne" />
+                              <TextField fx:id="cidTwo" GridPane.columnIndex="1" />
+                              <TextField fx:id="cidThree" GridPane.rowIndex="1" />
+                              <TextField fx:id="cidFour" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="cidFive" GridPane.rowIndex="2" />
+                              <TextField fx:id="cidSix" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Button fx:id="addButton" mnemonicParsing="false" onAction="#submitted" text="Add" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="25.0" />
+                                 </GridPane.margin>
+                              </Button>
+                           </children>
+                        </GridPane>
+                        <Text fx:id="successText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                     <HBox.margin>
+                        <Insets left="350.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add courses using the course feature, allowing searching by title, professor, department, and more!" textAlignment="CENTER" wrappingWidth="200.0">
+                           <VBox.margin>
+                              <Insets top="140.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="courseSearchBtn" mnemonicParsing="false" onAction="#switchToClassSearch" prefHeight="25.0" prefWidth="99.0" text="Course Search">
+                           <VBox.margin>
+                              <Insets left="105.0" top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="100.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+            </HBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
