@@ -170,7 +170,7 @@ public class calendarManager implements Initializable {
 
 
             // For descending order
-            return c1-c2;
+            return c2-c1;
         }
     };
 }
