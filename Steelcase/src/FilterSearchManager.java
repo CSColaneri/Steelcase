@@ -9,14 +9,20 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -81,7 +87,7 @@ public class FilterSearchManager implements Initializable{
 
     );
 
-    public void addCourses(){
+    public void addCourses(ActionEvent e){
         //call the course thingy
         for(Course u : list){
             if(u.getAdd().isSelected()){
@@ -89,6 +95,11 @@ public class FilterSearchManager implements Initializable{
                 System.out.println("Adding course: " + u.getLong_title());
                 GuiMain.schedule.add(u);
             }
+        }
+        try {
+            switchToCalender(e);
+        }catch (IOException xe){
+            xe.printStackTrace();
         }
     }
 
@@ -250,18 +261,32 @@ public class FilterSearchManager implements Initializable{
             });
         }
         clearBtn.setVisible(false);
-
         searchText.addEventHandler(KeyEvent.KEY_PRESSED, eventHandler);
         choiceBox.getItems().addAll(choices);
         search(); //fills the allCourses
         list.addAll(allCourses);
         for(Course c : list){
             if(GuiMain.schedule.conflicts(c)){
-                c.getAdd().setDisable(true);
+                c.getAdd().setOpacity(.2);
                 c.getAdd().setOnMouseClicked(actionEvent -> {
-                    Text text = new Text("Conflicting course can not add");
+                    c.getAdd().setSelected(false);
+                    System.out.println("Showing the popUp");
+                    Button btn = new Button("X");
+                    btn.setTranslateX(180);
+                    btn.setTranslateY(-80);
+                    Text text = new Text("Conflicting course(s) can not added to schedule");
+                    Rectangle rect = new Rectangle(400, 200);
+                    rect.setFill(Color.WHITE);
+                    StackPane sPane = new StackPane();
+                    sPane.getChildren().addAll(rect, text, btn);
                     Popup popup = new Popup();
-                    popup.getContent().add(text);
+                    popup.getContent().add(sPane);
+                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    popup.show(stage);
+                    btn.setOnAction(actionEvent1 ->
+                    {
+                        popup.hide();
+                    });
                 });
             }
         }

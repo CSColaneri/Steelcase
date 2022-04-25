@@ -66,7 +66,7 @@
                         <TableColumn fx:id="endTime" editable="false" prefWidth="90.0" resizable="false" text="End Time" />
                         <TableColumn fx:id="day" editable="false" prefWidth="57.0" resizable="false" text="Day" />
                         <TableColumn fx:id="description" editable="false" minWidth="0.0" prefWidth="384.0" resizable="false" text="Description" />
-                        <TableColumn fx:id="courseAdd" editable="false" minWidth="0.0" prefWidth="87.0" resizable="false" text="Add Course" />
+                        <TableColumn fx:id="courseAdd" editable="false" minWidth="0.0" prefWidth="87.0" resizable="false" sortable="false" text="Add Course" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
