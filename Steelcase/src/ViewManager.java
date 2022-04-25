@@ -45,6 +45,8 @@ public class ViewManager implements Initializable {
     private TableView<mockUser> viewShed;
     @FXML
     private Button login;
+    @FXML
+    private TableColumn<mockUser, String> delete;
 
     public ObservableList<mockUser> list = FXCollections.observableArrayList();
 
@@ -112,6 +114,29 @@ public class ViewManager implements Initializable {
         GuiMain.schedule.saveSchedule(GuiMain.account);
     }
 
+    public void deleteSelected(){
+//        for(mockUser mU : list){
+//            if(mU.getAdd().isSelected()){
+//                int id = mU.getId();
+//                try {
+//                    GuiMain.schedule.removeCourse(id);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    e.getCause();
+//                }
+//                list.remove(mU);
+//            }
+//        }
+        for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).getAdd().isSelected()){
+                int id = list.get(i).getId(); //maybe remove from list after remove from GUI
+                list.remove(i);
+                i--;
+                GuiMain.schedule.removeCourse(id);
+            }
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (GuiMain.loggedIn) {
@@ -152,6 +177,7 @@ public class ViewManager implements Initializable {
         end_time.setCellValueFactory(new PropertyValueFactory<mockUser, String>("end_time"));
         building.setCellValueFactory(new PropertyValueFactory<mockUser, String>("building"));
         locationRoom.setCellValueFactory(new PropertyValueFactory<mockUser, String>("locationRoom"));
+        delete.setCellValueFactory(new PropertyValueFactory<mockUser, String>("add"));
 
         System.out.println("after setCellValueFactories");
 

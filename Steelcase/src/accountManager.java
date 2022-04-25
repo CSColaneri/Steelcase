@@ -51,6 +51,16 @@ public class accountManager implements Initializable {
         //change password
     }
 
+    public void logout(ActionEvent e){
+        GuiMain.account = null;
+        GuiMain.loggedIn = false;
+        try {
+            switchToMain(e);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
         System.out.println("Switching to main");
