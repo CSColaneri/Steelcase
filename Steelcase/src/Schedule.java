@@ -21,8 +21,14 @@ public class Schedule {
 
 	// TODO: check for duplicate course and time conflicts
 	public boolean add(Course c) {
-		return schedule.add(c);
+		// check for conflicts here.
+		if(!schedule.contains(c) || conflicts(c)) {
+			return schedule.add(c);
+		}
+		return false;
 	}
+
+	// Can add conflicting courses to schedule (not db, just local obj)
 
 	/**
 	 * Checks if the schedule has any classes in it.
@@ -190,12 +196,14 @@ public class Schedule {
 	/**
 	 * Connects to the database to save this schedule object
 	 * to the given account. First it clears the account's
-	 * current schedule,
+	 * current schedule.
 	 * 
 	 * @param account The account to save to.
 	 * @return true if successfull, false if it fails at any point
 	 */
 	public boolean saveSchedule(Account account) {
+		// check for conflicts in schedule.
+
 		// clear current schedule
 		Connection conn = null;
 		boolean status = true;
