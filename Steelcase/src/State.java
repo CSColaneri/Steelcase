@@ -14,23 +14,35 @@ public class State {
         previousAction = s;
     }
 
-    public State(String s, String loc)
+    public Course getRemovedCourse() {
+        return removedCourse;
+    }
+
+    public void setRemovedCourse(Course removedCourse) {
+        this.removedCourse = removedCourse;
+    }
+
+    public State(String s, String option)
     {
         previousAction = s;
-        previousLocation = loc;
+        switch(option)
+        {
+            
+        }
+        previousLocation = option;
     }
 
     public State(String s,  Course c)
     {
         previousAction = s;
-        removedCourse = c;
+        setRemovedCourse(c);
     }
 
-    public State(String s, String loc, Course c)
+    public State(String s, String option, Course c)
     {
         previousAction = s;
-        previousLocation = loc;
-        removedCourse = c;
+        previousLocation = option;
+        setRemovedCourse(c);
     }
 
     public String getPreviousAction()

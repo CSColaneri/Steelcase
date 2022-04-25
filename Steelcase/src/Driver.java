@@ -9,7 +9,7 @@ public class Driver {
 	private Account account;
 	private Schedule schedule = new Schedule();
 	private ArrayList<State> state = new ArrayList<State>();
-	private int statePosition;
+	private int statePosition = -1;
 	private String help = "Commands:\n"
 		+ "help:  brings up help dialog.\n"
 		+ "create: brings up the create schedule dialog.\n"
@@ -146,7 +146,9 @@ public class Driver {
 			+ "help: Print this message again\n"
 			+	"add: Add classes by their department, code, and section \n"
 			+ "search: Begin searching for courses\n"
-			+ "back: return to the main console dialogue\n";
+			+ "back: return to the main console dialogue\n"
+			+ "undo: undo adding or removing a course.\n"
+			+ "redo: redo adding or removing a course.\n";	
 
 		if(loggedIn){
 			help = help + "logout: logs the user out\n";
@@ -161,6 +163,12 @@ public class Driver {
 				beginAdd(scan);
 			} else {
 				switch (in) {
+					case "undo":
+						undo();
+						break;
+					case "redo":
+						redo();
+						break;
 					case "search"://go to search
 						searchCoursesPage();
 						//fallthrough intentional
@@ -195,7 +203,9 @@ public class Driver {
 			+ "Export: Send list and calendar views to a file you specify\n"
 			+ "Remove: remove a course from your schedule\n"
 			+ "Save: upload your schedule to the cloud (requires account)\n"
-			+ "Back: go back to the home view\n";
+			+ "Back: go back to the home view\n"
+			+ "undo: undo adding or removing a course.\n"
+			+ "redo: redo adding or removing a course.\n";	
 
 		if(loggedIn){
 			help = help + "logout: logs the user out\n";
@@ -207,6 +217,12 @@ public class Driver {
 			Scanner scan = new Scanner(System.in);
 			String in = scan.next().toLowerCase();
 			switch (in) {
+				case "undo":
+					undo();
+					break;
+				case "redo":
+					redo();
+					break;
 				case "logout":
 					viewing = false;
 					logoutPage();
@@ -516,7 +532,9 @@ public class Driver {
 		+ "addFilter:  add a single filter to your search.\n"
 		+ "clear:  clear search filters.\n"
 		+ "back: return to main console dialog.\n"
-		+ "add: add a course from the course list to your schedule\n";
+		+ "add: add a course from the course list to your schedule\n"
+		+ "undo: undo adding or removing a course.\n"
+		+ "redo: redo adding or removing a course.\n";
 
 		if(loggedIn){
 			help = help + "logout: log out of your account\n";
@@ -528,6 +546,12 @@ public class Driver {
 			System.out.println(help);
 			in = input.next();
 			switch (in) {
+				case "undo":
+					undo();
+					break;
+				case "redo":
+					redo();
+					break;
 				case "clear":
 					search = new Search();
 					break;
@@ -581,7 +605,6 @@ public class Driver {
 					break;
 			}
 		}
-		
 		try
 		{
 			conn.close();
@@ -840,7 +863,11 @@ public class Driver {
 				}
 
 			schedule.add(course);
-
+			/**
+			*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
+			*/
+			state.add(new State("addToSchedule", course));
+			updateState();
 			}
 			else
 			{
@@ -852,11 +879,6 @@ public class Driver {
 			e.printStackTrace();
 			System.out.println("AddCourse error.");
 		}
-
-		/**
-		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
-		 */
-		state.add(new State("addToSchedule"));
 	}
 
 	protected void removeCourse(int courseCode)
@@ -868,6 +890,7 @@ public class Driver {
 		 	*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW removeFromSchedule
 		 	*/
 			state.add(new State("removeFromSchedule", course));
+			updateState();
 		}
 		schedule.removeCourse(courseCode);
 	}
@@ -948,12 +971,12 @@ public class Driver {
 				}
 				schedule.add(c);
 				System.out.printf("Course %s added successfully\n", c.simpleString());
+				/**
+				*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
+				*/
+				state.add(new State("addToSchedule", c));
+				updateState();
 			}
-			/**
-		 	*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
-		 	*/
-			state.add(new State("addToSchedule"));
-
 
 			return true;
 		}
@@ -970,10 +993,13 @@ public class Driver {
 		String confirmP = scan.next();
 		System.out.println();
 		
+
 		if(!newP.equals(confirmP)) {
 			System.out.println("Passwords do not match.");
 			return;
 		}
+
+		//String oldP = this.account.getPassEncrypted();
 
 		// passwords match
 		try {
@@ -989,7 +1015,7 @@ public class Driver {
 		/**
 		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW changePassword
 		 */
-		state.add(new State("changePassword"));
+		//state.add(new State("changePassword", oldP));
 	}
 
 	private void changeEmail(Scanner scan) {
@@ -997,6 +1023,7 @@ public class Driver {
 		String newEmail = scan.next();
 		try {
 			this.account.changeEmail(newEmail);
+
 		} catch(SQLException e) {
 			System.out.println("That email is already in use!");
 			// TODO: log
@@ -1007,11 +1034,6 @@ public class Driver {
 			return;
 		}
 		System.out.println("Email successfully updated! Check the new email address for a confirmation email.");
-		
-		/**
-		 *   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW changeEmail
-		 */
-		state.add(new State("changeEmail"));
 	}
 
 /*
@@ -1025,50 +1047,83 @@ public class Driver {
 	
 	public void undo()
 	{
+		if(statePosition == -1)
+		{
+			System.out.println("Nothing to undo.");
+			return;
+		}
 		Scanner input = new Scanner(System.in);
-		System.out.println("Undoing will undo your last action, " + state.get(state.size() - 1) + ".");
+		System.out.println("Undoing will undo your last action, " + state.get(state.size() - 1).getPreviousAction() + ".");
 		System.out.println("Are you sure you want to do that?  Enter Y for yes, or anything else for no.");
 		String check = input.next();
 
-		if(!(check == "Y" || check == "y"))
+		if(!(check.equals("Y") || check.equals("y")))
 		{
 			return;
 		}
 
 		switch(state.get(statePosition).getPreviousAction())
 		{
-			case "changeEmail":
-				// I'm going to have to figure out how to store the previous Email and revert.  Look into database undo.
-				break;
-			case "changePassword":
-				break;
 			case "addToSchedule":
 				// Remove last item from list of courses in schedule - this will always be the last item added.
+				schedule.removeCourse(state.get(statePosition).getRemovedCourse().getID());
 				break;
 			case "removeFromSchedule":
 				// We're going to have to store items in order to restore them in the event of an undo
+				schedule.add(state.get(statePosition).getRemovedCourse());
 				break;
 			default:
 				break;
 		}
 
+		// work on updateState here, sanity-check code before pushing
+		statePosition--;
 	}
 
 	public void redo()
 	{
-
+		if(statePosition == state.size() - 1)
+		{
+			System.out.println("Nothing to redo.");
+			return;
+		}
+		statePosition++;
+		Scanner input = new Scanner(System.in);
+		System.out.println("Redoing will redo your last undone action, " + state.get(statePosition).getPreviousAction() + ".");
+		System.out.println("Are you sure you want to do that?  Enter Y for yes, or anything else for no.");
+		String check = input.next();
+		if(!(check.equals("Y") || check.equals("y")))
+		{
+			return;
+		}
+		switch(state.get(statePosition).getPreviousAction())
+		{
+			case "addToSchedule":
+				// Remove last item from list of courses in schedule - this will always be the last item added.
+				schedule.add(state.get(statePosition).getRemovedCourse());
+				break;
+			case "removeFromSchedule":
+				// We're going to have to store items in order to restore them in the event of an undo
+				schedule.removeCourse(state.get(statePosition).getRemovedCourse().getID());
+				break;
+			default:
+				break;
+		}
 	}
 
-	public void updateState(String action, String location)
+	public void updateState()
     {
        if(statePosition != state.size() - 1)
        {
-            for(int i = state.size() - 1; i > statePosition; i--)
+            for(int i = state.size() - 2; i > statePosition; i--)
             {
                 state.remove(i);
             }
-            state.add(new State(action));
             statePosition = state.size() - 1;
        }
+	   else
+	   {
+		   statePosition++;
+	   }
     }
 }
