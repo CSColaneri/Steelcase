@@ -10,7 +10,7 @@ import javax.mail.internet.*;
 
 public class Email {
 	// regex to validate email strings
-	private static final String EMAIL_REGEX = "(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+	public static final String EMAIL_REGEX = "(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 	// this email exists as of 4/17/2022.
 	private static final String FROM = "noreply.gcc.teamsteelcase@gmail.com";
 	private static final String HOST = "smtp.gmail.com";
@@ -102,20 +102,6 @@ public class Email {
 	}
 
 	/**
-	 * Takes an ArrayList of emails and puts them into an {@code Address[]} array.
-	 * @param emails An arraylist of valid email addresses.
-	 * @return The email addresses from the parameter but in an Address array instead.
-	 * @throws AddressException if the addresses couldn't be parsed into the Address array. 
-	 */
-	private static Address[] addressFromArraylist(ArrayList<String> emails) throws AddressException {
-		String addrList = "";
-		for(int i = 0; i < emails.size(); ++i) {
-			addrList = addrList.concat(emails.get(i)+",");
-		}
-		return InternetAddress.parse(addrList);
-	}
-
-	/**
 	 * Sends the given schedule to the given email {@code to}. Returns
 	 * true if and only if the email is successfully send. False in 
 	 * all other cases.
@@ -132,20 +118,33 @@ public class Email {
 			
 			message.setSubject(subject);
 			
-			// TODO: use html for schedule
-			message.setContent(buildHtml(body, schedule), "text/html");
 			// maybe attachement. tutorial: https://www.tutorialspoint.com/java/java_sending_email.htm
+			message.setContent(buildScheduleHtml(body, schedule), "text/html");
 
 			Transport.send(message);
 			return true;
 		} catch (MessagingException e) {
-			// TODO: Logging
+			// TODO: Log
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-	private static String buildHtml(String message, Schedule schedule) {
+	/**
+	 * Takes an ArrayList of emails and puts them into an {@code Address[]} array.
+	 * @param emails An arraylist of valid email addresses.
+	 * @return The email addresses from the parameter but in an Address array instead.
+	 * @throws AddressException if the addresses couldn't be parsed into the Address array. 
+	 */
+	private static Address[] addressFromArraylist(ArrayList<String> emails) throws AddressException {
+		String addrList = "";
+		for(int i = 0; i < emails.size(); ++i) {
+			addrList = addrList.concat(emails.get(i)+",");
+		}
+		return InternetAddress.parse(addrList);
+	}
+
+	private static String buildScheduleHtml(String message, Schedule schedule) {
 		// build html
 		String html;
 		try {// if the template can be found do this
@@ -191,6 +190,47 @@ public class Email {
 		return html;
 	}
 
+	public static boolean isValidEmail(String email) {
+		return email.matches(EMAIL_REGEX);
+	}
+
+	/**
+	 * Sends an email confirmation code to the given account.
+	 * If the account has a newEmail address, sends the email
+	 * there. If it doesn't, then the user is signing up and
+	 * the email should go to their current email.
+	 * @param account
+	 * @return
+	 */
+	public static boolean sendConfirmationEmail(Account account) {
+		String to;
+		// If the user is changing their email, 
+		// 	send to the new email.
+		// else the user is signing up, 
+		// 	send to their current email
+		if(!account.getNewEmail().isBlank()) {
+			to = account.getNewEmail();
+		} else {
+			to = account.getEmail();
+		}
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(FROM));
+
+			message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			message.setText("Your confirmation code is: " + account.getConfirmationCode());
+
+			Transport.send(message);
+			return true;
+		} catch(MessagingException e) {
+			// TODO: Log
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+
 	// If this won't run at school, try running it with a VPN enabled.
 	// I keep getting Web Login Required, probably because of the
 	// location being flagged as suspicious (vpn's be dropping me
@@ -212,7 +252,7 @@ public class Email {
 				 + " It should be one you have access to so you can check it.");
 				
 				to = scan.next().strip();
-			} while(!to.matches(EMAIL_REGEX));
+			} while(!isValidEmail(to));
 	
 			scan.nextLine();//trailing newline
 	
