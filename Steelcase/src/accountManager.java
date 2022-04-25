@@ -54,6 +54,9 @@ public class accountManager implements Initializable {
     public void logout(ActionEvent e){
         GuiMain.account = null;
         GuiMain.loggedIn = false;
+
+        GuiMain.schedule = new Schedule();
+
         try {
             switchToMain(e);
         }catch (Exception ex){
