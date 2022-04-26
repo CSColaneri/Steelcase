@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Author - Collin Campbell
@@ -128,14 +128,19 @@ public class ViewManager implements Initializable {
 //                list.remove(mU);
 //            }
 //        }
+
+        ArrayList<Course> removed = new ArrayList<Course>();
         for (int i = 0; i < list.size(); i++) {
             if(list.get(i).getAdd().isSelected()){
                 int id = list.get(i).getId(); //maybe remove from list after remove from GUI
                 list.remove(i);
                 i--;
+                removed.add(GuiMain.schedule.getCourse(id));
                 GuiMain.schedule.removeCourse(id);
             }
         }
+        GuiMain.state.add(new State("removeFromSchedule", removed));
+        GuiMain.updateState();
     }
 
     @Override

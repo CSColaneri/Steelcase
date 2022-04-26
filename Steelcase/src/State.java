@@ -7,7 +7,9 @@ import java.util.*;
 public class State {
     private String previousAction;
     private String previousLocation;
-    private Course removedCourse;
+    private Course course;
+    private ArrayList<Course> multiCourse = new ArrayList<Course>();
+
 
     public State(String s)
     {
@@ -15,11 +17,11 @@ public class State {
     }
 
     public Course getRemovedCourse() {
-        return removedCourse;
+        return course;
     }
 
     public void setRemovedCourse(Course removedCourse) {
-        this.removedCourse = removedCourse;
+        this.course = removedCourse;
     }
 
     public State(String s, String option)
@@ -36,6 +38,15 @@ public class State {
     {
         previousAction = s;
         setRemovedCourse(c);
+    }
+
+    public State(String s,  ArrayList<Course> c)
+    {
+        previousAction = s;
+        for(int i = 0; i < c.size(); i++)
+        {
+            multiCourse.add(c.get(i));
+        }
     }
 
     public State(String s, String option, Course c)
@@ -55,6 +66,16 @@ public class State {
         return previousLocation;
     }
 
+    public ArrayList<Course> getCourses()
+    {
+        return multiCourse;
+    }
 
-    
+    public void setMultiCourse(ArrayList<Course> c)
+    {
+        for(int i = 0; i < c.size(); i++)
+        {
+            multiCourse.add(c.get(i));
+        }
+    }
 }

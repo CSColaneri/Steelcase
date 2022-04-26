@@ -8,13 +8,15 @@ import javafx.stage.WindowEvent;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 
 public class GuiMain extends Application{
     public static Account account;
     public static Schedule schedule = new Schedule();
     public static boolean loggedIn = false;
     public static Connection conn = null;
+	public static ArrayList<State> state = new ArrayList<>();
+	public static int statePosition = -1;
 
     public static void main(String[] args) {
         try{
@@ -106,4 +108,102 @@ public class GuiMain extends Application{
 		}
 		return false;
 	}
+
+	public void undo()
+	{
+		if(statePosition == -1)
+		{
+			System.out.println("Nothing to undo.");
+			return;
+		}
+		Scanner input = new Scanner(System.in);
+
+		/*System.out.println("Undoing will undo your last action, " + state.get(state.size() - 1).getPreviousAction() + ".");
+		System.out.println("Are you sure you want to do that?  Enter Y for yes, or anything else for no.");
+		String check = input.next();
+
+		if(!(check.equals("Y") || check.equals("y")))
+		{
+			return;
+		}*/
+
+		switch(state.get(statePosition).getPreviousAction())
+		{
+			case "addToSchedule":
+				// Remove last item from list of courses in schedule - this will always be the last item added.
+				for(int i = 0; i < state.get(statePosition).getCourses().size(); i++)
+				{
+					schedule.removeCourse(state.get(statePosition).getCourses().get(i).getId());
+				}
+				break;
+			case "removeFromSchedule":
+				// We're going to have to store items in order to restore them in the event of an undo
+				for(int i = 0; i < state.get(statePosition).getCourses().size(); i++)
+				{
+					schedule.add(state.get(statePosition).getCourses().get(i));
+				}
+				break;
+			default:
+				break;
+		}
+
+		statePosition--;
+	}
+
+	public void redo()
+	{
+		if(statePosition == state.size() - 1)
+		{
+			System.out.println("Nothing to redo.");
+			return;
+		}
+
+		statePosition++;
+		
+		/*Scanner input = new Scanner(System.in);
+		System.out.println("Redoing will redo your last undone action, " + state.get(statePosition).getPreviousAction() + ".");
+		System.out.println("Are you sure you want to do that?  Enter Y for yes, or anything else for no.");
+		String check = input.next();
+		if(!(check.equals("Y") || check.equals("y")))
+		{
+			return;
+		}*/
+
+
+		switch(state.get(statePosition).getPreviousAction())
+		{
+			case "addToSchedule":
+				// Remove last item from list of courses in schedule - this will always be the last item added.
+				for(int i = 0; i < state.get(statePosition).getCourses().size(); i++)
+				{
+					schedule.add(state.get(statePosition).getCourses().get(i));
+				}
+				break;
+			case "removeFromSchedule":
+				// We're going to have to store items in order to restore them in the event of an undo
+				for(int i = 0; i < state.get(statePosition).getCourses().size(); i++)
+				{
+					schedule.removeCourse(state.get(statePosition).getCourses().get(i).getId());
+				}				
+				break;
+			default:
+				break;
+		}
+	}
+
+	public static void updateState()
+    {
+       if(statePosition != state.size() - 1)
+       {
+            for(int i = state.size() - 2; i > statePosition; i--)
+            {
+                state.remove(i);
+            }
+            statePosition = state.size() - 1;
+       }
+	   else
+	   {
+		   statePosition++;
+	   }
+    }
 }

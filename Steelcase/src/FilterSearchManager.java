@@ -79,12 +79,16 @@ public class FilterSearchManager implements Initializable{
 
     public void addCourses(){
         //call the course thingy
+        ArrayList<Course> c = new ArrayList<>();
         for(Course u : list){
             if(u.getAdd().isSelected()){
                 System.out.println("Adding course: " + u.getLong_title());
+                c.add(u);
                 GuiMain.schedule.add(u);
             }
         }
+        GuiMain.state.add(new State("addToSchedule", c));
+        GuiMain.updateState();
     }
 
     public void search(){
