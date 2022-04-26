@@ -21,8 +21,8 @@ public class Schedule {
 
 	// TODO: check for duplicate course and time conflicts
 	public boolean add(Course c) {
-		// check for conflicts here.
-		if(!schedule.contains(c) || conflicts(c)) {
+		// If not already in and doesn't conflict.
+		if(!schedule.contains(c) && !conflicts(c)) {
 			return schedule.add(c);
 		}
 		return false;
