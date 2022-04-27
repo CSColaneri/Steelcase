@@ -1,7 +1,10 @@
 import javafx.scene.control.CheckBox;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Course {
   private int id;
@@ -250,9 +253,9 @@ public class Course {
 		  String stmt = String.format("UPDATE Course set %s = %d where id = %d", field, Integer.parseInt(newIn), courseCode);
       try (
 			  Connection conn = DataSource.getConnection();
-			  Statement ps1 = conn.createStatement(stmt);
+			  Statement ps1 = conn.createStatement();
 		  ){
-        ps1.execute();
+        ps1.execute(stmt);
       }
       catch (SQLException s) {
 			  System.err.println("Failed to change course data");
@@ -267,9 +270,9 @@ public class Course {
 		  String stmt = String.format("UPDATE Course set %s = '%s' where id = %d", field, newIn, courseCode);
       try (
 			  Connection conn = DataSource.getConnection();
-			  Statement ps1 = conn.createStatement(stmt);
+			  Statement ps1 = conn.createStatement();
 		  ){
-        ps1.execute();
+        ps1.execute(stmt);
       }
       catch (SQLException s) {
 			  System.err.println("Failed to change course data");
@@ -290,9 +293,9 @@ public class Course {
     String stmt = "Delete from Course where id = " + courseCode;
     try (
 			Connection conn = DataSource.getConnection();
-			Statement ps1 = conn.createStatement(stmt);
+			Statement ps1 = conn.createStatement();
 		){
-      ps1.execute();
+      ps1.execute(stmt);
     }
     catch (SQLException s) {
 			System.err.println("Failed to delete course");

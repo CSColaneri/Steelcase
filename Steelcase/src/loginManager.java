@@ -4,7 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,7 +20,9 @@ public class loginManager {
     @FXML
     private TextField email;
     @FXML
-    private TextField password;
+    private PasswordField password;
+    @FXML
+    private Text errorText;
 
     @FXML
     public void login(ActionEvent e) throws Exception {
@@ -29,6 +33,7 @@ public class loginManager {
         GuiMain.account = Account.login(em, pass);
         if (GuiMain.account == null) {
             System.out.println("Invalid username/password");
+            errorText.setText("Invalid username/password");
         } else {
             System.out.println("Valid account information");
             GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account); //gets the shed. to the account given

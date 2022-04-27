@@ -10,45 +10,51 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
-public class GuiMain extends Application{
-    public static Account account;
-    public static Schedule schedule = new Schedule();
-    public static boolean loggedIn = false;
-    public static Connection conn = null;
+public class GuiMain extends Application {
+	public static Account account;
+	public static Schedule schedule = new Schedule();
+	public static boolean loggedIn = false;
+	/*
+		this is literally the antithesis to DataSource.
+		A connection may timeout, and DataSource.getConnection() will handle this for us.
+		The entire point of DataSource is that if you need a connection, just grab one
+		and it will handle keeping them live.
+		*/
+	public static Connection conn = null;
 	public static ArrayList<State> state = new ArrayList<>();
 	public static int statePosition = -1;
 
-    public static void main(String[] args) {
-        try{
-            conn = DataSource.getConnection();
-        }catch (Exception e){
-            e.getCause();
-        }
-        launch(args);
-    }
+		public static void main(String[] args) {
+				try{
+						conn = DataSource.getConnection();
+				}catch (Exception e){
+						e.getCause();
+				}
+				launch(args);
+		}
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent e) {
-                System.out.println("Hi");
-                try{
-                    conn.close();
-                }catch (Exception ex){
-                    ex.getCause();
-                }
-                System.exit(0);
-            }
-        });
+		@Override
+		public void start(Stage primaryStage) throws Exception {
+				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent e) {
+								System.out.println("Hi");
+								try{
+										conn.close();
+								}catch (Exception ex){
+										ex.getCause();
+								}
+								System.exit(0);
+						}
+				});
 
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("Main");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
-    }
+			Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+			primaryStage.setTitle("Main");
+			primaryStage.setScene(new Scene(root));
+			primaryStage.show();
+		}
 
-    /**
+		/**
 	 * Receives a course's department, code, and section as string
 	 * and performs a search for that single course. If successfull,
 	 * that course is then added to the user's schedule.
@@ -59,7 +65,7 @@ public class GuiMain extends Application{
 	 * @return False if no course found, true otherwise
 	 */
 	public static boolean addByDepCodeSec(String[] in) {
-        Search s = new Search();
+				Search s = new Search();
 		ArrayList<Course> alc = new ArrayList<>();
 		
 		Filter fdep = new Filter("department", in[0]);
@@ -100,7 +106,7 @@ public class GuiMain extends Application{
 			/**
 		 	*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
 		 	*/
-            //  TODO: Adapt state to gui
+						//  TODO: Adapt state to gui
 			// state.add(new State("addToSchedule"));
 
 
@@ -192,18 +198,18 @@ public class GuiMain extends Application{
 	}
 
 	public static void updateState()
-    {
-       if(statePosition != state.size() - 1)
-       {
-            for(int i = state.size() - 2; i > statePosition; i--)
-            {
-                state.remove(i);
-            }
-            statePosition = state.size() - 1;
-       }
-	   else
-	   {
-		   statePosition++;
-	   }
-    }
+		{
+			 if(statePosition != state.size() - 1)
+			 {
+						for(int i = state.size() - 2; i > statePosition; i--)
+						{
+								state.remove(i);
+						}
+						statePosition = state.size() - 1;
+			 }
+		 else
+		 {
+			 statePosition++;
+		 }
+		}
 }

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -47,11 +48,11 @@
                         <Insets left="500.0" top="25.0" />
                      </VBox.margin>
                   </Text>
-                  <TextField fx:id="password">
+                  <PasswordField fx:id="password">
                      <VBox.margin>
                         <Insets left="500.0" right="500.0" />
                      </VBox.margin>
-                  </TextField>
+                  </PasswordField>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Hyperlink onAction="#switchToRegister" text="Register">
@@ -65,7 +66,11 @@
                         <Insets bottom="340.0" left="500.0" right="500.0" />
                      </VBox.margin>
                   </HBox>
+                  <Text id="errorText" fx:id="errorText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Text" translateX="500.0" translateY="-325.0" />
                </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
             </VBox>
          </center>
       </BorderPane>
