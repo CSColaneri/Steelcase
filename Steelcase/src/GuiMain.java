@@ -14,23 +14,17 @@ public class GuiMain extends Application {
 	public static Account account;
 	public static Schedule schedule = new Schedule();
 	public static boolean loggedIn = false;
-	/*
+	/* vvvvvvv
 		this is literally the antithesis to DataSource.
 		A connection may timeout, and DataSource.getConnection() will handle this for us.
 		The entire point of DataSource is that if you need a connection, just grab one
 		and it will handle keeping them live.
 		*/
-	public static Connection conn = null;
 	public static ArrayList<State> state = new ArrayList<>();
 	public static int statePosition = -1;
 
 		public static void main(String[] args) {
-				try{
-						conn = DataSource.getConnection();
-				}catch (Exception e){
-						e.getCause();
-				}
-				launch(args);
+			launch(args);
 		}
 
 		@Override
@@ -39,11 +33,6 @@ public class GuiMain extends Application {
 						@Override
 						public void handle(WindowEvent e) {
 								System.out.println("Hi");
-								try{
-										conn.close();
-								}catch (Exception ex){
-										ex.getCause();
-								}
 								System.exit(0);
 						}
 				});

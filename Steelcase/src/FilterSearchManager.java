@@ -25,6 +25,7 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -111,7 +112,12 @@ public class FilterSearchManager implements Initializable{
         Search search = new Search();
 
         if(choiceBox.getValue() == null) {
-            allCourses = search.searchCoursesC(GuiMain.conn); //has all the courses
+            try(Connection conn = DataSource.getConnection()) {
+                allCourses = search.searchCoursesC(conn); //has all the courses
+            } catch(Exception e) {
+                System.err.println("Failed to grab connection");
+                e.printStackTrace();;
+            }
         }else{
             clearBtn.setVisible(true);
             ArrayList<Course> filteredCourses = new ArrayList<>();
