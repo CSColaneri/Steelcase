@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class loginManager {
+    //TODO: Add failed login text
     private Stage stage;
     private Scene scene;
     private Parent root;

@@ -32,7 +32,7 @@
          <center>
             <VBox prefHeight="668.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
                      <VBox.margin>
                         <Insets left="500.0" top="150.0" />
                      </VBox.margin>
