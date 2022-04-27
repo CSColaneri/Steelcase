@@ -63,21 +63,21 @@ public class Schedule {
 	 * @return a Schedule object with the user's schedule in it.
 	 */
 	public static Schedule retrieveSchedule(Account account) {
+		/**
+			SELECT * FROM Course
+			WHERE
+					code IN (SELECT prereqCode FROM Prereq WHERE courseCode = 321 AND courseDep = "MECE")
+				AND
+				department IN (SELECT prereqDep FROM Prereq WHERE courseCode = 321 and courseDep = "MECE")
+			)
+		 */
 		String sql = "SELECT * FROM Course c INNER JOIN Schedule s ON c.id = s.courseID WHERE s.email = ?";
 		String sql2 = "SELECT id FROM Course c "
-		+"INNER JOIN Prereq p"
-		+"on c.code = p.prereqCode"
-		+ "and c.department = p.prereqDep"
+		+"INNER JOIN Prereq p "
+		+"on c.code = p.prereqCode "
+		+ "and c.department = p.prereqDep "
 		+ "WHERE p.courseCode = ? AND p.courseDep = ?;";
 		ArrayList<Integer> ids = new ArrayList<>();
-		/**
-SELECT * FROM Course
-WHERE
-    code IN (SELECT prereqCode FROM Prereq WHERE courseCode = 321 AND courseDep = "MECE")
-	AND
-	department IN (SELECT prereqDep FROM Prereq WHERE courseCode = 321 and courseDep = "MECE")
-)
-		 */
 		Schedule schedule = new Schedule();
 		try (
 			Connection conn = DataSource.getConnection();
@@ -88,23 +88,21 @@ WHERE
 			while (rs.next()) {
 				// TODO: This can't be right...
 				PreparedStatement ps2 = conn.prepareStatement(sql2);
-				int id = rs.getInt("id");
-				int code = rs.getInt("code");
+				int id 						= rs.getInt("id");
+				int code					= rs.getInt("code");
 				String department = rs.getString("department");
-				char section = rs.getString("section").toCharArray()[0];
-				String building = rs.getString("building");
+				char section 			= rs.getString("section").toCharArray()[0];
+				String building 	= rs.getString("building");
 				String long_title = rs.getString("long_title");
-				String short_title = rs.getString("short_title");
-				String description = rs.getString("description");
-				String professor = rs.getString("professor");
-				String day = rs.getString("day");
-				String begin_time = rs.getTime("begin_time").toString() != null ? rs.getTime("begin_time").toString() : "null";
-				String end_time = rs.getTime("begin_time").toString() != null ? rs.getTime("begin_time").toString() : "null";
-				// System.out.println("Begin time: " + begin_time);
-				// System.out.println("End time: " + end_time);
-				int capacity = rs.getInt("capacity");
-				int enrollment = rs.getInt("enrollment");
-				String room = rs.getString("room");
+				String short_title= rs.getString("short_title");
+				String description= rs.getString("description");
+				String professor 	= rs.getString("professor");
+				String day 				= rs.getString("day");
+				String begin_time = rs.getTime("begin_time") != null ? rs.getTime("begin_time").toString() : "null";
+				String end_time 	= rs.getTime("begin_time") != null ? rs.getTime("begin_time").toString() : "null";
+				int capacity 			= rs.getInt("capacity");
+				int enrollment		= rs.getInt("enrollment");
+				String room 			= rs.getString("room");
 				ps2.setString(2, department);
 				ps2.setInt(1, code);
 				ResultSet rs2 = ps2.executeQuery();
