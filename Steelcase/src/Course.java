@@ -96,6 +96,7 @@ public class Course {
       this.room         = course.getString("room");
       this.add          = new CheckBox();
     }
+
   }
   
   public int getId() {

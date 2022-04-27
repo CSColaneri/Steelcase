@@ -132,33 +132,54 @@ public class calendarManager implements Initializable {
             System.out.println(c.getIntStartTime());
         }
 
+        //adding empty text boxes that will be filled to each day 7 for mwf and 5 for
+        for(int i = 0; i < 10; i++){
+            monday.getChildren().add(new Text("\n"));
+            friday.getChildren().add(new Text("\n"));
+            wednesday.getChildren().add(new Text("\n"));
+        }
+
+        for(int i = 0; i < 10; i++){
+            tuesday.getChildren().add(new Text("\n"));
+            thursday.getChildren().add(new Text("\n"));
+        }
+
         for(Course c:GuiMain.schedule.getSchedule()) {
             if(c.getDay().contains("M")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                monday.getChildren().add(t);
+               //get the time
+                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
+                Text text = (Text) monday.getChildren().get(index + 1);
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
             }
             if(c.getDay().contains("T")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                tuesday.getChildren().add(t);
+                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
+                Text text = (Text) tuesday.getChildren().get(index + 1);
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
             }
             if(c.getDay().contains("W")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                wednesday.getChildren().add(t);
+                //get the time
+                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
+                Text text = (Text) wednesday.getChildren().get(index + 1);
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
             }
             if(c.getDay().contains("R")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                thursday.getChildren().add(t);
+                //get the time
+                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
+                Text text = (Text) thursday.getChildren().get(index + 1);
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
             }
             if(c.getDay().contains("F")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                friday.getChildren().add(t);
+                //get the time
+                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
+                Text text = (Text) friday.getChildren().get(index + 1);
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
             }
         }
+    }
+
+    public void setText(Text t, String longTitle, String beginTime, String endTime, String professor, String room){
+        t.setText(longTitle + "\n" + beginTime + "-" + endTime + "\n" + professor +"\nRoom: " + room);
+        t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 10));
     }
 
     public static Comparator<Course> courseComparator = new Comparator<Course>() {
@@ -173,4 +194,44 @@ public class calendarManager implements Initializable {
             return c2-c1;
         }
     };
+
+    public int mapIntStartTime(int time){
+        int ret = 0;
+        switch (time) {
+            case 8:
+                ret = 0;
+                break;
+            case 9:
+                ret = 1;
+                break;
+            case 10:
+                ret = 2;
+                break;
+            case 11:
+                ret = 3;
+                break;
+            case 12:
+                ret = 4;
+                break;
+            case 13:
+                ret = 5;
+                break;
+            case 14:
+                ret = 6;
+                break;
+            case 15:
+                ret = 7;
+                break;
+            case 16:
+                ret = 8;
+                break;
+            case 0:
+                ret = 9;
+                break;
+            default:
+                ret = 9;
+        }
+        System.out.println("Returning: "  + ret);
+        return ret;
+    }
 }
