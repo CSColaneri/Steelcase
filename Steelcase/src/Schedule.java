@@ -55,6 +55,20 @@ public class Schedule {
 	 */
 	public static Schedule retrieveSchedule(Account account) {
 		String sql = "SELECT * FROM Course c INNER JOIN Schedule s ON c.id = s.courseID WHERE s.email = ?";
+		String sql2 = "SELECT id FROM Course c "
+		+"INNER JOIN Prereq p"
+		+"on c.code = p.prereqCode"
+		+ "and c.department = p.prereqDep"
+		+ "WHERE p.courseCode = ? AND p.courseDep = ?;";
+		ArrayList<Integer> ids = new ArrayList<>();
+		/**
+SELECT * FROM Course
+WHERE
+    code IN (SELECT prereqCode FROM Prereq WHERE courseCode = 321 AND courseDep = "MECE")
+	AND
+	department IN (SELECT prereqDep FROM Prereq WHERE courseCode = 321 and courseDep = "MECE")
+)
+		 */
 		Schedule schedule = new Schedule();
 		try (
 			Connection conn = DataSource.getConnection();
@@ -64,6 +78,7 @@ public class Schedule {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				// TODO: This can't be right...
+				PreparedStatement ps2 = conn.prepareStatement(sql2);
 				int id = rs.getInt("id");
 				int code = rs.getInt("code");
 				String department = rs.getString("department");
@@ -81,9 +96,17 @@ public class Schedule {
 				int capacity = rs.getInt("capacity");
 				int enrollment = rs.getInt("enrollment");
 				String room = rs.getString("room");
+				ps2.setString(2, department);
+				ps2.setInt(1, code);
+				ResultSet rs2 = ps2.executeQuery();
+				while(rs2.next())
+				{
+					ids.add(rs2.getInt("id"));
+				}
 				// TODO: only add to schedule when all courses are successfully retrieved.
 				schedule.add(new Course(id, code, department, section, building, long_title, short_title, description,
-						professor, day, begin_time, end_time, capacity, enrollment, room));
+						professor, day, begin_time, end_time, capacity, enrollment, room, ids));
+				ids.clear();
 			}
 		} catch (SQLException e) {
 			// TODO: make log function

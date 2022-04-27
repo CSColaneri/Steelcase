@@ -1,7 +1,7 @@
 import javafx.scene.control.CheckBox;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class Course {
   private int id;
@@ -21,6 +21,7 @@ public class Course {
   private int intStartTime; //used for sorting later
   private String room;
   private CheckBox add;
+  private ArrayList<Integer> preReqs = new ArrayList<>();
 
   public Course() {
     id = 0;
@@ -46,7 +47,7 @@ public class Course {
       String building, String long_title, String short_title, 
       String description, String professor, String day, 
       String begin_time, String end_time, int capacity, 
-      int enrollment, String room) {
+      int enrollment, String room, ArrayList<Integer> c) {
     this.id = id;
     this.code = code;
     this.department = department;
@@ -64,6 +65,10 @@ public class Course {
     this.room = room;
     this.intStartTime = Integer.parseInt(this.begin_time.split(":")[0]);
     this.add = new CheckBox();
+    for(int i = 0; i < c.size(); i++)
+    {
+      preReqs.add(c.get(i));
+    }
   }
   
   /**
@@ -73,9 +78,16 @@ public class Course {
    * @param course
    * @throws SQLException
    */
-  public Course (ResultSet course) throws SQLException {
+  public Course (ResultSet course, Connection conn) throws SQLException {
     this();
     if(!course.isClosed() && !course.isAfterLast()) {
+      String sql2 = "SELECT id FROM Course c "
+      +"INNER JOIN Prereq p"
+      +"on c.code = p.prereqCode"
+      + "and c.department = p.prereqDep"
+      + "WHERE p.courseCode = ? AND p.courseDep = ?;";
+      PreparedStatement ps2 = conn.prepareStatement(sql2);
+
       this.id           = course.getInt("id");
       this.code         = course.getInt("code");
       this.department   = course.getString("department");
@@ -92,6 +104,14 @@ public class Course {
       this.enrollment   = course.getInt("enrollment");
       this.room         = course.getString("room");
       this.add          = new CheckBox();
+
+      ps2.setString(2, department);
+      ps2.setInt(1, code);
+      ResultSet rs2 = ps2.executeQuery();
+      while(rs2.next())
+      {
+        this.preReqs.add(rs2.getInt("id"));
+      }
     }
   }
   
@@ -159,6 +179,11 @@ public class Course {
     return room;
   }
 
+  public ArrayList<Integer> getPreReqs()
+  {
+    return preReqs;
+  }
+
   public int getIntStartTime(){return intStartTime;}
 
   public void setLong_title(String lt){
@@ -199,6 +224,17 @@ public class Course {
     if(!conflict && c1.code == this.code && c1.department.equals(this.department)) {
       conflict = true;
       System.out.println("Conflicting code & dep");
+    }
+    if(GuiMain.loggedIn && !GuiMain.account.getCoursesTaken().isEmpty())
+    {
+        for(int i = 0; i < GuiMain.account.getCoursesTaken().size(); i++)
+        {
+          if(!c1.preReqs.contains(GuiMain.account.getCoursesTaken().get(i)))
+          {
+            conflict = true;
+            break;
+          }
+        }
     }
     return conflict;
   }
