@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -28,19 +29,7 @@ public class calendarManager implements Initializable {
     private Parent root;
 
     @FXML
-    private VBox friday;
-
-    @FXML
-    private VBox monday;
-
-    @FXML
-    private VBox thursday;
-
-    @FXML
-    private VBox tuesday;
-
-    @FXML
-    private VBox wednesday;
+    private GridPane gridPaneCalendar;
 
     @FXML
     private Button login;
@@ -107,6 +96,15 @@ public class calendarManager implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //placing all the times in the grid pane
+        for(int i = 0; i <= 10; i++){
+            String time =  i > 4 ? ((8 + i) % 12) + " PM" : ((8 + i) % 12) + " AM";
+            if(time.equals("0 AM")){
+                time = "12 PM";
+            }
+            gridPaneCalendar.add(new Text(time), 0, (i+1));
+        }
+
         if (GuiMain.loggedIn) {
             try {
                 login.setText("Account");
@@ -132,49 +130,82 @@ public class calendarManager implements Initializable {
             System.out.println(c.getIntStartTime());
         }
 
-        //adding empty text boxes that will be filled to each day 7 for mwf and 5 for
-        for(int i = 0; i < 10; i++){
-            monday.getChildren().add(new Text("\n"));
-            friday.getChildren().add(new Text("\n"));
-            wednesday.getChildren().add(new Text("\n"));
+        //placing the classes in the right designated tiles
+        for(Course c : GuiMain.schedule.getSchedule()){
+            int startTime = Integer.parseInt(c.getBegin_time().split(":")[0]);
+            if(c.getDay().contains("M")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 1, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("T")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 2, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("W")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 3, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("R")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 4, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("F")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 5, mappingToGridPane(startTime));
+            }
+            if(c.getDay().equals(null)){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 6, mappingToGridPane(startTime));
+            }
         }
 
-        for(int i = 0; i < 10; i++){
-            tuesday.getChildren().add(new Text("\n"));
-            thursday.getChildren().add(new Text("\n"));
-        }
 
-        for(Course c:GuiMain.schedule.getSchedule()) {
-            if(c.getDay().contains("M")) {
-               //get the time
-                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
-                Text text = (Text) monday.getChildren().get(index + 1);
-                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
-            }
-            if(c.getDay().contains("T")) {
-                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
-                Text text = (Text) tuesday.getChildren().get(index + 1);
-                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
-            }
-            if(c.getDay().contains("W")) {
-                //get the time
-                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
-                Text text = (Text) wednesday.getChildren().get(index + 1);
-                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
-            }
-            if(c.getDay().contains("R")) {
-                //get the time
-                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
-                Text text = (Text) thursday.getChildren().get(index + 1);
-                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
-            }
-            if(c.getDay().contains("F")) {
-                //get the time
-                int index = mapIntStartTime(Integer.parseInt(c.getBegin_time().split(":")[0]));
-                Text text = (Text) friday.getChildren().get(index + 1);
-                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
-            }
+    }
+
+    public int mappingToGridPane(int startTime){
+        int returnTime;
+
+        switch (startTime){
+            case 8:
+                returnTime = 1;
+                break;
+            case 9:
+                returnTime = 2;
+                break;
+            case 10:
+                returnTime = 3;
+                break;
+            case 11:
+                returnTime = 4;
+                break;
+            case 12:
+                returnTime = 5;
+                break;
+            case 13:
+                returnTime = 6;
+                break;
+            case 14:
+                returnTime = 7;
+                break;
+            case 15:
+                returnTime = 8;
+                break;
+            case 16:
+                returnTime = 9;
+                break;
+            case 17:
+                returnTime = 11;
+                break;
+            default:
+                returnTime = 12;
         }
+        return returnTime;
     }
 
     public void setText(Text t, String longTitle, String beginTime, String endTime, String professor, String room){
@@ -195,43 +226,4 @@ public class calendarManager implements Initializable {
         }
     };
 
-    public int mapIntStartTime(int time){
-        int ret = 0;
-        switch (time) {
-            case 8:
-                ret = 0;
-                break;
-            case 9:
-                ret = 1;
-                break;
-            case 10:
-                ret = 2;
-                break;
-            case 11:
-                ret = 3;
-                break;
-            case 12:
-                ret = 4;
-                break;
-            case 13:
-                ret = 5;
-                break;
-            case 14:
-                ret = 6;
-                break;
-            case 15:
-                ret = 7;
-                break;
-            case 16:
-                ret = 8;
-                break;
-            case 0:
-                ret = 9;
-                break;
-            default:
-                ret = 9;
-        }
-        System.out.println("Returning: "  + ret);
-        return ret;
-    }
 }
