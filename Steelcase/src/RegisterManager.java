@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -18,28 +19,43 @@ public class RegisterManager {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    
+
     @FXML
     private TextField fname;
-
     @FXML
     private TextField lname;
-    
     @FXML
     private TextField email;
-    
     @FXML
     private TextField password;
-    
     @FXML
     private TextField confirmPass;
-
     @FXML
     private Button registerButton;
+    @FXML
+    private Text errorText;
 
     @FXML
     void submitted(ActionEvent e) {
-        if(password.getText().equals(confirmPass.getText())) {
+        boolean missingInfo = false;
+        errorText.setText("");
+        if(fname.getText().isBlank()) {
+            missingInfo = true;
+            errorText.setText("Must include first name!");
+        }
+        if(lname.getText().isBlank()) {
+            missingInfo = true;
+            errorText.setText(errorText.getText() + "\nMust include last name!");
+        }
+        if(email.getText().isBlank()) {
+            missingInfo = true;
+            errorText.setText(errorText.getText() + "\nMust include email!");
+        }
+        if(password.getText().isBlank()) {
+            missingInfo = true;
+            errorText.setText(errorText.getText() + "\nMust include password!");
+        }
+        if(!missingInfo && password.getText().equals(confirmPass.getText())) {
             try {
                 GuiMain.account = Account.signup(email.getText(), password.getText(), GuiMain.schedule, fname.getText(), lname.getText());
                 GuiMain.loggedIn = true;
@@ -53,12 +69,17 @@ public class RegisterManager {
                 }
             } catch(InvalidNameException ex) {
                 // TODO invalid email. do something here
-                ex.printStackTrace();
+                errorText.setText(errorText.getText() + "\nInvalid Email");
+                System.err.println("Invalid email.");
+                // ex.printStackTrace();
             } 
             catch (Exception e1) {
                 // TODO Auto-generated catch block
+                errorText.setText("Sorry, something went wrong! Please try again later.");
                 e1.printStackTrace();
             }
+        } else {
+            errorText.setText(errorText.getText() + "\nPassswords must match!");
         }
     }
 

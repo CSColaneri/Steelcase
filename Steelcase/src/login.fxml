@@ -66,7 +66,7 @@
                         <Insets bottom="340.0" left="500.0" right="500.0" />
                      </VBox.margin>
                   </HBox>
-                  <Text id="errorText" fx:id="errorText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Text" translateX="500.0" translateY="-325.0" />
+                  <Text id="errorText" fx:id="errorText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" translateX="500.0" translateY="-325.0" />
                </children>
                <BorderPane.margin>
                   <Insets />

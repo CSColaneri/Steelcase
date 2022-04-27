@@ -85,9 +85,14 @@
                         </TextField>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="registerButton" mnemonicParsing="false" onAction="#submitted" text="Register">
+                              <Text fx:id="errorText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" translateX="-75.0">
                                  <HBox.margin>
-                                    <Insets left="200.0" top="25.0" />
+                                    <Insets />
+                                 </HBox.margin>
+                              </Text>
+                              <Button fx:id="registerButton" mnemonicParsing="false" onAction="#submitted" text="Register" translateX="75.0" HBox.hgrow="NEVER">
+                                 <HBox.margin>
+                                    <Insets top="25.0" />
                                  </HBox.margin>
                               </Button>
                            </children>
