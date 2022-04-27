@@ -1186,7 +1186,7 @@ public class Driver {
 					System.out.println("what is the room");
 					String room = input.next();
 					temp = new Course(0, code, department, section, building, long_title, short_title, description,
-					professor, day, begin_time, end_time, capacity, enrollment, room);
+					professor, day, begin_time, end_time, capacity, enrollment, room, null);
 					temp.createCourse();
 					break;
 				case "change":
