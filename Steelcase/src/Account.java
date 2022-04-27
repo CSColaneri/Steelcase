@@ -13,6 +13,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.naming.InvalidNameException;
 
+import com.google.api.client.util.Data;
+
 import org.apache.http.auth.InvalidCredentialsException;
 
 // much of the methods are grabbed from 
@@ -28,6 +30,7 @@ public class Account {
 	private String newEmail;
 	private boolean isEmailConfirmed;
 	private String confirmationCode;
+	private ArrayList<Integer> coursesTaken = new ArrayList<>();
 
 	private static final String PASSWORD_FIELD= "password_hash";
 	private static final String EMAIL_FIELD 	= "email";
@@ -63,7 +66,6 @@ public class Account {
 		this.isEmailConfirmed = false;
 		this.confirmationCode = getNewEmailConfirmationCode();
 	}
-	
 	private Account(String email, String pword, String salt, String firstName, String lastName, String role) {
 		this.setEmail(email);
 		this.setPassEncrypted(pword);
@@ -112,6 +114,68 @@ public class Account {
 	
 	public String getPassEncrypted() {
 		return passEncrypted;
+	}
+
+
+	/**
+	 * String sql2 = "SELECT ID FROM PreReqSave WHERE email = ?";
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			ps2.setString(1, GuiMain.account.getEmail());
+			ResultSet rs2 = ps2.executeQuery();
+			while(rs2.next())
+			{
+				coursesTaken.add(rs2.getInt("ID"));
+			}
+	 * @return
+	 */
+	private Account(String email, String pword, String salt, String firstName, String lastName, ArrayList<Integer> courses) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.coursesTaken = courses;
+	}
+
+	public ArrayList<Integer> getCoursesTaken()
+	{
+		return coursesTaken;
+	}
+
+	public void addCoursesTaken(ArrayList<Integer> c)
+	{
+		
+		for(int i = 0; i < c.size(); i++)
+		{
+			if(!coursesTaken.contains(c.get(i)))
+			{
+				coursesTaken.add(c.get(i));
+				try
+				{
+					Connection conn = DataSource.getConnection();
+					pushCourse(c.get(i), conn);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public void pushCourse(int i, Connection conn)
+	{
+		try
+		{
+			String sql2 = "INSERT INTO PreReqSave (id, email) VALUES (?, ?)";
+				PreparedStatement ps2 = conn.prepareStatement(sql2);
+				ps2.setInt(1, i);
+				ps2.setString(2, email);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public String getEmail() {
@@ -207,6 +271,7 @@ public class Account {
 	 *         salt from the database.
 	 */
 	private static Account getAccountDetails(String email) {
+		ArrayList<Integer> c = new ArrayList<>();
 		String sql = "SELECT * FROM Account WHERE email like ?";
 		String pHash,
 					salt,
@@ -223,8 +288,15 @@ public class Account {
 				salt = rs.getString(SALT_FIELD);
 				firstName = rs.getString(FIRST_NAME_FIELD);
 				lastName = rs.getString(LAST_NAME_FIELD);
-
-				return new Account(email, pHash, salt, firstName, lastName);
+				String sql2 = "SELECT id FROM PreReqSave WHERE email = ?";
+				PreparedStatement ps2 = conn.prepareStatement(sql2);
+				ps2.setString(1, email);
+				ResultSet rs2 = ps2.executeQuery();
+				while(rs2.next())
+				{
+					c.add(rs2.getInt("id"));
+				}
+				return new Account(email, pHash, salt, firstName, lastName, c);
 			}
 			rs.close();
 		} catch (SQLException e) {

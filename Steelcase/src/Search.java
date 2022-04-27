@@ -222,7 +222,7 @@ public class Search {
         try(PreparedStatement stmt = buildStatement(conn);
             ResultSet courses = stmt.executeQuery()) {
             while(courses.next()) {
-                alc.add(new Course(courses));
+                alc.add(new Course(courses, conn));
             }
         } catch(Exception e) {
             // TODO: Log function

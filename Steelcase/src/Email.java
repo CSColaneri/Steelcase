@@ -280,9 +280,9 @@ public class Email {
 				
 				// example schedule
 				Schedule s = new Schedule();
-				s.add(new Course(3,300,"ABRD",'A',"OFFCP","STUDY ABROAD","STUDY ABROAD","","","","","",20,17,"NULL"));
+				s.add(new Course(3,300,"ABRD",'A',"OFFCP","STUDY ABROAD","STUDY ABROAD","","","","","",20,17,"NULL", null));
 				String desc = "Course topics include accounting for debt and stockholder’s equity, financial statement analysis, statement of cash flows, as well as introductions to managerial accounting techniques including cost-volume-profit analysis, budgeting, product costing...";
-				s.add(new Course(4,202,"ACCT",'A',"HAL","PRINCIPLES OF ACCOUNTING II","PRIN OF ACCOUNT",desc,"Tricia Shultz","MWF","08:00:00","08:50:00",44,37,"306"));
+				s.add(new Course(4,202,"ACCT",'A',"HAL","PRINCIPLES OF ACCOUNTING II","PRIN OF ACCOUNT",desc,"Tricia Shultz","MWF","08:00:00","08:50:00",44,37,"306", null));
 				
 				Scanner schedScan = new Scanner(s.toString());
 				while(schedScan.hasNext()) {
