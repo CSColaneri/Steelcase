@@ -98,8 +98,8 @@ WHERE
 				String description = rs.getString("description");
 				String professor = rs.getString("professor");
 				String day = rs.getString("day");
-				String begin_time = rs.getTime("begin_time").toString();
-				String end_time = rs.getTime("end_time").toString();
+				String begin_time = rs.getTime("begin_time").toString() != null ? rs.getTime("begin_time").toString() : "null";
+				String end_time = rs.getTime("begin_time").toString() != null ? rs.getTime("begin_time").toString() : "null";
 				// System.out.println("Begin time: " + begin_time);
 				// System.out.println("End time: " + end_time);
 				int capacity = rs.getInt("capacity");

@@ -157,6 +157,7 @@ public class Course {
         this.preReqs.add(rs2.getInt("id"));
       }
     }
+
   }
   
   public int getId() {
