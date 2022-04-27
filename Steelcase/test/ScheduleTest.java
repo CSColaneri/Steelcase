@@ -11,7 +11,7 @@ public class ScheduleTest {
   
   @Before
   public void makeCourse() {
-    testCourse = new Course(1, 1, "dep", 'A', "KET", "test class", "test", "this is a test course", "Professor", "mwf", "11:00:00", "12:00:00", 19, 10, "300A");
+    testCourse = new Course(1, 1, "dep", 'A', "KET", "test class", "test", "this is a test course", "Professor", "mwf", "11:00:00", "12:00:00", 19, 10, "300A", null);
   }
 
   public void testGetSchedule() {
