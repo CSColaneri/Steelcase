@@ -858,7 +858,7 @@ public class Driver {
 
 			if(rs.next())
 			{
-				Course course = new Course(rs);
+				Course course = new Course(rs, conn);
 
 				for(int i = 0; i < schedule.getSchedule().size(); i++)
 				{
