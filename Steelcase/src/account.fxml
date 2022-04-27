@@ -55,6 +55,11 @@
                         <Insets left="450.0" top="25.0" />
                      </VBox.margin>
                   </Button>
+                  <Button layoutX="460.0" layoutY="242.0" mnemonicParsing="false" onAction="#switchToPreReq" text="Add Prereq">
+                     <VBox.margin>
+                        <Insets left="450.0" top="25.0" />
+                     </VBox.margin>
+                  </Button>
                </children>
             </VBox>
          </center>

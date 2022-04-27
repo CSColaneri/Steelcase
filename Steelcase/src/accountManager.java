@@ -278,6 +278,16 @@ public class accountManager implements Initializable {
         stage.show();
     }
 
+    @FXML
+    public void switchToPreReq(ActionEvent e) throws IOException{
+        System.out.println("Switching to Register");
+        root = FXMLLoader.load(getClass().getResource("addPreReq.fxml"));
+        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (GuiMain.loggedIn) {
