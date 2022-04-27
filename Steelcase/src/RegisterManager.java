@@ -57,9 +57,11 @@ public class RegisterManager {
         }
         if(!missingInfo && password.getText().equals(confirmPass.getText())) {
             try {
+                System.out.println("Signing user up.");
                 GuiMain.account = Account.signup(email.getText(), password.getText(), GuiMain.schedule, fname.getText(), lname.getText());
-                GuiMain.loggedIn = true;
                 if(GuiMain.account != null) {
+                    System.out.println("Account made, logging in");
+                    GuiMain.loggedIn = true;
                     GuiMain.schedule = Schedule.retrieveSchedule(GuiMain.account);
                     if(GuiMain.schedule.hasSchedule()) {
                         switchToCalender(e);
@@ -67,6 +69,8 @@ public class RegisterManager {
                         switchToSearch(e);
                     }
                 }
+                System.out.println("Email already in use.");
+                errorText.setText("Email already taken.");
             } catch(InvalidNameException ex) {
                 // TODO invalid email. do something here
                 errorText.setText(errorText.getText() + "\nInvalid Email");

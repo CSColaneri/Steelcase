@@ -116,6 +116,7 @@ public class ViewManager implements Initializable {
     }
 
     public void saveShed() {
+        System.out.println("Saving schedule");
         GuiMain.schedule.saveSchedule(GuiMain.account);
     }
 
