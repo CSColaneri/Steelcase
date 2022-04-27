@@ -28,10 +28,19 @@ public class calendarManager implements Initializable {
     private Parent root;
 
     @FXML
+    private Button cAdd;
+
+    @FXML
+    private Button export;
+
+    @FXML
     private GridPane gridPaneCalendar;
 
     @FXML
     private Button login;
+
+    @FXML
+    private Button save;
 
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
@@ -95,6 +104,10 @@ public class calendarManager implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if(!GuiMain.loggedIn){
+            save.setDisable(true);
+        }
+
         //placing all the times in the grid pane
         for(int i = 0; i <= 11; i++){
             String time =  i > 4 ? ((8 + i) % 12) + " PM" : ((8 + i) % 12) + " AM";
@@ -165,13 +178,12 @@ public class calendarManager implements Initializable {
             }
         }
 
-
     }
 
-    public int mappingToGridPane(int startTime){
+    public int mappingToGridPane(int startTime) {
         int returnTime;
 
-        switch (startTime){
+        switch (startTime) {
             case 8:
                 returnTime = 1;
                 break;
@@ -209,8 +221,12 @@ public class calendarManager implements Initializable {
     }
 
     public void setText(Text t, String longTitle, String beginTime, String endTime, String professor, String room){
-        t.setText(longTitle + "\n" + beginTime + "-" + endTime + "\n" + professor +"\nRoom: " + room);
+        t.setText(longTitle + "\n" + professor +"\nRoom: " + room);
         t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 10));
+    }
+
+    public void saveShed(){
+        GuiMain.schedule.saveSchedule(GuiMain.account); //saves the shed
     }
 
     public static Comparator<Course> courseComparator = new Comparator<Course>() {
@@ -219,7 +235,6 @@ public class calendarManager implements Initializable {
 
             int c1 = s1.getIntStartTime();
             int c2 = s2.getIntStartTime();
-
 
             // For descending order
             return c2-c1;

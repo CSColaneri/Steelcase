@@ -51,7 +51,7 @@
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </ChoiceBox>
-                        <TextField fx:id="searchText" promptText="Serach" />
+                        <TextField fx:id="searchText" promptText="Search" />
                      </children>
                   </HBox>
                   <TableView fx:id="viewShed" prefHeight="568.0" prefWidth="1280.0">

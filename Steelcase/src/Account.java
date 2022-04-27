@@ -39,67 +39,49 @@ public class Account {
 	private static final String LAST_NAME_FIELD = "last_name";
 	private static final String ROLE_FIELD = "role";
 	private static final String NEW_EMAIL_FIELD = "NEW_EMAIL";
-	private static final String EMAIL_CONFIRMATION_FIELD = "EMAIL_CONFIRMATION";
-	private static final String CONFIRMATION_CODE_FIELD = "CONFIRMATION_CODE";
+	private static final String EMAIL_CONFIRMATION_FIELD = "email_confirmed";
+	private static final String CONFIRMATION_CODE_FIELD = "confirmation_code";
 	// private static final String ROLE_FIELD = "role";
 
 	private Account(Account a) {
-		this.email = a.email;
-		this.passEncrypted = a.passEncrypted;
-		this.salt = a.salt;
-		this.firstName = a.firstName;
-		this.lastName = a.lastName;
-		this.role = a.role;
-		this.newEmail = a.newEmail;
-		this.isEmailConfirmed = a.isEmailConfirmed;
-		this.confirmationCode = a.confirmationCode;
+		this.email 						= a.email;
+		this.passEncrypted		= a.passEncrypted;
+		this.salt 						= a.salt;
+		this.firstName 				= a.firstName;
+		this.lastName 				= a.lastName;
+		this.role 						= a.role;
+		this.newEmail 				= a.newEmail;
+		this.isEmailConfirmed	= a.isEmailConfirmed;
+		this.confirmationCode	= a.confirmationCode;
 	}
 
-	private Account(String email, String pword, String salt, String firstName, String lastName) {
-		this.email =email;
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.role = "user";
-		this.newEmail = "";
-		this.isEmailConfirmed = false;
-		this.confirmationCode = getNewEmailConfirmationCode();
+	private Account(String email, String pword, String salt, 
+									String firstName, String lastName, String role,
+									String newEmail, boolean isEmailConfirmed,
+									String confirmationCode) {
+		this.email 						= email;
+		this.passEncrypted		= pword;
+		this.salt 						= salt;
+		this.firstName 				= firstName;
+		this.lastName 				= lastName;
+		this.role 						= role;
+		this.newEmail 				= newEmail;
+		this.isEmailConfirmed = isEmailConfirmed;
+		this.confirmationCode = confirmationCode;
 	}
-	private Account(String email, String pword, String salt, String firstName, String lastName, String role) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.role = role;
-		this.newEmail = "";
-		this.isEmailConfirmed = false;
+
+	private Account(String email, String pword, String salt, 
+									String firstName, String lastName, String role,
+									String newEmail, boolean isEmailConfirmed) {
+		this.email 						= email;
+		this.passEncrypted		= pword;
+		this.salt 						= salt;
+		this.firstName 				= firstName;
+		this.lastName 				= lastName;
+		this.role 						= role;
+		this.newEmail 				= newEmail;
+		this.isEmailConfirmed = isEmailConfirmed;
 		this.confirmationCode = getNewEmailConfirmationCode();
-	}
-	
-	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.role = "user";
-		this.newEmail = newEmail;
-		this.isEmailConfirmed = emailIsConfirmed;
-		this.confirmationCode = getNewEmailConfirmationCode();
-	}
-	
-	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed, String code) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.role = "user";
-		this.newEmail = newEmail;
-		this.isEmailConfirmed = emailIsConfirmed;
-		this.confirmationCode = code;
 	}
 	
 	public String getRole() {
@@ -114,37 +96,6 @@ public class Account {
 	
 	public String getPassEncrypted() {
 		return passEncrypted;
-	}
-
-
-	/**
-	 * String sql2 = "SELECT ID FROM PreReqSave WHERE email = ?";
-			PreparedStatement ps2 = conn.prepareStatement(sql2);
-			ps2.setString(1, GuiMain.account.getEmail());
-			ResultSet rs2 = ps2.executeQuery();
-			while(rs2.next())
-			{
-				coursesTaken.add(rs2.getInt("ID"));
-			}
-	 * @return
-	 */
-	private Account(String email, String pword, String salt, String firstName, String lastName, ArrayList<Integer> courses) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.coursesTaken = courses;
-	}
-
-	private Account(String email, String pword, String salt, String firstName, String lastName, ArrayList<Integer> courses, String role) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.coursesTaken = courses;
-		this.role = role;
 	}
 
 	public ArrayList<Integer> getCoursesTaken()
@@ -220,28 +171,36 @@ public class Account {
 		return this.confirmationCode;
 	}
 
-	private void setEmail(String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	private void setPassEncrypted(String passEncrypted) {
+	public void setPassEncrypted(String passEncrypted) {
 		this.passEncrypted = passEncrypted;
 	}
 
-	private void setSalt(String salt) {
+	public void setSalt(String salt) {
 		this.salt = salt;
 	}
 
-	private void setNewEmail(String newEmail) {
+	public void setNewEmail(String newEmail) {
 		this.newEmail = newEmail;
 	}
 
-	private void setIsEmailConfirmed(boolean bool) {
+	public void setIsEmailConfirmed(boolean bool) {
 		this.isEmailConfirmed = bool;
 	}
 
-	private void setConfirmationCode(String confirmationCode) {
+	public void setConfirmationCode(String confirmationCode) {
 		this.confirmationCode = confirmationCode;
+	}
+
+	public void setFirstName(String fn) {
+		this.firstName = fn;
+	}
+	
+	public void setLastName(String ln) {
+		this.lastName = ln;
 	}
 
 	/**
@@ -293,7 +252,10 @@ public class Account {
 					salt,
 					firstName,
 					lastName,
-					role;
+					role,
+					newEmail,
+					confirmationCode;
+		boolean isEmailConfirmed;
 		try (
 			Connection conn = DataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -301,11 +263,15 @@ public class Account {
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {// account exists in db.
-				pHash = rs.getString(PASSWORD_FIELD);
-				salt = rs.getString(SALT_FIELD);
-				firstName = rs.getString(FIRST_NAME_FIELD);
-				lastName = rs.getString(LAST_NAME_FIELD);
-				role = rs.getString(ROLE_FIELD);
+				pHash 					= rs.getString(PASSWORD_FIELD);
+				salt 						= rs.getString(SALT_FIELD);
+				firstName 			= rs.getString(FIRST_NAME_FIELD);
+				lastName 				= rs.getString(LAST_NAME_FIELD);
+				role 						= rs.getString(ROLE_FIELD);
+				newEmail 				= rs.getString(NEW_EMAIL_FIELD);
+				isEmailConfirmed= rs.getBoolean(EMAIL_CONFIRMATION_FIELD);
+				confirmationCode= rs.getString(CONFIRMATION_CODE_FIELD);
+
 				String sql2 = "SELECT id FROM PreReqSave WHERE email = ?";
 				PreparedStatement ps2 = conn.prepareStatement(sql2);
 				ps2.setString(1, email);
@@ -314,7 +280,7 @@ public class Account {
 				{
 					c.add(rs2.getInt("id"));
 				}
-				return new Account(email, pHash, salt, firstName, lastName, c, role);
+				return new Account(email, pHash, salt, firstName, lastName, role, newEmail, isEmailConfirmed, confirmationCode);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -325,6 +291,19 @@ public class Account {
 		}
 		// no account with that email.
 		return null;
+	}
+
+	public boolean prereqConflict(Course c) {
+		// have account with prereqs
+		// I'm trying to add course c.
+		// If I have all of the prereqs for course c,
+		// return false. If I don't, return true.
+		for (Integer i : c.getPreReqs()) {
+			if(!this.coursesTaken.contains(i)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -372,43 +351,25 @@ public class Account {
 	 *                   email
 	 */
 	public static Account signup(String email, String password, Schedule sched, String firstName, String lastName) throws Exception {
-		// check to see if the email already exists before any expensive hashing.
-		try (
-			Connection conn = DataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement("SELECT email FROM Account WHERE email = ?")
-		) {
-			ps.setString(1, email);
-			if (ps.executeQuery().next()) {// if the email already exists, just return null now.
-				// System.out.println("Email already in use.");
-				return null;
-			}
-		} catch (Exception e) {
-			// on any exception, couldn't check if email already exists. return null.
-			// TODO: Make logging function
-			System.err.println("Something went wrong, please try again later.");
-			e.printStackTrace();
-			throw new Exception("Couldn't check for duplicate emails.");
-		}
-
-		// At this point, email not already used
-		if(isValidEmail(email)) {
-			String salt = getNewSalt();
-			String encryptedPassword = getEncryptedPassword(password, salt);
-			System.out.println("Making account");
-			Account account = new Account(email, encryptedPassword, salt, firstName, lastName);
-			System.out.println("Uploading user and schedule");
-			account = account.saveUser(sched);
-			System.out.println("Sending Confirmation Email");
-			// if(!Email.sendConfirmationEmail(account)) {
-			// 	System.err.println("Failed to send confirmation email");
-			// }
-			return account;
-		} else {
-			throw new InvalidNameException("Invalid Email");
-		}
+		return signup(email, password, sched, firstName, lastName, "user");
 	}
 
 	//same as above, but added role, used for admin creation and driver
+	/**
+	 * Adapted from:
+	 * https://www.quickprogrammingtips.com/java/how-to-securely-store-passwords-in-java.html
+	 * 
+	 * @param email    	User's inputted email.
+	 * @param password 	User's inputted password.
+	 * @param sched    	User's schedule
+	 * @param firstName User's first name
+	 * @param lastName	User's last name
+	 * @param role			The role for the user.
+	 * @return Null if email already in use, or an Account object representing the
+	 *         user's account
+	 * @throws Exception If something goes wrong while checking for a duplicate
+	 *                   email
+	 */
 	public static Account signup(String email, String password, Schedule sched, String firstName, String lastName, String role) throws Exception {
 		// check to see if the email already exists before any expensive hashing.
 		try (
@@ -432,11 +393,14 @@ public class Account {
 		if(isValidEmail(email)) {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
-			Account account = new Account(email, encryptedPassword, salt, firstName, lastName, role);
+			System.out.println("Making account");
+			Account account = new Account(email, encryptedPassword, salt, firstName, lastName, role, "", false);
+			System.out.println("Uploading schedule");
 			account = account.saveUser(sched);
-			if(!Email.sendConfirmationEmail(account)) {
-				System.err.println("Failed to send confirmation email");
-			}
+			// System.out.println("Sending confirmation email");
+			// if(!Email.sendConfirmationEmail(account)) {
+			// 	System.err.println("Failed to send confirmation email");
+			// }
 			return account;
 		} else {
 			throw new InvalidNameException("Invalid Email");
@@ -653,6 +617,7 @@ public class Account {
 		}
 		return false;		
 	}
+
 	/**
 	 * Updates the user's password to the given password.
 	 * @param password The new password to use.
@@ -663,7 +628,9 @@ public class Account {
 
 		// using a new salt doesn't necessarily increase security.
 		String encP = getEncryptedPassword(password, this.salt);
-		updateUser(new Account(email, encP, salt, firstName, lastName, newEmail, isEmailConfirmed, confirmationCode));
+		Account updateAcc = new Account(this);
+		updateAcc.setPassEncrypted(encP);
+		updateUser(updateAcc);
 	}
 
 	/**
@@ -681,7 +648,12 @@ public class Account {
 
 		if(getAccountDetails(newEmail) == null) {
 			// email is available.
-			updateUser(new Account(this.email, this.passEncrypted, this.salt, this.firstName, this.lastName, newEmail, false, getNewEmailConfirmationCode()));
+			Account updateAcc = new Account(this);
+			updateAcc.setNewEmail(newEmail);
+			updateAcc.setIsEmailConfirmed(false);
+			updateAcc.setConfirmationCode(getNewEmailConfirmationCode());
+
+			updateUser(updateAcc);
 			return;
 		}
 		// TODO: Log
@@ -693,7 +665,11 @@ public class Account {
 		// if the user provides the right code, update the account
 		// with the newEmail as the main email & emailConfirmed as true
 		if(code.equals(this.confirmationCode)) {
-			updateUser(new Account(newEmail, passEncrypted, salt, firstName, lastName, "", true, ""));
+			Account updateAcc = new Account(this);
+			updateAcc.setNewEmail("");
+			updateAcc.setIsEmailConfirmed(true);
+			updateAcc.setConfirmationCode("");
+			updateUser(updateAcc);
 		}
 	}
 
