@@ -203,6 +203,103 @@ public class Course {
     return conflict;
   }
 
+/**
+	 * only for admin
+	 * adds a new class
+	 */
+	public void createCourse(){
+		String data = "insert into Course (code, department, section, building, long_title, short_title, "
+		+ "description, professor, day, begin_time, end_time, capacity, enrollment, room) "
+		+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try (
+			Connection conn = DataSource.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement(data);
+		){
+			ps1.setInt(1, code);
+			ps1.setString(2, department);
+			ps1.setString(3, ""+section);
+			ps1.setString(4, building);
+			ps1.setString(5, long_title);
+			ps1.setString(6, short_title);
+			ps1.setString(7, description);
+			ps1.setString(8, professor);
+			ps1.setString(9, day);
+			ps1.setString(10, begin_time);
+			ps1.setString(11, end_time);
+			ps1.setInt(12, capacity);
+			ps1.setInt(13, enrollment);
+			ps1.setString(14, room);
+			ps1.execute();
+		}
+		catch (SQLException s) {
+			System.err.println("Failed to create new course");
+			s.printStackTrace();
+		}
+	}
+
+	/**
+	 * only for admin
+	 * changes the data of a given course to the input data
+	 * @param courseCode specifies could to be changed
+   * @param field specifies what to change
+   * @param newIn the new input
+	 */
+	public void changeCourse(int courseCode, String field, String newIn){
+    //runs for all int fields
+    if(field.equals("code") || field.equals("capacity") || field.equals("enrollment")){
+		  String stmt = String.format("UPDATE Course set %s = %d where id = %d", field, Integer.parseInt(newIn), courseCode);
+      try (
+			  Connection conn = DataSource.getConnection();
+			  Statement ps1 = conn.createStatement(stmt);
+		  ){
+        ps1.execute();
+      }
+      catch (SQLException s) {
+			  System.err.println("Failed to change course data");
+			  s.printStackTrace();
+		  }
+    }
+
+    //runs for all string/char fields
+    else if(field.equals("department") || field.equals("section") || field.equals("building") || field.equals("long_title") 
+    || field.equals("short_title") || field.equals("description") || field.equals("professor") 
+    || field.equals("day") || field.equals("begin_time") || field.equals("end_time") || field.equals("room")){
+		  String stmt = String.format("UPDATE Course set %s = '%s' where id = %d", field, newIn, courseCode);
+      try (
+			  Connection conn = DataSource.getConnection();
+			  Statement ps1 = conn.createStatement(stmt);
+		  ){
+        ps1.execute();
+      }
+      catch (SQLException s) {
+			  System.err.println("Failed to change course data");
+			  s.printStackTrace();
+		  }
+    }
+    else{
+      System.out.println("invalid field");
+    }
+	}
+
+	/**
+	 * only for admin
+	 * @param courseCode specifies the course to delete
+	 */
+	public void delCourse(int courseCode){
+    //TODO: Check role.
+    String stmt = "Delete from Course where id = " + courseCode;
+    try (
+			Connection conn = DataSource.getConnection();
+			Statement ps1 = conn.createStatement(stmt);
+		){
+      ps1.execute();
+    }
+    catch (SQLException s) {
+			System.err.println("Failed to delete course");
+			s.printStackTrace();
+		}
+	}
+
   public String simpleString() {
     return String.format("%s %s %s", this.department, this.code, this.section);
   }
