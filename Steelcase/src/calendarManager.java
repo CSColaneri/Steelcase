@@ -7,12 +7,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import java.awt.*;
 import java.io.IOException;
@@ -41,6 +46,81 @@ public class calendarManager implements Initializable {
 
     @FXML
     private Button save;
+
+
+    //ERIC right here
+    public void export(ActionEvent e){
+        System.out.println("exporting");
+    }
+
+    //ERIC right here
+    public void addNewCustomCourse(ActionEvent e){
+        Popup popup = new Popup();
+        StackPane sp = new StackPane();
+        TextField Description = new TextField();
+        TextField Days = new TextField();
+        TextField Title = new TextField();
+        TextField bTime = new TextField();
+        TextField eTime = new TextField();
+        Button accept = new Button("Add");
+        Button cancel = new Button("Cancel");
+        Rectangle rect = new Rectangle(400, 400);
+        rect.setFill(Color.WHITE);
+
+        Description.setPromptText("Description");
+        Days.setPromptText("MTWRF");
+        Title.setPromptText("Name");
+        bTime.setPromptText("Start Time (8:00:00)");
+        eTime.setPromptText("End Time (8:00:00)");
+
+        accept.setTranslateX(350);
+        accept.setTranslateY(355);
+        cancel.setTranslateX(280);
+        cancel.setTranslateY(355);
+
+        Title.setTranslateX(25);
+        Title.setTranslateY(50);
+
+        Description.setTranslateX(25);
+        Description.setTranslateY(110);
+
+        Days.setTranslateX(25);
+        Days.setTranslateY(170);
+
+        bTime.setTranslateX(25);
+        bTime.setTranslateY(230);
+
+        eTime.setTranslateX(25);
+        eTime.setTranslateY(290);
+
+
+        popup.getContent().addAll(sp, rect,Description, Days, Title, bTime, eTime, accept, cancel);
+        Stage stage = (Stage) ((Node) e.getSource()).getParent().getParent().getScene().getWindow();
+        popup.show(stage);
+
+        cancel.setOnAction(actionEvent -> {
+            popup.hide();
+        });
+
+        //put adding new course code here Eric!
+        String title = Title.getText();
+        String des = Description.getText();
+        String btime = bTime.getText();
+        String etime = eTime.getText();
+        String days = Days.getText();
+        accept.setOnAction(actionEvent -> {
+            /*Put code here to add to sched*/
+
+            popup.hide();
+            try {
+                switchToCalender(actionEvent);
+            }catch (Exception e1){
+                e1.printStackTrace();
+            }
+        });
+
+
+    }
 
     @FXML
     public void switchToMain(ActionEvent e)throws IOException {
@@ -225,8 +305,47 @@ public class calendarManager implements Initializable {
         t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 10));
     }
 
-    public void saveShed(){
-        GuiMain.schedule.saveSchedule(GuiMain.account); //saves the shed
+    public void saveShed(ActionEvent e){
+        if(GuiMain.schedule.saveSchedule(GuiMain.account)){
+            System.out.println("Showing saved popup");
+            Popup popup = new Popup();
+            StackPane sp = new StackPane();
+            Button btn = new Button("X");
+            Text text = new Text("Saved!");
+            Rectangle rect = new Rectangle(400, 200);
+            btn.setTranslateX(180);
+            btn.setTranslateY(-80);
+            rect.setFill(Color.WHITE);
+            sp.getChildren().addAll(rect, text,btn);
+
+            popup.getContent().add(sp);
+            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            popup.show(stage);
+
+            btn.setOnAction(actionEvent -> {
+               popup.hide();
+            });
+        }else{
+            System.out.println("Showing saved popup");
+            Popup popup = new Popup();
+            StackPane sp = new StackPane();
+            Button btn = new Button("X");
+            Text text = new Text("Failed, do you have an internet connection?");
+            Rectangle rect = new Rectangle(400, 200);
+            btn.setTranslateX(180);
+            btn.setTranslateY(-80);
+            rect.setFill(Color.WHITE);
+            sp.getChildren().addAll(rect, text,btn);
+
+            popup.getContent().add(sp);
+            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            popup.show(stage);
+
+            btn.setOnAction(actionEvent -> {
+                popup.hide();
+            });
+        }
+
     }
 
     public static Comparator<Course> courseComparator = new Comparator<Course>() {
