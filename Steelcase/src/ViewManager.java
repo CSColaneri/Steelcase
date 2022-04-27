@@ -34,6 +34,8 @@ public class ViewManager implements Initializable {
     @FXML
     private TableColumn<Course, String> title;
     @FXML
+    private TableColumn<Course, String> day;
+    @FXML
     private TableColumn<Course, String> begin_time;
     @FXML
     private TableColumn<Course, String> end_time;
@@ -45,6 +47,8 @@ public class ViewManager implements Initializable {
     private TableView<Course> viewShed;
     @FXML
     private Button login;
+    @FXML
+    private Button saveSched;
     @FXML
     private TableColumn<Course, String> delete;
 
@@ -151,6 +155,7 @@ public class ViewManager implements Initializable {
             }catch (Exception e){
                 e.getCause();
             }
+            saveSched.setDisable(false);
             login.setOnAction(actionEvent -> {
                 System.out.println("Switching to Register");
                 try {
@@ -163,6 +168,8 @@ public class ViewManager implements Initializable {
                 stage.setScene(scene);
                 stage.show();
             });
+        } else {
+            saveSched.setDisable(true);
         }
 
         System.out.println("view schedule init before adding courses to schedule");
@@ -180,6 +187,7 @@ public class ViewManager implements Initializable {
         dep.setCellValueFactory(new PropertyValueFactory<Course, String>("department"));
         cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));
         title.setCellValueFactory(new PropertyValueFactory<Course, String>("short_title"));
+        day.setCellValueFactory(new PropertyValueFactory<Course, String>("day"));
         begin_time.setCellValueFactory(new PropertyValueFactory<Course, String>("begin_time"));
         end_time.setCellValueFactory(new PropertyValueFactory<Course, String>("end_time"));
         building.setCellValueFactory(new PropertyValueFactory<Course, String>("building"));
