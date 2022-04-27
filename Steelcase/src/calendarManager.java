@@ -148,7 +148,7 @@ public class calendarManager implements Initializable {
                 t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
                 wednesday.getChildren().add(t);
             }
-            if(c.getDay().contains("T")) {
+            if(c.getDay().contains("R")) {
                 Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
                 t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
                 thursday.getChildren().add(t);
