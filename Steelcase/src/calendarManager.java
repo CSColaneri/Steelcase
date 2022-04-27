@@ -7,13 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
@@ -28,19 +28,7 @@ public class calendarManager implements Initializable {
     private Parent root;
 
     @FXML
-    private VBox friday;
-
-    @FXML
-    private VBox monday;
-
-    @FXML
-    private VBox thursday;
-
-    @FXML
-    private VBox tuesday;
-
-    @FXML
-    private VBox wednesday;
+    private GridPane gridPaneCalendar;
 
     @FXML
     private Button login;
@@ -107,6 +95,15 @@ public class calendarManager implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //placing all the times in the grid pane
+        for(int i = 0; i <= 11; i++){
+            String time =  i > 4 ? ((8 + i) % 12) + " PM" : ((8 + i) % 12) + " AM";
+            if(time.equals("0 AM")){
+                time = "12 PM";
+            }
+            gridPaneCalendar.add(new Text(time), 0, (i+1));
+        }
+
         if (GuiMain.loggedIn) {
             try {
                 login.setText("Account");
@@ -128,37 +125,92 @@ public class calendarManager implements Initializable {
         }
 
         Collections.sort(GuiMain.schedule.getSchedule(), calendarManager.courseComparator);
+
+        int index = 1;
+        //placing the classes in the right designated tiles
         for(Course c : GuiMain.schedule.getSchedule()){
-            System.out.println(c.getIntStartTime());
+            int startTime = -1;
+            if(c.getBegin_time() != null) {
+                startTime = Integer.parseInt(c.getBegin_time().split(":")[0]);
+            }
+            if(c.getDay().contains("M")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 1, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("T")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 2, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("W")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 3, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("R")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 4, mappingToGridPane(startTime));
+            }
+            if(c.getDay().contains("F")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 5, mappingToGridPane(startTime));
+            }
+            if(c.getDay().equals(null) || c.getDay().equals("")){
+                Text text = new Text();
+                setText(text, c.getLong_title(), c.getBegin_time(), c.getEnd_time(), c.getProfessor(), c.getRoom());
+                gridPaneCalendar.add(text, 6, index++);
+            }
         }
 
-        for(Course c:GuiMain.schedule.getSchedule()) {
-            if(c.getDay().contains("M")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                monday.getChildren().add(t);
-            }
-            if(c.getDay().contains("T")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                tuesday.getChildren().add(t);
-            }
-            if(c.getDay().contains("W")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                wednesday.getChildren().add(t);
-            }
-            if(c.getDay().contains("R")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                thursday.getChildren().add(t);
-            }
-            if(c.getDay().contains("F")) {
-                Text t = new Text(c.getLong_title() + "\n" + c.getBegin_time() + "-" + c.getEnd_time() + "\n" + c.getProfessor() +"\nRoom: " + c.getRoom());
-                t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 12));
-                friday.getChildren().add(t);
-            }
+
+    }
+
+    public int mappingToGridPane(int startTime){
+        int returnTime;
+
+        switch (startTime){
+            case 8:
+                returnTime = 1;
+                break;
+            case 9:
+                returnTime = 2;
+                break;
+            case 10:
+                returnTime = 3;
+                break;
+            case 11:
+                returnTime = 4;
+                break;
+            case 12:
+                returnTime = 5;
+                break;
+            case 13:
+                returnTime = 6;
+                break;
+            case 14:
+                returnTime = 7;
+                break;
+            case 15:
+                returnTime = 8;
+                break;
+            case 16:
+                returnTime = 9;
+                break;
+            case 17:
+                returnTime = 11;
+                break;
+            default:
+                returnTime = 12;
         }
+        return returnTime;
+    }
+
+    public void setText(Text t, String longTitle, String beginTime, String endTime, String professor, String room){
+        t.setText(longTitle + "\n" + beginTime + "-" + endTime + "\n" + professor +"\nRoom: " + room);
+        t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 10));
     }
 
     public static Comparator<Course> courseComparator = new Comparator<Course>() {
@@ -173,4 +225,5 @@ public class calendarManager implements Initializable {
             return c2-c1;
         }
     };
+
 }
