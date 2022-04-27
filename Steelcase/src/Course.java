@@ -177,25 +177,8 @@ public class Course {
    */
   public boolean conflicts(Course c1) {
     boolean conflict = false;
-    boolean timeExists = true;
-    String[] thisBegin = {""};
-    String[] thisEnd = {""};
-    String[] c1Begin = {""};
-    String[] c1End = {""};
-    if(this.getBegin_time() == null || this.getEnd_time() == null || c1.getBegin_time() == null || c1.getEnd_time() == null) {
-      timeExists = false;
-    } else {
-      timeExists= true;
-      thisBegin = this.getBegin_time().split(":");
-      thisEnd   = this.getEnd_time().split(":");
-      c1Begin   = c1.getBegin_time().split(":");
-      c1End     = c1.getEnd_time().split(":");
-    }
-    // if thisBegin > (after) c1End or thisEnd < (before) c1Begin, no conflict
-    if( timeExists &&
-        (Integer.parseInt(thisBegin[0]) > Integer.parseInt(c1End[0]) ||
-        Integer.parseInt(thisEnd[0]) < Integer.parseInt(c1Begin[0]))
-    ) {
+    boolean timeExists = !(this.getBegin_time() == null || this.getEnd_time() == null || c1.getBegin_time() == null || c1.getEnd_time() == null);
+    if(timeExists && timeConflict(c1)) {
       System.out.println("Conflicting time");
       conflict = true;
     }
@@ -204,6 +187,28 @@ public class Course {
       System.out.println("Conflicting code & dep");
     }
     return conflict;
+  }
+
+  private boolean timeConflict(Course c) {
+    String[] thisBegin= this.getBegin_time().split(":");
+    String[] thisEnd  = this.getEnd_time().split(":");
+    String[] cBegin   = c.getBegin_time().split(":");
+    String[] cEnd     = c.getEnd_time().split(":");
+    
+    for(Character day : this.day.toCharArray()) {
+      // if days differ, no time conflict.
+      if(c.day.contains(day.toString())) {
+        // if any day matches check time and return
+        // if thisBegin > (after) c1End or thisEnd < (before) c1Begin, no conflict
+        boolean conflict = !(Integer.parseInt(thisBegin[0]) > Integer.parseInt(cEnd[0]) || 
+          Integer.parseInt(thisEnd[0]) < Integer.parseInt(cBegin[0]));
+        // if(!conflict) {
+        //   conflict = thisBegin[0].equals(cBegin[0]) || thisEnd[0].equals(cEnd[0]);
+        // }
+        return conflict;
+      }
+    }
+    return false;
   }
 
 /**
