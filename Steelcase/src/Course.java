@@ -81,7 +81,7 @@ public class Course {
     this.capacity = capacity;
     this.enrollment = enrollment;
     this.room = room;
-    this.intStartTime = Integer.parseInt(this.begin_time.split(":")[0]);
+    this.intStartTime = !this.begin_time.equals("null") ? Integer.parseInt(this.begin_time.split(":")[0]) : 0;
     this.add = new CheckBox();
     for(int i = 0; i < c.size(); i++)
     {
