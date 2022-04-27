@@ -83,9 +83,7 @@ public class FilterSearchManager implements Initializable{
     //populating choice box
     private String[] choices = {"Professor", "Class Name", "Description", "Code", "Department", "ID", "Day"};
 
-    public ObservableList<Course> list = FXCollections.observableArrayList(
-
-    );
+    public ObservableList<Course> list = FXCollections.observableArrayList();
 
     public void addCourses(ActionEvent e){
         //call the course thingy
