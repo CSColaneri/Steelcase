@@ -22,10 +22,7 @@ public class Schedule {
 	// TODO: check for duplicate course and time conflicts
 	public boolean add(Course c) {
 		// If not already in and doesn't conflict.
-		if(!schedule.contains(c) && !conflicts(c)) {
-			return schedule.add(c);
-		}
-		return false;
+		return schedule.add(c);
 	}
 
 	// Can add conflicting courses to schedule (not db, just local obj)
@@ -40,6 +37,18 @@ public class Schedule {
 	}
 
 	public boolean conflicts(Course c1) {
+		if(GuiMain.loggedIn && !GuiMain.account.getCoursesTaken().isEmpty())
+		{
+			for(int i = 0; i < c1.getPreReqs().size(); i++)
+			{
+			  if(!GuiMain.account.getCoursesTaken().contains(c1.getPreReqs().get(i)))
+			  {
+				System.out.println("Prerequisite course required.");
+				return true;
+			  }
+			}
+		}
+
 		for (Course c : schedule) {
 			if (c.conflicts(c1))
 				return true;

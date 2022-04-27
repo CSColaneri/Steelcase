@@ -14,6 +14,7 @@ public class GuiMain extends Application {
 	public static Account account;
 	public static Schedule schedule = new Schedule();
 	public static boolean loggedIn = false;
+	public static ArrayList<Course> courseList = new ArrayList<>();
 	/* vvvvvvv
 		this is literally the antithesis to DataSource.
 		A connection may timeout, and DataSource.getConnection() will handle this for us.

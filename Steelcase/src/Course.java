@@ -82,10 +82,10 @@ public class Course {
     this();
     if(!course.isClosed() && !course.isAfterLast()) {
       String sql2 = "SELECT id FROM Course c "
-      +"INNER JOIN Prereq p"
-      +"on c.code = p.prereqCode"
-      + "and c.department = p.prereqDep"
-      + "WHERE p.courseCode = ? AND p.courseDep = ?;";
+      + "INNER JOIN Prereq p "
+      + "on c.code = p.prereqCode "
+      + "and c.department = p.prereqDep "
+      + "WHERE p.courseCode = ? AND p.courseDep = ?";
       PreparedStatement ps2 = conn.prepareStatement(sql2);
 
       this.id           = course.getInt("id");
@@ -207,17 +207,6 @@ public class Course {
     if(!conflict && c1.code == this.code && c1.department.equals(this.department)) {
       conflict = true;
       System.out.println("Conflicting code & dep");
-    }
-    if(GuiMain.loggedIn && !GuiMain.account.getCoursesTaken().isEmpty())
-    {
-        for(int i = 0; i < GuiMain.account.getCoursesTaken().size(); i++)
-        {
-          if(!c1.preReqs.contains(GuiMain.account.getCoursesTaken().get(i)))
-          {
-            conflict = true;
-            break;
-          }
-        }
     }
     return conflict;
   }

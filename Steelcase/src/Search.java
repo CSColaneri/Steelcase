@@ -218,11 +218,12 @@ public class Search {
     }
 
     public ArrayList<Course> searchCoursesC(Connection conn) {
-        ArrayList<Course> alc = new ArrayList<Course>();
+       if(GuiMain.courseList.isEmpty())
+       {
         try(PreparedStatement stmt = buildStatement(conn);
             ResultSet courses = stmt.executeQuery()) {
             while(courses.next()) {
-                alc.add(new Course(courses, conn));
+                GuiMain.courseList.add(new Course(courses, conn));
             }
         } catch(Exception e) {
             // TODO: Log function
@@ -230,7 +231,8 @@ public class Search {
             e.printStackTrace();
             return null;
         }
-        return alc;
+       }
+       return GuiMain.courseList;
     }
 
     //input: date/time selection

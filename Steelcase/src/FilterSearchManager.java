@@ -280,20 +280,28 @@ public class FilterSearchManager implements Initializable{
                 c.getAdd().setOnMouseClicked(actionEvent -> {
                     c.getAdd().setSelected(false);
                     System.out.println("Showing the popUp");
-                    Button btn = new Button("X");
-                    btn.setTranslateX(180);
-                    btn.setTranslateY(-80);
+                    Button btn = new Button("Close");
+                    Button btn2 = new Button("Add Anyway");
+                    btn.setTranslateX(-50);
+                    btn.setTranslateY(40);
+                    btn2.setTranslateX(50);
+                    btn2.setTranslateY(40);
                     Text text = new Text("Conflicting course(s) can not added to schedule");
                     Rectangle rect = new Rectangle(400, 200);
                     rect.setFill(Color.WHITE);
                     StackPane sPane = new StackPane();
-                    sPane.getChildren().addAll(rect, text, btn);
+                    sPane.getChildren().addAll(rect, text, btn, btn2);
                     Popup popup = new Popup();
                     popup.getContent().add(sPane);
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     popup.show(stage);
                     btn.setOnAction(actionEvent1 ->
                     {
+                        popup.hide();
+                    });
+                    btn2.setOnAction(actionEvent2 ->
+                    {
+                        c.getAdd().setSelected(true);
                         popup.hide();
                     });
                 });

@@ -149,11 +149,15 @@ public class Account {
 		{
 			if(!coursesTaken.contains(c.get(i)))
 			{
-				coursesTaken.add(c.get(i));
 				try
 				{
 					Connection conn = DataSource.getConnection();
 					pushCourse(c.get(i), conn);
+					coursesTaken.add(c.get(i));
+					for(int j = 0; j < coursesTaken.size(); j++)
+					{
+						System.out.println(coursesTaken.get(j));
+					}
 				}
 				catch(Exception e)
 				{
@@ -171,9 +175,11 @@ public class Account {
 				PreparedStatement ps2 = conn.prepareStatement(sql2);
 				ps2.setInt(1, i);
 				ps2.setString(2, email);
+				ps2.executeUpdate();
 		}
 		catch(Exception e)
 		{
+			System.out.println("Code Broke, stupid idiot.");
 			e.printStackTrace();
 		}
 	}

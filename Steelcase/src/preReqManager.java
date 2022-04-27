@@ -83,20 +83,18 @@ public class preReqManager implements Initializable {
 
     public void addCourses(ActionEvent e){ //write prereq code here
         //call the course thingy
-        ArrayList<Course> c = new ArrayList<>();
+        ArrayList<Integer> c = new ArrayList<>();
         for(Course u : list){
             if(u.getAdd().isSelected()){
                 u.getAdd().setSelected(false);
                 System.out.println("Adding course: " + u.getLong_title());
-                c.add(u);
-                GuiMain.schedule.add(u);
+                c.add(u.getId());
             }
         }
-        GuiMain.state.add(new State("addToSchedule", c));
-        GuiMain.updateState();
+        GuiMain.account.addCoursesTaken(c);
 
         try {
-            switchToCalender(e);
+            switchToPreReq(e);
         }catch (IOException xe){
             xe.printStackTrace();
         }
@@ -226,6 +224,16 @@ public class preReqManager implements Initializable {
     public void switchToSearch(ActionEvent e)throws IOException{
         System.out.println("Switching to Search");
         root = FXMLLoader.load(getClass().getResource("search.fxml"));
+        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void switchToPreReq(ActionEvent e) throws IOException{
+        System.out.println("Switching to Register");
+        root = FXMLLoader.load(getClass().getResource("addPreReq.fxml"));
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

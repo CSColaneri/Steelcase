@@ -214,16 +214,16 @@ public class Email {
 			to = account.getEmail();
 		}
 		try {
-			Message message = new MimeMessage(session);
+			/*Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(FROM));
 
 			message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
 			message.setText("Your confirmation code is: " + account.getConfirmationCode());
 
-			Transport.send(message);
+			Transport.send(message);*/
 			return true;
-		} catch(MessagingException e) {
+		} catch(Exception e) { // was MessagingException
 			// TODO: Log
 			e.printStackTrace();
 		}
