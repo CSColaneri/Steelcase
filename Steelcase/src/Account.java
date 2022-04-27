@@ -40,13 +40,28 @@ public class Account {
 	private static final String CONFIRMATION_CODE_FIELD = "CONFIRMATION_CODE";
 	// private static final String ROLE_FIELD = "role";
 
+	private Account(Account a) {
+		this.email = a.email;
+		this.passEncrypted = a.passEncrypted;
+		this.salt = a.salt;
+		this.firstName = a.firstName;
+		this.lastName = a.lastName;
+		this.role = a.role;
+		this.newEmail = a.newEmail;
+		this.isEmailConfirmed = a.isEmailConfirmed;
+		this.confirmationCode = a.confirmationCode;
+	}
+
 	private Account(String email, String pword, String salt, String firstName, String lastName) {
-		this.setEmail(email);
+		this.email =email;
 		this.setPassEncrypted(pword);
 		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		role = "user";
+		this.role = "user";
+		this.newEmail = "";
+		this.isEmailConfirmed = false;
+		this.confirmationCode = getNewEmailConfirmationCode();
 	}
 	
 	private Account(String email, String pword, String salt, String firstName, String lastName, String role) {
@@ -56,6 +71,33 @@ public class Account {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
+		this.newEmail = "";
+		this.isEmailConfirmed = false;
+		this.confirmationCode = getNewEmailConfirmationCode();
+	}
+	
+	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = "user";
+		this.newEmail = newEmail;
+		this.isEmailConfirmed = emailIsConfirmed;
+		this.confirmationCode = getNewEmailConfirmationCode();
+	}
+	
+	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed, String code) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = "user";
+		this.newEmail = newEmail;
+		this.isEmailConfirmed = emailIsConfirmed;
+		this.confirmationCode = code;
 	}
 	
 	public String getRole() {
@@ -70,28 +112,6 @@ public class Account {
 	
 	public String getPassEncrypted() {
 		return passEncrypted;
-	}
-	
-	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.newEmail = newEmail;
-		this.isEmailConfirmed = emailIsConfirmed;
-		this.confirmationCode = getNewEmailConfirmationCode();
-	}
-	
-	private Account(String email, String pword, String salt, String firstName, String lastName, String newEmail, boolean emailIsConfirmed, String code) {
-		this.setEmail(email);
-		this.setPassEncrypted(pword);
-		this.salt = salt;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.newEmail = newEmail;
-		this.isEmailConfirmed = emailIsConfirmed;
-		this.confirmationCode = code;
 	}
 
 	public String getEmail() {
@@ -284,11 +304,14 @@ public class Account {
 		if(isValidEmail(email)) {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
+			System.out.println("Making account");
 			Account account = new Account(email, encryptedPassword, salt, firstName, lastName);
+			System.out.println("Uploading user and schedule");
 			account = account.saveUser(sched);
-			if(!Email.sendConfirmationEmail(account)) {
-				System.err.println("Failed to send confirmation email");
-			}
+			System.out.println("Sending Confirmation Email");
+			// if(!Email.sendConfirmationEmail(account)) {
+			// 	System.err.println("Failed to send confirmation email");
+			// }
 			return account;
 		} else {
 			throw new InvalidNameException("Invalid Email");
@@ -376,7 +399,7 @@ public class Account {
 			ps1.setString(8, role);
 			ps1.execute();
 			ps2.setString(1, email);
-			// probably doesn't work
+
 			for (int i = 0; i < classes.getSchedule().size(); i++) {
 				ps2.setInt(2, classes.getSchedule().get(i).getId());
 				ps2.execute();
