@@ -94,6 +94,11 @@ public class Driver {
 							+ "courses: a list of courses.\n"
 							+ "exit:  exit the application.";
 						break;
+					case "admin":
+						if(account.getRole().equals("admin")){
+							admin();
+						}
+						break;
 					case "exit":
 						running = false;
 						break;
@@ -123,7 +128,7 @@ public class Driver {
 						}
 						break;
 					case "signup":
-						signupPage();
+						signupPage("user");
 						if(account != null) {
 							aferLogIn();
 						}
@@ -274,7 +279,7 @@ public class Driver {
 						System.out.println("Please create an account if you want to upload your schedule!");
 						System.out.println("Would you like to create one now? Y/N");
 						if(scan.next().equalsIgnoreCase("y")) {
-							signupPage();
+							signupPage("user");
 						}
 						break;
 					}
@@ -661,6 +666,10 @@ public class Driver {
 			+ "logout: Logs out (unsaved changes are lost)\n"
 			+ "courses: a list of courses.\n"
 			+ "exit:  exit the application.";
+		//also give the user the admin commands
+		if(account.getRole().equals("admin")){
+			help += "\nadmin: access the admin privileges.";
+		}
 	}
 
 	private void aferLogIn() { //nice
@@ -688,7 +697,7 @@ public class Driver {
 
 	}
 
-	public void signupPage() {
+	public void signupPage(String role) {
 		String email = "";
 		String pass = "";
 		String fName = "";
@@ -732,7 +741,7 @@ public class Driver {
 		if(signup) {
 			try {
 				//create the new account and log them in.
-				account = Account.signup(email, pass, schedule, fName, lName);
+				account = Account.signup(email, pass, schedule, fName, lName, role);
 				if(account != null) {
 					login();
 				} else {
@@ -1122,6 +1131,85 @@ public class Driver {
 				break;
 			default:
 				break;
+		}
+	}
+
+	public void admin(){
+		String commands = "Commands:\n"
+		+ "help: brings up this dialogue\n"
+		+ "addmin: used to add admin account\n"
+		+ "create: used to create a new course in the database\n"
+		+ "change: used to change course data in the database\n"
+		+ "delete: used to delete a course from the database\n"
+		+ "back: return to main page";
+		String in = "";
+		Scanner input = new Scanner(System.in);
+		System.out.println(commands);
+		Course temp = new Course();;
+		Boolean run = true;
+		while(run){
+			in = input.next();
+			switch(in){
+				case "help":
+					System.out.println(commands);
+					break;
+				case "addmin":
+					signupPage("admin");
+					break;
+				case "create":
+					System.out.println("what is the code");
+					int code = input.nextInt();
+					System.out.println("what is the department");
+					String department = input.next();
+					System.out.println("what is the section");
+					char section = input.next().charAt(0);
+					System.out.println("what is the building");
+					String building = input.next();
+					System.out.println("what is the long title");
+					String long_title = input.nextLine();
+					System.out.println("what is the short title");
+					String short_title = input.nextLine();
+					System.out.println("what is the description");
+					String description = input.next();
+					System.out.println("what is the professor");
+					String professor = input.next();
+					System.out.println("what is the day");
+					String day = input.next();
+					System.out.println("what is the begin time");
+					String begin_time = input.next();
+					System.out.println("what is the end time");
+					String end_time = input.next();
+					System.out.println("what is the capacity");
+					int capacity = input.nextInt();
+					System.out.println("what is the enrollment");
+					int enrollment = input.nextInt();
+					System.out.println("what is the room");
+					String room = input.next();
+					temp = new Course(0, code, department, section, building, long_title, short_title, description,
+					professor, day, begin_time, end_time, capacity, enrollment, room);
+					temp.createCourse();
+					break;
+				case "change":
+					System.out.println("what is the id of the course you would like to change");
+					int id = input.nextInt();
+					System.out.println("what is the field you would like to change");
+					String field = input.next();
+					System.out.println("what is the new data you would like to enter");
+					in = input.nextLine();
+					temp.changeCourse(id, field, in);
+					break;
+				case "delete":
+					System.out.println("what is the id of the course you would like to delete");
+					in = input.next();
+					temp.delCourse(Integer.parseInt(in));
+					break;
+				case "back":
+					run = false;
+					break;
+				default:
+					System.out.println("invalid input");
+					break;
+			}
 		}
 	}
 

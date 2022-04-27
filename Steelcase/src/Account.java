@@ -390,6 +390,41 @@ public class Account {
 		}
 	}
 
+	//same as above, but added role, used for admin creation and driver
+	public static Account signup(String email, String password, Schedule sched, String firstName, String lastName, String role) throws Exception {
+		// check to see if the email already exists before any expensive hashing.
+		try (
+			Connection conn = DataSource.getConnection();
+			PreparedStatement ps = conn.prepareStatement("SELECT email FROM Account WHERE email = ?")
+		) {
+			ps.setString(1, email);
+			if (ps.executeQuery().next()) {// if the email already exists, just return null now.
+				// System.out.println("Email already in use.");
+				return null;
+			}
+		} catch (Exception e) {
+			// on any exception, couldn't check if email already exists. return null.
+			// TODO: Make logging function
+			System.err.println("Something went wrong, please try again later.");
+			e.printStackTrace();
+			throw new Exception("Couldn't check for duplicate emails.");
+		}
+
+		// At this point, email not already used
+		if(isValidEmail(email)) {
+			String salt = getNewSalt();
+			String encryptedPassword = getEncryptedPassword(password, salt);
+			Account account = new Account(email, encryptedPassword, salt, firstName, lastName, role);
+			account = account.saveUser(sched);
+			if(!Email.sendConfirmationEmail(account)) {
+				System.err.println("Failed to send confirmation email");
+			}
+			return account;
+		} else {
+			throw new InvalidNameException("Invalid Email");
+		}
+	}
+
 	// Get a encrypted password using PBKDF2 hash algorithm
 	/**
 	 * Adapted from:
