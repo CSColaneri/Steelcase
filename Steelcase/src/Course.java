@@ -41,6 +41,24 @@ public class Course {
     room = "";
     this.add = new CheckBox();
   }
+
+  public Course(int diff) {
+    id = 0;
+    code = 0;
+    department = "";
+    section = '\0';
+    building = "";
+    long_title = "";
+    short_title = "";
+    description = "";
+    professor = "";
+    day = "";
+    begin_time = "";
+    end_time = "";
+    capacity = 0;
+    enrollment = 0;
+    room = "";
+  }
   
   // TODO: This can't be right...
   public Course(int id, int code, String department, char section, 
@@ -65,6 +83,32 @@ public class Course {
     this.room = room;
     this.intStartTime = Integer.parseInt(this.begin_time.split(":")[0]);
     this.add = new CheckBox();
+    for(int i = 0; i < c.size(); i++)
+    {
+      preReqs.add(c.get(i));
+    }
+  }
+  public Course(int id, int code, String department, char section, 
+      String building, String long_title, String short_title, 
+      String description, String professor, String day, 
+      String begin_time, String end_time, int capacity, 
+      int enrollment, String room, ArrayList<Integer> c,int diff) {
+    this.id = id;
+    this.code = code;
+    this.department = department;
+    this.section = section;
+    this.building = building;
+    this.long_title = long_title;
+    this.short_title = short_title;
+    this.description = description;
+    this.professor = professor;
+    this.day = day;
+    this.begin_time = begin_time;
+    this.end_time = end_time;
+    this.capacity = capacity;
+    this.enrollment = enrollment;
+    this.room = room;
+    this.intStartTime = Integer.parseInt(this.begin_time.split(":")[0]);
     for(int i = 0; i < c.size(); i++)
     {
       preReqs.add(c.get(i));

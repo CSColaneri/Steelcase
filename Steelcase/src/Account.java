@@ -137,6 +137,16 @@ public class Account {
 		this.coursesTaken = courses;
 	}
 
+	private Account(String email, String pword, String salt, String firstName, String lastName, ArrayList<Integer> courses, String role) {
+		this.setEmail(email);
+		this.setPassEncrypted(pword);
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.coursesTaken = courses;
+		this.role = role;
+	}
+
 	public ArrayList<Integer> getCoursesTaken()
 	{
 		return coursesTaken;
@@ -282,7 +292,8 @@ public class Account {
 		String pHash,
 					salt,
 					firstName,
-					lastName;
+					lastName,
+					role;
 		try (
 			Connection conn = DataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -294,6 +305,7 @@ public class Account {
 				salt = rs.getString(SALT_FIELD);
 				firstName = rs.getString(FIRST_NAME_FIELD);
 				lastName = rs.getString(LAST_NAME_FIELD);
+				role = rs.getString(ROLE_FIELD);
 				String sql2 = "SELECT id FROM PreReqSave WHERE email = ?";
 				PreparedStatement ps2 = conn.prepareStatement(sql2);
 				ps2.setString(1, email);
@@ -302,7 +314,7 @@ public class Account {
 				{
 					c.add(rs2.getInt("id"));
 				}
-				return new Account(email, pHash, salt, firstName, lastName, c);
+				return new Account(email, pHash, salt, firstName, lastName, c, role);
 			}
 			rs.close();
 		} catch (SQLException e) {

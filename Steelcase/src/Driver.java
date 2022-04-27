@@ -157,6 +157,9 @@ public class Driver {
 
 		if(loggedIn){
 			help = help + "logout: logs the user out\n";
+			if(account.getRole().equals("admin")){
+				help += "admin: gives admin commands\n";
+			}
 		}
 
 		Scanner scan = new Scanner(System.in);
@@ -183,6 +186,11 @@ public class Driver {
 					case "logout":
 						run = false;
 						logoutPage();
+						break;
+					case "admin":
+						if(account.getRole().equals("admin")){
+							admin();
+						}
 						break;
 					case "help":
 						System.out.println(help);
@@ -1145,9 +1153,10 @@ public class Driver {
 		String in = "";
 		Scanner input = new Scanner(System.in);
 		System.out.println(commands);
-		Course temp = new Course();;
+		Course temp;
 		Boolean run = true;
 		while(run){
+			System.out.println(commands);
 			in = input.next();
 			switch(in){
 				case "help":
@@ -1165,14 +1174,15 @@ public class Driver {
 					char section = input.next().charAt(0);
 					System.out.println("what is the building");
 					String building = input.next();
+					String buffer = input.nextLine();
 					System.out.println("what is the long title");
 					String long_title = input.nextLine();
 					System.out.println("what is the short title");
 					String short_title = input.nextLine();
 					System.out.println("what is the description");
-					String description = input.next();
+					String description = input.nextLine();
 					System.out.println("what is the professor");
-					String professor = input.next();
+					String professor = input.nextLine();
 					System.out.println("what is the day");
 					String day = input.next();
 					System.out.println("what is the begin time");
@@ -1186,7 +1196,7 @@ public class Driver {
 					System.out.println("what is the room");
 					String room = input.next();
 					temp = new Course(0, code, department, section, building, long_title, short_title, description,
-					professor, day, begin_time, end_time, capacity, enrollment, room, null);
+					professor, day, begin_time, end_time, capacity, enrollment, room, new ArrayList<Integer>(), 0);
 					temp.createCourse();
 					break;
 				case "change":
@@ -1194,13 +1204,16 @@ public class Driver {
 					int id = input.nextInt();
 					System.out.println("what is the field you would like to change");
 					String field = input.next();
+					buffer = input.nextLine();
 					System.out.println("what is the new data you would like to enter");
 					in = input.nextLine();
+					temp = new Course(0);
 					temp.changeCourse(id, field, in);
 					break;
 				case "delete":
 					System.out.println("what is the id of the course you would like to delete");
 					in = input.next();
+					temp = new Course(0);
 					temp.delCourse(Integer.parseInt(in));
 					break;
 				case "back":

@@ -55,7 +55,7 @@ public class GuiMain extends Application {
 	 * @return False if no course found, true otherwise
 	 */
 	public static boolean addByDepCodeSec(String[] in) {
-				Search s = new Search();
+		Search s = new Search();
 		ArrayList<Course> alc = new ArrayList<>();
 		
 		Filter fdep = new Filter("department", in[0]);
@@ -96,7 +96,7 @@ public class GuiMain extends Application {
 			/**
 		 	*   BOOKKEEPING:  ACTION ADDED TO STATE, PREVIOUS ACTION NOW addToSchedule
 		 	*/
-						//  TODO: Adapt state to gui
+			//  TODO: Adapt state to gui
 			// state.add(new State("addToSchedule"));
 
 
