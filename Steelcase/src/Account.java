@@ -476,11 +476,13 @@ public class Account {
 	}
 
 	/**
-	 * Deletes the given account from the database and any schedule associated
-	 * with it.
+	 * Checks the given password against the account's password and deletes the given account
+	 * from the database if they match, and any schedule associated with it. Throws 
+	 * {@code InvalidCredentialException} if the passwords don't match.
 	 * @param account The account to delete
 	 * @param password The password entered by the user to verify.
-	 * @return True if successful, or false if an exception occurs during the delete on the db.
+	 * @return True if successful, or false if passwords don't match or an exception occurs 
+	 * 					during the delete on the db.
 	 * @throws NoSuchAlgorithmException			If the hash algorithm for passwords doesn't exist.
 	 * @throws InvalidKeySpecException			If the given password can't be hashed.
 	 * @throws InvalidCredentialsException 	If the passwords don't match
@@ -491,11 +493,11 @@ public class Account {
 			throw new InvalidCredentialsException("Passwords do not match");
 		}
 		// passwords match, continue.
-		String sql = String.format("DELETE FROM Account WHERE email = %s", account.email);
-		try(Connection conn = DataSource.getConnection();) {
-			Statement s = conn.createStatement();
-			s.execute(sql);
-			s.close();
+		String sql = "DELETE FROM Account WHERE email = ?";
+		try(Connection conn = DataSource.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, account.email);
+			ps.execute();
 			return true;
 		} catch(SQLException e) {
 			// TODO: log

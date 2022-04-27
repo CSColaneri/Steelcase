@@ -40,12 +40,12 @@
                         <Insets left="450.0" top="25.0" />
                      </VBox.margin>
                   </Text>
-                  <Button fx:id="dAccountBtn" mnemonicParsing="false" text="Delete Account">
+                  <Button fx:id="dAccountBtn" mnemonicParsing="false" onAction="#dAccount" text="Delete Account">
                      <VBox.margin>
                         <Insets left="450.0" top="25.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="cPBtn" mnemonicParsing="false" text="Change Password">
+                  <Button fx:id="cPBtn" mnemonicParsing="false" onAction="#cPBtn" text="Change Password">
                      <VBox.margin>
                         <Insets left="450.0" top="25.0" />
                      </VBox.margin>
