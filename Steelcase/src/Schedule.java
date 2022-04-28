@@ -352,7 +352,7 @@ public class Schedule {
 		try {
 			LocalTime.parse(begin);
 			LocalTime.parse(end);
-			Course temp = new Course(title, description, day, begin, end, customs);
+			Course temp = new Course(customs, 0, "", '\0', "", title, "", description, "", day, begin, end, 0, 0, "", new ArrayList<Integer>(), 0);
 			schedule.add(temp);
 			customs--;
 		} catch (DateTimeParseException | NullPointerException e) {
