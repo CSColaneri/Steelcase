@@ -51,6 +51,7 @@ public class calendarManager implements Initializable {
     //ERIC right here
     public void export(ActionEvent e){
         System.out.println("exporting");
+        GuiMain.schedule.export("scheduler.txt");
     }
 
     //ERIC right here
