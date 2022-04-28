@@ -48,13 +48,13 @@ public class calendarManager implements Initializable {
     private Button save;
 
 
-    //ERIC right here
+    //currently exports in a list view to a txt
     public void export(ActionEvent e){
         System.out.println("exporting");
         GuiMain.schedule.export("scheduler.txt");
     }
 
-    //ERIC right here
+    //add a new custom event
     public void addNewCustomCourse(ActionEvent e){
         Popup popup = new Popup();
         StackPane sp = new StackPane();
@@ -103,7 +103,7 @@ public class calendarManager implements Initializable {
             popup.hide();
         });
 
-        //put adding new course code here Eric!
+        //when accept is clicked, adds event as a temporary course on schedule
         accept.setOnAction(actionEvent -> {
             String title = Title.getText();
             String des = Description.getText();
