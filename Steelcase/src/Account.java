@@ -393,7 +393,7 @@ public class Account {
 		if(isValidEmail(email)) {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
-			System.out.println("Making account");
+			System.out.println("Making account object");
 			Account account = new Account(email, encryptedPassword, salt, firstName, lastName, role, "", false);
 			System.out.println("Uploading schedule");
 			account = account.saveUser(sched);
@@ -555,7 +555,7 @@ public class Account {
 			}
 			
 			// if confirmation code is diff, update
-			if(!this.confirmationCode.equals(newAccount.confirmationCode)) {
+			if(this.confirmationCode != null && !this.confirmationCode.equals(newAccount.confirmationCode)) {
 				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", CONFIRMATION_CODE_FIELD, newAccount.confirmationCode, this.email);
 				stmt.addBatch(sql);
 			}
