@@ -218,6 +218,8 @@ public class Search {
     }
 
     public ArrayList<Course> searchCoursesC(Connection conn) {
+        // Why? This breaks add by course, dep, section. What's the point?
+        // TODO
        if(GuiMain.courseList.isEmpty())
        {
         try(PreparedStatement stmt = buildStatement(conn);

@@ -165,11 +165,11 @@ public class Email {
 			
 			ul.append("</ul>\n");
 	
-			//// calendar view
-			StringBuilder calendar = new StringBuilder();
-			calendar.append("Calendar Here");
+			// //// calendar view
+			// StringBuilder calendar = new StringBuilder();
+			// calendar.append("Calendar Here");
 	
-			html = String.format(body.toString(),"firstname", "lastname", ul.toString(), calendar.toString());
+			html = String.format(body.toString(),GuiMain.account.getFirstName(), GuiMain.account.getLastName(), ul.toString()/*, calendar.toString() */);
 			// end html
 		} catch(FileNotFoundException e) { // else use this.
 			html = String.format("<h1>%s</h1>\n", message);
