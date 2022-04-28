@@ -38,7 +38,7 @@
                               <Insets left="500.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField fx:id="fname" translateY="125.0">
+                        <TextField fx:id="fname" onKeyTyped="#checkNameLen" translateY="125.0">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
@@ -48,7 +48,7 @@
                               <Insets left="500.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField fx:id="lname" translateY="137.5">
+                        <TextField fx:id="lname" onKeyTyped="#checkNameLen" translateY="137.5">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
@@ -58,7 +58,7 @@
                               <Insets left="500.0" top="150.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField fx:id="email">
+                        <TextField fx:id="email" onKeyTyped="#checkEmailLen">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
@@ -68,7 +68,7 @@
                               <Insets left="500.0" top="10.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField fx:id="password">
+                        <TextField fx:id="password" onKeyTyped="#checkPWordLen">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>
@@ -78,7 +78,7 @@
                               <Insets left="500.0" top="10.0" />
                            </VBox.margin>
                         </Text>
-                        <TextField fx:id="confirmPass" layoutX="510.0" layoutY="242.0">
+                        <TextField fx:id="confirmPass" layoutX="510.0" layoutY="242.0" onKeyTyped="#checkPWordLen">
                            <VBox.margin>
                               <Insets left="500.0" right="500.0" />
                            </VBox.margin>

@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -34,6 +35,58 @@ public class RegisterManager {
     private Button registerButton;
     @FXML
     private Text errorText;
+
+    boolean invalidName,
+            invalidEmail,
+            invalidPass;
+
+    @FXML
+    void checkNameLen(KeyEvent e) {
+        String fn = fname.getText();
+        String ln = lname.getText();
+        this.invalidName = false;
+        if(fn.length() > 25) {
+            invalidName = true;
+            System.err.println("First name too long. Keep it to 25 characters at most.");
+            fname.setText(fn.substring(0, 25));
+        }
+        if(ln.length() > 25) {
+            invalidName = true;
+            System.err.println("Last name too long. Keep it to 25 characters at most.");
+            lname.setText(ln.substring(0, 25));
+        }
+        disableRegisterButton();
+    }
+
+    @FXML
+    void checkEmailLen(KeyEvent e) {
+        String emailText = email.getText();
+        invalidEmail = false;
+        if(emailText.length() > 50) {
+            invalidEmail = true;
+            System.err.println("Email too long. Keep it to 50 characters at most.");
+            email.setText(emailText.substring(0, 50));
+        }
+        disableRegisterButton();
+    }
+
+    @FXML
+    void checkPWordLen(KeyEvent e) {
+        String pword = password.getText();
+        String cpword = confirmPass.getText();
+        invalidPass = false;
+        if(pword.length() > 50) {
+            invalidPass = true;
+            System.err.println("Password to long, keep it to 50 characters at most.");
+            password.setText(pword.substring(0, 50));
+        }
+        if(cpword.length() > 50) {
+            invalidPass = true;
+            System.err.println("Password confirmation too long! keep it to 50 characters at most");
+            confirmPass.setText(cpword.substring(0,50));
+        }
+        disableRegisterButton();
+    }
 
     @FXML
     void submitted(ActionEvent e) {
@@ -84,6 +137,14 @@ public class RegisterManager {
             }
         } else {
             errorText.setText(errorText.getText() + "\nPassswords must match!");
+        }
+    }
+
+    private void disableRegisterButton() {
+        if(invalidName || invalidEmail || invalidPass) {
+            registerButton.setDisable(true);
+        } else {
+            registerButton.setDisable(false);
         }
     }
 
