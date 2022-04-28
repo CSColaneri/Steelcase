@@ -473,7 +473,7 @@ public class Account {
 	private Account saveUser(Schedule classes) {
 		String acc = "insert into Account(email, password_hash, salt, first_name, last_name, email_confirmed, confirmation_code, role) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		String sch = "insert into Schedule(email, courseID) values(?, ?)";
-		String check = "SELECT * FROM Course WHERE EXISTS (SELECT id FROM Course WHERE id = ?)";
+		String check = "SELECT * FROM Course WHERE id = ?";
 		try (
 			Connection conn = DataSource.getConnection();
 			PreparedStatement ps1 = conn.prepareStatement(acc);
