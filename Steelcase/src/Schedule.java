@@ -3,6 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileOutputStream;
@@ -10,6 +12,7 @@ import java.io.IOException;
 
 public class Schedule {
 	private ArrayList<Course> schedule = null;
+	private int customs = Integer.MAX_VALUE;
 
 	public Schedule() {
 		schedule = new ArrayList<>();
@@ -343,6 +346,18 @@ public class Schedule {
 			}
 		}
 		return null;
+	}
+
+	public void addCustom(String title, String description, String day, String begin, String end){
+		try {
+			LocalTime.parse(begin);
+			LocalTime.parse(end);
+			Course temp = new Course(title, description, day, begin, end, customs);
+			schedule.add(temp);
+			customs--;
+		} catch (DateTimeParseException | NullPointerException e) {
+			System.err.println("user gave invalid times");
+		}
 	}
 
 	@Override

@@ -114,6 +114,24 @@ public class Course {
       preReqs.add(c.get(i));
     }
   }
+
+  public Course(String title, String description, String day, String begin, String end, int id){
+    this.id = id;
+    code = 0;
+    department = "";
+    section = '\0';
+    building = "";
+    long_title = title;
+    short_title = "";
+    description = "";
+    professor = "";
+    this.day = day;
+    begin_time = begin;
+    end_time = end;
+    capacity = 0;
+    enrollment = 0;
+    room = "";
+  }
   
   /**
    * Accepts a SQL ResultSet from a select query on the

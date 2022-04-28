@@ -103,13 +103,13 @@ public class calendarManager implements Initializable {
         });
 
         //put adding new course code here Eric!
-        String title = Title.getText();
-        String des = Description.getText();
-        String btime = bTime.getText();
-        String etime = eTime.getText();
-        String days = Days.getText();
         accept.setOnAction(actionEvent -> {
-            /*Put code here to add to sched*/
+            String title = Title.getText();
+            String des = Description.getText();
+            String btime = bTime.getText();
+            String etime = eTime.getText();
+            String days = Days.getText();
+            GuiMain.schedule.addCustom(title, des, days, btime, etime);
 
             popup.hide();
             try {
