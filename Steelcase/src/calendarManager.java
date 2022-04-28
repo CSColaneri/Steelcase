@@ -110,10 +110,11 @@ public class calendarManager implements Initializable {
             String etime = eTime.getText();
             String days = Days.getText();
             GuiMain.schedule.addCustom(title, des, days, btime, etime);
+            System.out.println(GuiMain.schedule.toString());
 
             popup.hide();
             try {
-                switchToCalender(actionEvent);
+                switchToCalender(e);
             }catch (Exception e1){
                 e1.printStackTrace();
             }
