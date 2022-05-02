@@ -393,7 +393,7 @@ public class Account {
 		if(isValidEmail(email)) {
 			String salt = getNewSalt();
 			String encryptedPassword = getEncryptedPassword(password, salt);
-			System.out.println("Making account");
+			System.out.println("Making account object");
 			Account account = new Account(email, encryptedPassword, salt, firstName, lastName, role, "", false);
 			System.out.println("Uploading schedule");
 			account = account.saveUser(sched);
@@ -473,10 +473,12 @@ public class Account {
 	private Account saveUser(Schedule classes) {
 		String acc = "insert into Account(email, password_hash, salt, first_name, last_name, email_confirmed, confirmation_code, role) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		String sch = "insert into Schedule(email, courseID) values(?, ?)";
+		String check = "SELECT * FROM Course WHERE id = ?";
 		try (
 			Connection conn = DataSource.getConnection();
 			PreparedStatement ps1 = conn.prepareStatement(acc);
 			PreparedStatement ps2 = conn.prepareStatement(sch);
+			PreparedStatement ps3 = conn.prepareStatement(check);
 		) {
 			ps1.setString(1, email);
 			ps1.setString(2, passEncrypted);
@@ -490,8 +492,11 @@ public class Account {
 			ps2.setString(1, email);
 
 			for (int i = 0; i < classes.getSchedule().size(); i++) {
-				ps2.setInt(2, classes.getSchedule().get(i).getId());
-				ps2.execute();
+				ps3.setInt(1, classes.getSchedule().get(i).getId());
+				if(ps3.execute()){
+					ps2.setInt(2, classes.getSchedule().get(i).getId());
+					ps2.execute();
+				}
 			}
 		} catch (SQLException s) {
 			// if the account succeeds but the schedule fails, the account
@@ -555,7 +560,7 @@ public class Account {
 			}
 			
 			// if confirmation code is diff, update
-			if(!this.confirmationCode.equals(newAccount.confirmationCode)) {
+			if(this.confirmationCode != null && !this.confirmationCode.equals(newAccount.confirmationCode)) {
 				sql = String.format("UPDATE Account set %s = \"%s\" where email = \"%s\"", CONFIRMATION_CODE_FIELD, newAccount.confirmationCode, this.email);
 				stmt.addBatch(sql);
 			}

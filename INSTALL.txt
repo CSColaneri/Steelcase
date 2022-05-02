@@ -1,8 +1,14 @@
 Minor features we weren't able to get to:
-1. Delete Account and schedule
-2. Reset Password
-3. Last used filters are saved.
-4. Number of credits in user's Schedule
+1. Last used filters are saved.
+2. Number of credits in user's Schedule (Was initially on the board, but was removed, and once realized that credits were added, other tasks took priority)
+3. confirm emails (school blocks access)
+4. ask for major, minor, and advisor on startup
+5. ratemyprofessor links
+6. counseling web resource link
+7. color code schedule
+8. Stylize the GUI using css
+9. Mock the DB for unit tests
+10. Save calendar to pdf (instead saved the list view to a pdf)
 
 Unzip steelcase_turnin.zip in a clean directory. 
 
@@ -12,20 +18,25 @@ You'll find our source code in Steelcase_source. We've had many issues with Ecli
 
 >>VSCODE
 
-If you open Steelcase_source in vscode, run can just run the Driver.java file as the main class, the env variable is already set in .vscode/launch.json.
+If you open Steelcase_source in vscode, you must run the gui configuration. On the menu of icons on the left,
+select the debug icon (Play button with bug). On the new menu, at the top there is a drop down menu; select gui.
+Then run it.
 
 >>INTELLIJ
 
-Import the Steelcase_source project into a new Intellij java project (if prompted for a java version, use java 12) When it's finished loading, create a new application run configuration. Driver is the main class (it may take a while for intellij to find it), and make sure to include the environment variable GOOGLE_APPLICATION_CREDENTIALS=ambient-scope-342219-3894e6e0fc09.json
+Import the Steelcase_source project into a new Intellij java project (if prompted for a java version, use java 12) When it's 
+finished loading, create a new application run configuration. GuiMain is the main class (it may take a while for intellij to 
+find it), and make sure to include the environment variable GOOGLE_APPLICATION_CREDENTIALS=ambient-scope-342219-3894e6e0fc09.json
 Now you can run the program.
 
->RUNNING THE APPLICATION
+>>FROM A DIFFERENT IDE
 
->>FROM run_steelcase_scheduler.bat
+If you open a java project with the source code and want to run it from there, you'll have to make sure the environment variable
+GOOGLE_APPLICATION_CREDENTIALS is set to the path to ambient-scope-342219-3894e6e0fc09.json. Without this, the program will be
+unable to find the credentials necessary to connect to the database.
 
-If you just want to run the application, you can do so by executing run_steelcase_schedule.bat. If you open that file up, you'll see it sets a transient environment variable (only lasts for the duration of the program) GOOGLE_APPLICATION_CREDENTIALS. This must be set so the program can find the authentication credentials it needs to connect to our database.
+USING ADMIN PRIVILEGES
 
->>FROM AN IDE
-
-If you open a java project with the source code and want to run it from there, you'll have to make sure the environment variable GOOGLE_APPLICATION_CREDENTIALS is set to the path to ambient-scope-342219-3894e6e0fc09.json. Without this, the program will be unable to find the credentials necessary to connect to the database.
-
+Run the driver instead to access these. You will have to login before doing anything with admin, as only admins can create more admins.
+username = admin@gmail.com | password = changeme  .  "addmin" command may not properly add new admin due to the problem with emails
+admin assumes the user is more aquainted with the system and inputs the correct formatting.

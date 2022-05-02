@@ -162,7 +162,7 @@ public class accountManager implements Initializable {
         popupHBox.setSpacing(10);
         popupHBox.getChildren().addAll(popupPField, popupSubmitBttn);
 
-        popupErrorText.setVisible(false);
+        // popupErrorText.setVisible(false);
         // errorText.setText("Howdy");
         popupErrorText.setFill(Color.RED);
         popupErrorText.setId("errorText");
@@ -184,12 +184,12 @@ public class accountManager implements Initializable {
         System.out.println("Change Password Popup");
 
         double rectX = 300;
-        double rectY = 100;
+        double rectY = 200;
         
         // BorderPane bp = new BorderPane();
         this.popupText = new Text("Enter a new password");
         this.popupErrorText = new Text();
-        this.popupSubmitBttn = new Button("Change Password");
+        this.popupSubmitBttn = new Button("Submit");
         this.popupPField = new PasswordField();
         this.popupCPField = new PasswordField();
         this.popupCancelBttn = new Button("x");
@@ -205,9 +205,12 @@ public class accountManager implements Initializable {
         // bp.setTop(sPane2);//sets cancel button in top of border pane
         // bp.center is set lower, after forming the other elements
 
-        popupPField.setPromptText("Your Password");
+        popupPField.setPromptText("New Password");
+        // popupPField.setPrefSize(100, 20);
+        popupPField.setPadding(new Insets(10, 12, 0, 12));
+        popupCPField.setPromptText("Confirm new password");
 
-        popupSubmitBttn.setPrefSize(100, 20);
+        // popupSubmitBttn.setPrefSize(75, 20);
         // set delete action on popup
         popupSubmitBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -230,14 +233,14 @@ public class accountManager implements Initializable {
 
         popupHBox.setPadding(new Insets(10, 12, 0, 12));
         popupHBox.setSpacing(10);
-        popupHBox.getChildren().addAll(popupPField, popupSubmitBttn);
+        popupHBox.getChildren().addAll(popupCPField, popupSubmitBttn);
 
-        popupErrorText.setVisible(false);
+        // popupErrorText.setVisible(false);
         // errorText.setText("Howdy");
         popupErrorText.setFill(Color.RED);
         popupErrorText.setId("errorText");
 
-        popupVBox.getChildren().addAll(popupText, popupErrorText, popupHBox);
+        popupVBox.getChildren().addAll(popupText, popupErrorText, popupPField, popupHBox);
         popupVBox.setPadding(new Insets(10, 12, 0, 12));
 
         popupSP.getChildren().addAll(popupRect, popupVBox, popupCancelBttn);
@@ -269,7 +272,10 @@ public class accountManager implements Initializable {
         String cPword = popupCPField.getText();
         popupPField.setText("");
         popupCPField.setText("");
-        if(cPword.equals(pword)) {
+        if(pword.isBlank()) {
+            System.err.println("Password must be included");
+            popupErrorText.setText("Password must be included!");
+        } else if(cPword.equals(pword)) {
             // change password
             try {
                 GuiMain.account.changePassword(pword);
@@ -281,6 +287,7 @@ public class accountManager implements Initializable {
                 ex.printStackTrace();
             }
         } else {
+            System.err.println("Passwords don't match");
             popupErrorText.setText("Passwords don't match!");
         }
     }

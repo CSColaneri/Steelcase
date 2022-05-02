@@ -31,7 +31,7 @@ public class loginManager {
         System.out.println("Email: " + em + " Pass: <REMOVED>");
         //need to then do an account grab
         GuiMain.account = Account.login(em, pass);
-        if (GuiMain.account == null) {
+        if(GuiMain.account == null) {
             System.out.println("Invalid username/password");
             errorText.setText("Invalid username/password");
         } else {

@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import javax.mail.internet.AddressException;
+
 /**
  * Author - Collin Campbell
  * Manages the input to the View Schedule
@@ -51,9 +53,20 @@ public class ViewManager implements Initializable {
     private Button saveSched;
     @FXML
     private TableColumn<Course, String> delete;
-
+    @FXML
+    private Button sendEmailBttn;
 
     public ObservableList<Course> list = FXCollections.observableArrayList();
+
+    @FXML
+    void sendEmailSelf(ActionEvent event) {
+        try {
+            Email.sendEmail(GuiMain.account, GuiMain.schedule);
+        } catch(AddressException e) {
+            System.err.println("Email can't be resolved to an email address");
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void switchToMain(ActionEvent e) throws IOException {
