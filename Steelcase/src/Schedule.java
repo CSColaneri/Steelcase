@@ -101,13 +101,14 @@ public class Schedule {
 				String description= rs.getString("description");
 				String professor 	= rs.getString("professor");
 				String day 				= rs.getString("day");
-				String begin_time = rs.getTime("begin_time") != null ? rs.getTime("begin_time").toString() : "null";
-				String end_time 	= rs.getTime("begin_time") != null ? rs.getTime("begin_time").toString() : "null";
+				String begin_time = rs.getString("begin_time") != null ? rs.getString("begin_time") : "null";
+				String end_time 	= rs.getString("end_time") != null ? rs.getString("end_time") : "null";
 				int capacity 			= rs.getInt("capacity");
 				int enrollment		= rs.getInt("enrollment");
 				String room 			= rs.getString("room");
-				ps2.setString(2, department);
+
 				ps2.setInt(1, code);
+				ps2.setString(2, department);
 				ResultSet rs2 = ps2.executeQuery();
 				while(rs2.next())
 				{
@@ -116,7 +117,11 @@ public class Schedule {
 				// TODO: only add to schedule when all courses are successfully retrieved.
 				schedule.add(new Course(id, code, department, section, building, long_title, short_title, description,
 						professor, day, begin_time, end_time, capacity, enrollment, room, ids));
-				ids.clear();
+				// All courses have the same prerequisites with this one line. Make a new object
+				// instead of clearing the old one.
+				// TODO
+				ids = new ArrayList<>();
+				// ids.clear();
 			}
 		} catch (SQLException e) {
 			// TODO: make log function
