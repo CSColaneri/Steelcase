@@ -305,12 +305,12 @@ public class accountManager implements Initializable {
         }
     }
 
-    public void logout(Stage e){
+    public void logout(Stage e) {
         GuiMain.account = null;
         GuiMain.loggedIn = false;
 
         GuiMain.schedule = new Schedule();
-
+        System.out.println("User logged out");
         try {
             switchToMain(e);
         }catch (Exception ex){
