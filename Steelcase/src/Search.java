@@ -217,11 +217,12 @@ public class Search {
         return null;
     }
 
-    public ArrayList<Course> searchCoursesC(Connection conn) {
+    public ArrayList<Course> loadCourses(Connection conn) {
        if(GuiMain.courseList.isEmpty())
        {
-        try(PreparedStatement stmt = buildStatement(conn);
-            ResultSet courses = stmt.executeQuery()) {
+        try(PreparedStatement stmt = buildStatement(conn);            
+            ResultSet courses = stmt.executeQuery();) {
+            buildPreReqs(conn);
             while(courses.next()) {
                 GuiMain.courseList.add(new Course(courses, conn));
             }
@@ -234,6 +235,28 @@ public class Search {
        }
        return GuiMain.courseList;
     }
+
+    public ArrayList<Course> searchCoursesC(Connection conn)
+    {
+        ArrayList<Course> ret = new ArrayList<>();
+        try(PreparedStatement stmt = buildStatement(conn);            
+            ResultSet courses = stmt.executeQuery();) 
+        {
+            while(courses.next())
+            {
+                ret.add(new Course(courses, conn));
+            }
+        }
+        catch(Exception e) {
+            // TODO: Log function
+            System.err.println("Couldn't search for courses.");
+            e.printStackTrace();
+            return null;
+        }
+        return ret;
+    }
+
+
 
     //input: date/time selection
     //output: list of course names from the database
@@ -293,6 +316,35 @@ public class Search {
         //Sample input to test
         //System.out.println(searchByTime("M", "18:30", "21:00"));
 
+      }
+
+      public void buildPreReqs(Connection conn)
+      {
+        try
+        {
+            String s = "SELECT * FROM Prereq";
+            PreparedStatement stmt = conn.prepareStatement(s);
+            ResultSet r = stmt.executeQuery();
+            while(r.next())
+            {
+                GuiMain.preReqList.add
+                (
+                    new PreReq
+                    (
+                        r.getInt("courseCode"),
+                        r.getString("courseDep"),
+                        r.getInt("prereqCode"),
+                        r.getString("prereqDep")
+                    )
+                );
+            }
+            r.close();
+            stmt.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
       }
 }
 

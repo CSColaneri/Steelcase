@@ -125,13 +125,6 @@ public class Course {
   public Course (ResultSet course, Connection conn) throws SQLException {
     this();
     if(!course.isClosed() && !course.isAfterLast()) {
-      String sql2 = "SELECT id FROM Course c "
-      + "INNER JOIN Prereq p "
-      + "on c.code = p.prereqCode "
-      + "and c.department = p.prereqDep "
-      + "WHERE p.courseCode = ? AND p.courseDep = ?";
-      PreparedStatement ps2 = conn.prepareStatement(sql2);
-
       this.id           = course.getInt("id");
       this.code         = course.getInt("code");
       this.department   = course.getString("department");
@@ -149,12 +142,12 @@ public class Course {
       this.room         = course.getString("room");
       this.add          = new CheckBox();
 
-      ps2.setString(2, department);
-      ps2.setInt(1, code);
-      ResultSet rs2 = ps2.executeQuery();
-      while(rs2.next())
+      for(int i = 0; i < GuiMain.preReqList.size(); i++)
       {
-        this.preReqs.add(rs2.getInt("id"));
+        if(GuiMain.preReqList.get(i).getCode() == this.code && GuiMain.preReqList.get(i).getDept().equals(this.department))
+        {
+          this.preReqs.add(GuiMain.preReqList.get(i).getCode());
+        }
       }
     }
 

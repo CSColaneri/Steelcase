@@ -113,7 +113,7 @@ public class FilterSearchManager implements Initializable{
 
         if(choiceBox.getValue() == null) {
             try(Connection conn = DataSource.getConnection()) {
-                allCourses = search.searchCoursesC(conn); //has all the courses
+                allCourses = search.loadCourses(conn); //has all the courses
             } catch(Exception e) {
                 System.err.println("Failed to grab connection");
                 e.printStackTrace();;
