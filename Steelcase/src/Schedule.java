@@ -292,8 +292,8 @@ public class Schedule {
 			} catch (SQLException e) {
 				updatedSchedule = false;
 				// TODO: make log function
-				System.err.println("Failed to update schedule. Rolling back DB...");
 				e.printStackTrace();
+				System.err.println("Failed to update schedule. Rolling back DB...");
 				status = false;
 			}
 		}
