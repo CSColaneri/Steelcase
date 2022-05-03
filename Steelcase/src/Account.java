@@ -477,8 +477,6 @@ public class Account {
 		try (
 			Connection conn = DataSource.getConnection();
 			PreparedStatement ps1 = conn.prepareStatement(acc);
-			PreparedStatement ps2 = conn.prepareStatement(sch);
-			PreparedStatement ps3 = conn.prepareStatement(check);
 		) {
 			ps1.setString(1, email);
 			ps1.setString(2, passEncrypted);
@@ -489,6 +487,15 @@ public class Account {
 			ps1.setString(7, confirmationCode);
 			ps1.setString(8, role);
 			ps1.execute();
+		} catch(SQLException e) {
+			System.err.println("Failed to add new acccount.");
+			e.printStackTrace();
+		}
+		try(
+			Connection conn = DataSource.getConnection();
+			PreparedStatement ps2 = conn.prepareStatement(sch);
+			PreparedStatement ps3 = conn.prepareStatement(check);
+		) {
 			ps2.setString(1, email);
 
 			for (int i = 0; i < classes.getSchedule().size(); i++) {
@@ -502,7 +509,7 @@ public class Account {
 			// if the account succeeds but the schedule fails, the account
 			// will still be in there. This is good
 			// TODO: make log function
-			System.err.println("Failed to add new account");
+			System.err.println("Failed to save new account's schedule");
 			s.printStackTrace();
 		}
 		return this;
