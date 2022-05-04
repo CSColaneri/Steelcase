@@ -256,8 +256,6 @@ public class Search {
         return ret;
     }
 
-
-
     //input: date/time selection
     //output: list of course names from the database
     // TODO: Combine this function with the other search function.  Not a minimum requirement but it would be nice. 

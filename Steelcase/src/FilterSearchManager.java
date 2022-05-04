@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import javax.swing.Action;
+
 public class FilterSearchManager implements Initializable{
     private Stage stage;
     private Scene scene;
@@ -92,6 +94,15 @@ public class FilterSearchManager implements Initializable{
         for(Course u : list){
             if(u.getAdd().isSelected()){
                 u.getAdd().setSelected(false);
+                for(int i = 0; i < GuiMain.schedule.getSchedule().size(); i++)
+                {
+                    Course q = GuiMain.schedule.getSchedule().get(i);
+                    boolean timeExists = !(q.getBegin_time() == null || q.getEnd_time() == null || u.getBegin_time() == null || u.getEnd_time() == null);
+                    if(timeExists && q.timeConflict(u))
+                    {
+                        GuiMain.schedule.removeCourse(q.getId());
+                    }
+                }
                 System.out.println("Adding course: " + u.getLong_title());
                 c.add(u);
                 GuiMain.schedule.add(u);
@@ -286,7 +297,8 @@ public class FilterSearchManager implements Initializable{
                     btn.setTranslateY(40);
                     btn2.setTranslateX(50);
                     btn2.setTranslateY(40);
-                    Text text = new Text("Conflicting course(s) can not added to schedule");
+                    Text text = new Text("Course Conflicts!  \nIf you add anyway, it may remove other items in your schedule!");
+                    text.setTextAlignment(TextAlignment.CENTER);
                     Rectangle rect = new Rectangle(400, 200);
                     rect.setFill(Color.WHITE);
                     StackPane sPane = new StackPane();
@@ -305,6 +317,11 @@ public class FilterSearchManager implements Initializable{
                         popup.hide();
                     });
                 });
+            }
+            else
+            {
+                c.getAdd().setOpacity(1);
+                c.getAdd().setOnMouseClicked(actionEventFix ->{});
             }
         }
         cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));

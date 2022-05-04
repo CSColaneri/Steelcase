@@ -249,7 +249,7 @@ public class Course {
     return conflict;
   }
 
-  private boolean timeConflict(Course c) {
+  public boolean timeConflict(Course c) {
     String[] thisBegin= this.getBegin_time().split(":");
     String[] thisEnd  = this.getEnd_time().split(":");
     String[] cBegin   = c.getBegin_time().split(":");
