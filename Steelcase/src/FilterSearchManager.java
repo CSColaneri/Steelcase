@@ -275,6 +275,7 @@ public class FilterSearchManager implements Initializable{
         search(); //fills the allCourses
         list.addAll(allCourses);
         for(Course c : list){
+            c.getAdd().setSelected(false);
             if(GuiMain.schedule.conflicts(c)){
                 c.getAdd().setOpacity(.2);
                 c.getAdd().setOnMouseClicked(actionEvent -> {
