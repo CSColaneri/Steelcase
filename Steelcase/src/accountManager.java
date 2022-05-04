@@ -56,6 +56,7 @@ public class accountManager implements Initializable {
     private StackPane   popupSP;
     private Rectangle   popupRect;
     private Stage       popupOrigin;
+    private boolean     popupIsDelete = false;
 
     public void setAccountHolderText(String accountHolder){
         accountHolderText.setText("Account Holder: " + accountHolder);
@@ -91,8 +92,13 @@ public class accountManager implements Initializable {
         popup.hide();
     }
 
-    public void dAccount(ActionEvent e){
-        createPopup();
+    public void dAccount(ActionEvent e) {
+        // if the popup isn't for account deletion,
+        // or if it hasn't been initialized
+        if(!popupIsDelete || popup == null) {
+            createPopup();
+            popupIsDelete = true;
+        }
         // reset error text
         ((Text)popup.getContent().get(0).lookup("#errorText")).setText("");
 
@@ -121,6 +127,8 @@ public class accountManager implements Initializable {
         this.popupHBox = new HBox();
         this.popupVBox = new VBox();
         this.popup = new Popup();
+        popup.setAutoHide(true);
+        popup.setAutoFix(true);
         this.popupSP = new StackPane();
         this.popupRect = new Rectangle(rectX, rectY);
         popupRect.setFill(Color.WHITE);
@@ -196,6 +204,8 @@ public class accountManager implements Initializable {
         this.popupHBox = new HBox();
         this.popupVBox = new VBox();
         this.popup = new Popup();
+        popup.setAutoHide(true);
+        popup.setAutoFix(true);
         this.popupSP = new StackPane();
         this.popupRect = new Rectangle(rectX, rectY);
         popupRect.setFill(Color.WHITE);
@@ -207,8 +217,11 @@ public class accountManager implements Initializable {
 
         popupPField.setPromptText("New Password");
         // popupPField.setPrefSize(100, 20);
-        popupPField.setPadding(new Insets(10, 12, 0, 12));
+        popupPField.setPadding(new Insets(10, 12, 5, 10));
+        
         popupCPField.setPromptText("Confirm new password");
+        // popupCPField.setPrefSize(100, 20);
+        popupCPField.setPadding(new Insets(10, 12, 5, 10));
 
         // popupSubmitBttn.setPrefSize(75, 20);
         // set delete action on popup
@@ -255,11 +268,18 @@ public class accountManager implements Initializable {
 
     public void cPBtn(ActionEvent e){
         System.out.println("Changing the password");
-        // maybe do a popup
-        changePasswordPopup();
+        // if popup is not for changing password,
+        // or if it hasn't been initialized.
+        if(popupIsDelete || popup == null) {
+            changePasswordPopup();
+            popupIsDelete = false;
+        }
+
         if(popup.isShowing()) {
             popup.hide();
         } else {
+            popupPField.setText("");
+            popupCPField.setText("");
             Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
             popupOrigin = stage;
             popup.show(stage);
@@ -305,12 +325,12 @@ public class accountManager implements Initializable {
         }
     }
 
-    public void logout(Stage e){
+    public void logout(Stage e) {
         GuiMain.account = null;
         GuiMain.loggedIn = false;
 
         GuiMain.schedule = new Schedule();
-
+        System.out.println("User logged out");
         try {
             switchToMain(e);
         }catch (Exception ex){

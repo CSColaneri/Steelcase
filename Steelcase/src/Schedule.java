@@ -101,13 +101,14 @@ public class Schedule {
 				String description= rs.getString("description");
 				String professor 	= rs.getString("professor");
 				String day 				= rs.getString("day");
-				String begin_time = rs.getTime("begin_time") != null ? rs.getTime("begin_time").toString() : "null";
-				String end_time 	= rs.getTime("begin_time") != null ? rs.getTime("begin_time").toString() : "null";
+				String begin_time = rs.getString("begin_time") != null ? rs.getString("begin_time") : "null";
+				String end_time 	= rs.getString("end_time") != null ? rs.getString("end_time") : "null";
 				int capacity 			= rs.getInt("capacity");
 				int enrollment		= rs.getInt("enrollment");
 				String room 			= rs.getString("room");
-				ps2.setString(2, department);
+
 				ps2.setInt(1, code);
+				ps2.setString(2, department);
 				ResultSet rs2 = ps2.executeQuery();
 				while(rs2.next())
 				{
@@ -116,7 +117,11 @@ public class Schedule {
 				// TODO: only add to schedule when all courses are successfully retrieved.
 				schedule.add(new Course(id, code, department, section, building, long_title, short_title, description,
 						professor, day, begin_time, end_time, capacity, enrollment, room, ids));
-				ids.clear();
+				// All courses have the same prerequisites with this one line. Make a new object
+				// instead of clearing the old one.
+				// TODO
+				ids = new ArrayList<>();
+				// ids.clear();
 			}
 		} catch (SQLException e) {
 			// TODO: make log function
@@ -252,7 +257,7 @@ public class Schedule {
 		}
 
 		// if connection failed, skip this
-		if (status) {
+		if(status) {
 			// try(Statement statement = conn.createStatement()) {
 			try {
 				conn.setAutoCommit(false);// set to false to send as one transaction
@@ -266,10 +271,20 @@ public class Schedule {
 				ps.execute();
 				// statement.addBatch(sql);
 
+				/*
+					Custom event ids are all 0.
+					If a course in my schedule object has this id,
+					skip it and do not try to upload to DB.
+				*/
 				// insert new schedule
 				sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(?, ?)");
 				ps = conn.prepareStatement(sql);
 				for (Course c : schedule) {
+					// skip custom events.
+					if(c.getId() == 0) {
+						System.out.println("Skipping custom event " + c.toString());
+						continue;
+					}
 					ps.setString(1, account.getEmail());
 					ps.setInt(2, c.getId());
 					// sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(%s, %s)",
@@ -287,8 +302,8 @@ public class Schedule {
 			} catch (SQLException e) {
 				updatedSchedule = false;
 				// TODO: make log function
-				System.err.println("Failed to update schedule. Rolling back DB...");
 				e.printStackTrace();
+				System.err.println("Failed to update schedule. Rolling back DB...");
 				status = false;
 			}
 		}
@@ -352,7 +367,13 @@ public class Schedule {
 		try {
 			LocalTime.parse(begin);
 			LocalTime.parse(end);
-			Course temp = new Course(customs, 0, "", '\0', "", title, "", description, "", day, begin, end, 0, 0, "", new ArrayList<Integer>(), 0);
+			Course temp = new Course();
+			temp.setLong_title(title);
+			temp.setDescription(description);
+			temp.setDay(day);
+			temp.setBegin_time(begin);
+			temp.setEnd_time(end);
+
 			schedule.add(temp);
 			customs--;
 		} catch (DateTimeParseException | NullPointerException e) {
