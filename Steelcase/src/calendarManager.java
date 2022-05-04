@@ -47,7 +47,6 @@ public class calendarManager implements Initializable {
     @FXML
     private Button save;
 
-
     //currently exports in a list view to a txt
     public void export(ActionEvent e){
         System.out.println("exporting");

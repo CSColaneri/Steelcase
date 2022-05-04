@@ -257,7 +257,7 @@ public class Schedule {
 		}
 
 		// if connection failed, skip this
-		if (status) {
+		if(status) {
 			// try(Statement statement = conn.createStatement()) {
 			try {
 				conn.setAutoCommit(false);// set to false to send as one transaction
@@ -271,10 +271,20 @@ public class Schedule {
 				ps.execute();
 				// statement.addBatch(sql);
 
+				/*
+					Custom event ids are all 0.
+					If a course in my schedule object has this id,
+					skip it and do not try to upload to DB.
+				*/
 				// insert new schedule
 				sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(?, ?)");
 				ps = conn.prepareStatement(sql);
 				for (Course c : schedule) {
+					// skip custom events.
+					if(c.getId() == 0) {
+						System.out.println("Skipping custom event " + c.toString());
+						continue;
+					}
 					ps.setString(1, account.getEmail());
 					ps.setInt(2, c.getId());
 					// sql = String.format("INSERT INTO Schedule(email, courseID) VALUES(%s, %s)",
