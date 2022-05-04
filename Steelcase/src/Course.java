@@ -2,7 +2,6 @@ import javafx.scene.control.CheckBox;
 
 import java.sql.*;
 import java.util.ArrayList;
-
 public class Course {
     private int id;
     private int code;
