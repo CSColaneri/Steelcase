@@ -41,7 +41,8 @@
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
         "EMAIL_OTP": "jatwvstqwbypxfwh"
-      }
+      },
+      "vmArgs": "--module-path Steelcase/lib/javafx-sdk-18/lib --add-modules javafx.controls,javafx.fxml",
     },
     {
       "type": "java",
@@ -52,7 +53,8 @@
         "GOOGLE_APPLICATION_CREDENTIALS": "ambient-scope-342219-3894e6e0fc09.json",
         "EMAIL_OTP": "jatwvstqwbypxfwh",
         "DEBUG":"true"
-      }
+      },
+      "vmArgs": "--module-path Steelcase/lib/javafx-sdk-18/lib --add-modules javafx.controls,javafx.fxml",
     }
   ]
 }
