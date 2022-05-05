@@ -189,6 +189,8 @@ public class ViewManager implements Initializable {
         System.out.println("view schedule init before adding courses to schedule");
         if(GuiMain.schedule.hasSchedule()) {
             for(Course c : GuiMain.schedule.getSchedule()) {
+                c.getAdd().setOpacity(1);
+                c.getAdd().setOnMouseClicked(null);
                 list.add(c);
             }
         }
