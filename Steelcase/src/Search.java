@@ -220,7 +220,7 @@ public class Search {
     public ArrayList<Course> loadCourses(Connection conn) {
        if(GuiMain.courseList.isEmpty())
        {
-        try(PreparedStatement stmt = buildStatement(conn);            
+        try(PreparedStatement stmt = buildStatement(conn);
             ResultSet courses = stmt.executeQuery();) {
             buildPreReqs(conn);
             while(courses.next()) {

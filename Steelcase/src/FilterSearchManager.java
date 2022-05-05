@@ -84,7 +84,7 @@ public class FilterSearchManager implements Initializable{
     };
 
     //populating choice box
-    private String[] choices = {"Professor", "Class Name", "Description", "Code", "Department", "ID", "Day"};
+    private String[] choices = {"Professor", "Class Name", "Description", "Code", "Department", "ID", "Day", "Begin Time", "End Time"};
 
     public ObservableList<Course> list = FXCollections.observableArrayList();
 
@@ -193,6 +193,21 @@ public class FilterSearchManager implements Initializable{
                         filteredCourses.add(c); //add the class
                     }
                 }
+            } else if(choiceBox.getValue().equals("Begin Time")) {
+                System.out.println("Doing a begin_time search");
+                for(Course c : allCourses) {
+                    if(c.getBegin_time() != null && c.getBegin_time().contains(searchText.getText())) {
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+            } else if(choiceBox.getValue().equals("End Time")) {
+                System.out.println("Doing an end_time search");
+                for(Course c : allCourses) {
+                    if(c.getEnd_time() != null && c.getEnd_time().contains(searchText.getText())) {
+                        filteredCourses.add(c); //add the class
+                    }
+                }
+
             }
             list.addAll(filteredCourses);
         }
