@@ -183,6 +183,7 @@ public class ViewManager implements Initializable {
                 stage.show();
             });
         } else {
+            sendEmailBttn.setDisable(true);
             saveSched.setDisable(true);
         }
 
