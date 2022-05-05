@@ -122,9 +122,11 @@ public class Email {
 			message.setContent(buildScheduleHtml(body, schedule), "text/html");
 
 			Transport.send(message);
+			System.out.println("Email sent successfully!");
 			return true;
 		} catch (MessagingException e) {
 			// TODO: Log
+			System.err.println("Failed to send email");
 			e.printStackTrace();
 		}
 		return false;
@@ -169,7 +171,7 @@ public class Email {
 			// StringBuilder calendar = new StringBuilder();
 			// calendar.append("Calendar Here");
 	
-			html = String.format(body.toString(),GuiMain.account.getFirstName(), GuiMain.account.getLastName(), ul.toString()/*, calendar.toString() */);
+			html = String.format(body.toString(),GuiMain.account.getFirstName(), GuiMain.account.getLastName(), ul.toString(), ""/*calendar.toString() */);
 			// end html
 		} catch(FileNotFoundException e) { // else use this.
 			html = String.format("<h1>%s</h1>\n", message);
