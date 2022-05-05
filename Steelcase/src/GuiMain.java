@@ -50,7 +50,14 @@ public class GuiMain extends Application {
 	 * @return False if no course found, true otherwise
 	 */
 	public static boolean addByDepCodeSec(String[] in) {
+		try{
+			Integer.parseInt(in[1]);
+		} catch(NumberFormatException e) {
+			System.err.println("code is not a number!");
+			return false;
+		}
 		Search s = new Search();
+		boolean added = true;
 		ArrayList<Course> alc = new ArrayList<>();
 		
 		Filter fdep = new Filter("department", in[0]);
@@ -79,12 +86,14 @@ public class GuiMain extends Application {
 
 		// if the course was found, see if it conflicts with current scheduel
 		// and add if it doesn't
-		if(alc != null && alc.size() != 0) {
-			for(Course c : alc) {
-				if(schedule.conflicts(c)) {
-					System.out.printf("Course %s conflicts with your schedule!\n", c.simpleString());
-					continue;//don't add this course
-				}
+
+		if(alc != null && alc.size() == 1) {//should only be 1 large if not 0.
+			Course c = alc.get(0);
+			if(schedule.conflicts(c)) {
+				System.out.printf("Course %s conflicts with your schedule!\n", c.simpleString());
+				added = false;//don't add this course
+			} else {
+				// added = true; //already true
 				schedule.add(c);
 				System.out.printf("Course %s added successfully\n", c.simpleString());
 			}
@@ -93,11 +102,8 @@ public class GuiMain extends Application {
 		 	*/
 			//  TODO: Adapt state to gui
 			// state.add(new State("addToSchedule"));
-
-
-			return true;
 		}
-		return false;
+		return added;
 	}
 
 	public void undo()
