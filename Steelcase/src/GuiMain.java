@@ -53,11 +53,11 @@ public class GuiMain extends Application {
 		try{
 			Integer.parseInt(in[1]);
 		} catch(NumberFormatException e) {
-			System.err.println("code is not a number!");
+			System.err.println("code is not an integer!");
 			return false;
 		}
 		Search s = new Search();
-		boolean added = true;
+		boolean added = false;
 		ArrayList<Course> alc = new ArrayList<>();
 		
 		Filter fdep = new Filter("department", in[0]);
@@ -91,9 +91,9 @@ public class GuiMain extends Application {
 			Course c = alc.get(0);
 			if(schedule.conflicts(c)) {
 				System.out.printf("Course %s conflicts with your schedule!\n", c.simpleString());
-				added = false;//don't add this course
+				// added = false;//already false
 			} else {
-				// added = true; //already true
+				added = true; // says its added
 				schedule.add(c);
 				System.out.printf("Course %s added successfully\n", c.simpleString());
 			}
