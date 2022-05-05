@@ -277,31 +277,7 @@ public class preReqManager implements Initializable {
         choiceBox.getItems().addAll(choices);
         search(); //fills the allCourses
         list.addAll(allCourses);
-        for(Course c : list){
-            if(GuiMain.schedule.conflicts(c)){
-                c.getAdd().setOpacity(.2);
-                c.getAdd().setOnMouseClicked(actionEvent -> {
-                    c.getAdd().setSelected(false);
-                    System.out.println("Showing the popUp");
-                    Button btn = new Button("X");
-                    btn.setTranslateX(180);
-                    btn.setTranslateY(-80);
-                    Text text = new Text("Conflicting course(s) can not added to schedule");
-                    Rectangle rect = new Rectangle(400, 200);
-                    rect.setFill(Color.WHITE);
-                    StackPane sPane = new StackPane();
-                    sPane.getChildren().addAll(rect, text, btn);
-                    Popup popup = new Popup();
-                    popup.getContent().add(sPane);
-                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                    popup.show(stage);
-                    btn.setOnAction(actionEvent1 ->
-                    {
-                        popup.hide();
-                    });
-                });
-            }
-        }
+
         cid.setCellValueFactory(new PropertyValueFactory<Course, Integer>("code"));
         day.setCellValueFactory(new PropertyValueFactory<Course, String>("day"));
         locationRoom.setCellValueFactory(new PropertyValueFactory<Course, Integer>("room"));
