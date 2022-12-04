@@ -28,7 +28,6 @@ public class GuiMain extends Application {
 				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 						@Override
 						public void handle(WindowEvent e) {
-								System.out.println("Hi");
 								System.exit(0);
 						}
 				});
@@ -39,7 +38,7 @@ public class GuiMain extends Application {
 			primaryStage.show();
 		}
 
-		/**
+	/**
 	 * Receives a course's department, code, and section as string
 	 * and performs a search for that single course. If successfull,
 	 * that course is then added to the user's schedule.
